@@ -4,7 +4,7 @@ using TailwindVariants.NET;
 namespace RizzyUI;
 
 /// <summary>
-/// A container that provides a styled viewport for scrollable content.
+/// A styled scroll area wrapper inspired by shadcn/ui and Radix ScrollArea.
 /// </summary>
 public partial class RzScrollArea : RzComponent<RzScrollArea.Slots>
 {
@@ -12,17 +12,36 @@ public partial class RzScrollArea : RzComponent<RzScrollArea.Slots>
     /// Defines the default styling for the RzScrollArea component.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
-        @base: "relative",
+        @base: "relative overflow-hidden",
         slots: new()
         {
-            [s => s.Viewport] = "focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+            [s => s.Viewport] = "size-full rounded-[inherit] focus-visible:ring-ring/50 transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1",
+            [s => s.ViewportContent] = "min-w-full table",
+            [s => s.Scrollbar] = "flex touch-none select-none p-px transition-opacity duration-200",
+            [s => s.Thumb] = "bg-border relative flex-1 rounded-full",
+            [s => s.Corner] = "bg-background absolute right-0 bottom-0"
         },
         variants: new()
         {
             [s => ((RzScrollArea)s).Orientation] = new Variant<Orientation, Slots>
             {
-                [Orientation.Vertical] = new() { [s => s.Viewport] = "overflow-y-auto overflow-x-hidden" },
-                [Orientation.Horizontal] = new() { [s => s.Viewport] = "overflow-x-auto overflow-y-hidden whitespace-nowrap" }
+                [Orientation.Vertical] = new()
+                {
+                    [s => s.Viewport] = "overflow-y-scroll overflow-x-hidden",
+                    [s => s.Scrollbar] = "h-full w-2.5 border-l border-l-transparent"
+                },
+                [Orientation.Horizontal] = new()
+                {
+                    [s => s.Viewport] = "overflow-x-scroll overflow-y-hidden whitespace-nowrap",
+                    [s => s.Scrollbar] = "h-2.5 w-full flex-col border-t border-t-transparent"
+                }
+            },
+            [s => ((RzScrollArea)s).Type] = new Variant<ScrollAreaType, Slots>
+            {
+                [ScrollAreaType.Always] = new() { [s => s.Scrollbar] = "opacity-100" },
+                [ScrollAreaType.Hover] = new() { [s => s.Scrollbar] = "opacity-0 group-hover:opacity-100" },
+                [ScrollAreaType.Scroll] = new() { [s => s.Scrollbar] = "opacity-0" },
+                [ScrollAreaType.Auto] = new() { [s => s.Scrollbar] = "opacity-0" }
             }
         }
     );
@@ -30,22 +49,42 @@ public partial class RzScrollArea : RzComponent<RzScrollArea.Slots>
     /// <summary>
     /// The content rendered inside the scroll area viewport.
     /// </summary>
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// The primary scrolling orientation for the viewport.
+    /// The primary scrolling orientation.
     /// </summary>
-    [Parameter]
-    public Orientation Orientation { get; set; } = Orientation.Vertical;
+    [Parameter] public Orientation Orientation { get; set; } = Orientation.Vertical;
 
     /// <summary>
-    /// When true, renders a default <see cref="ScrollBar"/> matching <see cref="Orientation"/>.
+    /// Scrollbar visibility mode.
     /// </summary>
-    [Parameter]
-    public bool ShowDefaultScrollBar { get; set; } = true;
+    [Parameter] public ScrollAreaType Type { get; set; } = ScrollAreaType.Hover;
 
-    private Orientation DefaultScrollBarOrientation => Orientation;
+    /// <summary>
+    /// Delay in milliseconds before hiding hover/scroll scrollbars.
+    /// </summary>
+    [Parameter] public int ScrollHideDelay { get; set; } = 600;
+
+    /// <summary>
+    /// Whether to render the default built-in scrollbar(s).
+    /// </summary>
+    [Parameter] public bool ShowDefaultScrollBar { get; set; } = true;
+
+    /// <summary>
+    /// Whether a perpendicular scrollbar should also be rendered.
+    /// </summary>
+    [Parameter] public bool ShowBothScrollbars { get; set; }
+
+    /// <summary>
+    /// True when the vertical scrollbar should be rendered.
+    /// </summary>
+    protected bool ShowVertical => ShowDefaultScrollBar && (ShowBothScrollbars || Orientation == Orientation.Vertical);
+
+    /// <summary>
+    /// True when the horizontal scrollbar should be rendered.
+    /// </summary>
+    protected bool ShowHorizontal => ShowDefaultScrollBar && (ShowBothScrollbars || Orientation == Orientation.Horizontal);
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -58,20 +97,21 @@ public partial class RzScrollArea : RzComponent<RzScrollArea.Slots>
     protected override TvDescriptor<RzComponent<Slots>, Slots> GetDescriptor() => Theme.RzScrollArea;
 
     /// <summary>
-    /// Defines the slots available for styling in the RzScrollArea component.
+    /// Defines style slots for <see cref="RzScrollArea"/>.
     /// </summary>
     public sealed partial class Slots : ISlots
     {
-        /// <summary>
-        /// The base slot for the root element.
-        /// </summary>
-        [Slot("scroll-area")]
-        public string? Base { get; set; }
-
-        /// <summary>
-        /// The slot for the viewport wrapper.
-        /// </summary>
-        [Slot("scroll-area-viewport")]
-        public string? Viewport { get; set; }
+        /// <summary>The base slot for the root element.</summary>
+        [Slot("scroll-area")] public string? Base { get; set; }
+        /// <summary>The slot for the scrollable viewport.</summary>
+        [Slot("scroll-area-viewport")] public string? Viewport { get; set; }
+        /// <summary>The slot for the viewport content wrapper.</summary>
+        [Slot("scroll-area-viewport-content")] public string? ViewportContent { get; set; }
+        /// <summary>The slot for scrollbar tracks.</summary>
+        [Slot("scroll-area-scrollbar")] public string? Scrollbar { get; set; }
+        /// <summary>The slot for draggable thumbs.</summary>
+        [Slot("scroll-area-thumb")] public string? Thumb { get; set; }
+        /// <summary>The slot for the bottom corner fill when both scrollbars render.</summary>
+        [Slot("scroll-area-corner")] public string? Corner { get; set; }
     }
 }

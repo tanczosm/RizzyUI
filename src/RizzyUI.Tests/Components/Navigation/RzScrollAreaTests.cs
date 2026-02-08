@@ -22,7 +22,7 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
 
         var viewport = cut.Find("[data-slot='scroll-area-viewport']");
         Assert.Equal("0", viewport.GetAttribute("tabindex"));
-        Assert.Contains("overflow-y-auto", viewport.ClassList);
+        Assert.Contains("overflow-y-scroll", viewport.ClassList);
         Assert.Contains("overflow-x-hidden", viewport.ClassList);
         Assert.Contains("Scrollable content", viewport.TextContent);
 
@@ -44,7 +44,7 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Equal("horizontal", root.GetAttribute("data-orientation"));
 
         var viewport = cut.Find("[data-slot='scroll-area-viewport']");
-        Assert.Contains("overflow-x-auto", viewport.ClassList);
+        Assert.Contains("overflow-x-scroll", viewport.ClassList);
         Assert.Contains("overflow-y-hidden", viewport.ClassList);
 
         var scrollbar = cut.Find("[data-slot='scroll-area-scrollbar']");

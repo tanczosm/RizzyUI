@@ -1,22 +1,47 @@
+<style>
+    [data-radix-scroll-area-viewport]::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+
 @namespace RizzyUI
 @inherits RzComponent<RzScrollArea.Slots>
 
 <HtmlElement Element="@EffectiveElement"
              @attributes="@AdditionalAttributes"
              id="@Id"
-             class="@SlotClasses.GetBase()"
+             class="@($"group {SlotClasses.GetBase()}")"
              data-slot="scroll-area"
-             data-orientation="@Orientation.ToString().ToLowerInvariant()">
-    <div data-slot="scroll-area-viewport"
+             data-orientation="@Orientation.ToString().ToLowerInvariant()"
+             data-type="@Type.ToString().ToLowerInvariant()"
+             data-scroll-hide-delay="@ScrollHideDelay"
+             x-data="rzScrollArea"
+             x-on:pointerenter="onPointerEnter"
+             x-on:pointerleave="onPointerLeave">
+    <div x-ref="viewport"
+         data-radix-scroll-area-viewport
+         data-slot="scroll-area-viewport"
          class="@SlotClasses.GetViewport()"
-         tabindex="0">
-        @ChildContent
+         tabindex="0"
+         style="scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;">
+        <div x-ref="content" data-slot="scroll-area-viewport-content" class="@SlotClasses.GetViewportContent()">
+            @ChildContent
+        </div>
     </div>
 
-    @if (ShowDefaultScrollBar)
+    @if (ShowVertical)
     {
-        <ScrollBar Orientation="@DefaultScrollBarOrientation" />
+        <div x-ref="scrollbarY" data-slot="scroll-area-scrollbar" data-orientation="vertical" class="@SlotClasses.GetScrollbar()" x-on:pointerdown="onTrackPointerDown($event, 'vertical')">
+            <div x-ref="thumbY" data-slot="scroll-area-thumb" class="@SlotClasses.GetThumb()" x-on:pointerdown.stop.prevent="onThumbPointerDown($event, 'vertical')"></div>
+        </div>
     }
 
-    <div data-slot="scroll-area-corner"></div>
+    @if (ShowHorizontal)
+    {
+        <div x-ref="scrollbarX" data-slot="scroll-area-scrollbar" data-orientation="horizontal" class="@SlotClasses.GetScrollbar()" x-on:pointerdown="onTrackPointerDown($event, 'horizontal')">
+            <div x-ref="thumbX" data-slot="scroll-area-thumb" class="@SlotClasses.GetThumb()" x-on:pointerdown.stop.prevent="onThumbPointerDown($event, 'horizontal')"></div>
+        </div>
+    }
+
+    <div x-ref="corner" data-slot="scroll-area-corner" class="@SlotClasses.GetCorner()"></div>
 </HtmlElement>
