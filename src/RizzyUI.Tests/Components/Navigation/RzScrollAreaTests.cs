@@ -36,7 +36,7 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
     {
         // Act
         var cut = RenderComponent<RzScrollArea>(parameters => parameters
-            .Add(p => p.ScrollAreaOrientation, ScrollAreaOrientation.Horizontal)
+            .Add(p => p.Orientation, Orientation.Horizontal)
         );
 
         // Assert
