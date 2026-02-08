@@ -1,0 +1,21 @@
+@namespace RizzyUI
+@inherits RzComponent<RzScrollArea.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             @attributes="@AdditionalAttributes"
+             id="@Id"
+             class="@SlotClasses.GetBase()"
+             data-slot="scroll-area">
+    <div data-slot="scroll-area-viewport"
+         class="@SlotClasses.GetViewport()"
+         tabindex="0">
+        @ChildContent
+    </div>
+
+    @if (ShowDefaultScrollBar)
+    {
+        <ScrollBar Orientation="Orientation.Vertical" />
+    }
+
+    <div data-slot="scroll-area-corner"></div>
+</HtmlElement>
