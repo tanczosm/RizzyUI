@@ -5,7 +5,8 @@
              @attributes="@AdditionalAttributes"
              id="@Id"
              class="@SlotClasses.GetBase()"
-             data-slot="scroll-area">
+             data-slot="scroll-area"
+             data-orientation="@ScrollAreaOrientation.ToString().ToLowerInvariant()">
     <div data-slot="scroll-area-viewport"
          class="@SlotClasses.GetViewport()"
          tabindex="0">
@@ -14,7 +15,7 @@
 
     @if (ShowDefaultScrollBar)
     {
-        <ScrollBar Orientation="Orientation.Vertical" />
+        <ScrollBar Orientation="@DefaultScrollBarOrientation" />
     }
 
     <div data-slot="scroll-area-corner"></div>

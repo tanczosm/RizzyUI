@@ -16,6 +16,14 @@ public partial class RzScrollArea : RzComponent<RzScrollArea.Slots>
         slots: new()
         {
             [s => s.Viewport] = "focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+        },
+        variants: new()
+        {
+            [s => ((RzScrollArea)s).ScrollAreaOrientation] = new Variant<ScrollAreaOrientation, Slots>
+            {
+                [ScrollAreaOrientation.Vertical] = new() { [s => s.Viewport] = "overflow-y-auto overflow-x-hidden" },
+                [ScrollAreaOrientation.Horizontal] = new() { [s => s.Viewport] = "overflow-x-auto overflow-y-hidden whitespace-nowrap" }
+            }
         }
     );
 
@@ -26,10 +34,20 @@ public partial class RzScrollArea : RzComponent<RzScrollArea.Slots>
     public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// When true, renders a default vertical <see cref="ScrollBar"/> within the scroll area.
+    /// The primary scrolling orientation for the viewport.
+    /// </summary>
+    [Parameter]
+    public ScrollAreaOrientation ScrollAreaOrientation { get; set; } = ScrollAreaOrientation.Vertical;
+
+    /// <summary>
+    /// When true, renders a default <see cref="ScrollBar"/> matching <see cref="ScrollAreaOrientation"/>.
     /// </summary>
     [Parameter]
     public bool ShowDefaultScrollBar { get; set; } = true;
+
+    private Orientation DefaultScrollBarOrientation => ScrollAreaOrientation == ScrollAreaOrientation.Horizontal
+        ? Orientation.Horizontal
+        : Orientation.Vertical;
 
     /// <inheritdoc />
     protected override void OnInitialized()

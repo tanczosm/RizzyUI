@@ -19,6 +19,7 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Example" class="scroll-mt-20">Basic Example</RzHeading>
                 <RzParagraph>
                     This example uses the default vertical scrollbar that is automatically rendered by <code>RzScrollArea</code>.
+                    Set <code>ScrollAreaOrientation</code> to change the primary scroll direction.
                 </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
@@ -35,7 +36,9 @@
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzScrollArea class="h-56 w-full rounded-md border"&gt;
+&lt;RzScrollArea
+  ScrollAreaOrientation="ScrollAreaOrientation.Vertical"
+  class="h-56 w-full rounded-md border"&gt;
   &lt;div class="p-4 space-y-3"&gt;
     @@for (var i = 1; i &lt;= 20; i++)
     {
@@ -55,7 +58,10 @@
                 </RzParagraph>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzScrollArea ShowDefaultScrollBar="false" class="relative h-56 w-full rounded-md border"&gt;
+&lt;RzScrollArea
+  ScrollAreaOrientation="ScrollAreaOrientation.Horizontal"
+  ShowDefaultScrollBar="false"
+  class="relative h-56 w-full rounded-md border"&gt;
   &lt;div class="w-[640px] p-4"&gt;
     Wide content...
   &lt;/div&gt;

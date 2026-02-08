@@ -9,7 +9,7 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
     }
 
     [Fact]
-    public void RzScrollArea_DefaultRender_RendersViewportAndDefaultVerticalScrollBar()
+    public void RzScrollArea_DefaultRender_RendersVerticalViewportAndScrollbar()
     {
         // Act
         var cut = RenderComponent<RzScrollArea>(parameters => parameters
@@ -17,14 +17,38 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         );
 
         // Assert
-        cut.Find("[data-slot='scroll-area']");
+        var root = cut.Find("[data-slot='scroll-area']");
+        Assert.Equal("vertical", root.GetAttribute("data-orientation"));
+
         var viewport = cut.Find("[data-slot='scroll-area-viewport']");
         Assert.Equal("0", viewport.GetAttribute("tabindex"));
+        Assert.Contains("overflow-y-auto", viewport.ClassList);
+        Assert.Contains("overflow-x-hidden", viewport.ClassList);
         Assert.Contains("Scrollable content", viewport.TextContent);
 
         var scrollbar = cut.Find("[data-slot='scroll-area-scrollbar']");
         Assert.Equal("vertical", scrollbar.GetAttribute("data-orientation"));
         cut.Find("[data-slot='scroll-area-thumb']");
+    }
+
+    [Fact]
+    public void RzScrollArea_HorizontalOrientation_RendersHorizontalViewportAndScrollbar()
+    {
+        // Act
+        var cut = RenderComponent<RzScrollArea>(parameters => parameters
+            .Add(p => p.ScrollAreaOrientation, ScrollAreaOrientation.Horizontal)
+        );
+
+        // Assert
+        var root = cut.Find("[data-slot='scroll-area']");
+        Assert.Equal("horizontal", root.GetAttribute("data-orientation"));
+
+        var viewport = cut.Find("[data-slot='scroll-area-viewport']");
+        Assert.Contains("overflow-x-auto", viewport.ClassList);
+        Assert.Contains("overflow-y-hidden", viewport.ClassList);
+
+        var scrollbar = cut.Find("[data-slot='scroll-area-scrollbar']");
+        Assert.Equal("horizontal", scrollbar.GetAttribute("data-orientation"));
     }
 
     [Fact]
@@ -37,18 +61,5 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
 
         // Assert
         Assert.Empty(cut.FindAll("[data-slot='scroll-area-scrollbar']"));
-    }
-
-    [Fact]
-    public void ScrollBar_OrientationParameter_UpdatesDataOrientation()
-    {
-        // Act
-        var cut = RenderComponent<ScrollBar>(parameters => parameters
-            .Add(p => p.Orientation, Orientation.Horizontal)
-        );
-
-        // Assert
-        var scrollbar = cut.Find("[data-slot='scroll-area-scrollbar']");
-        Assert.Equal("horizontal", scrollbar.GetAttribute("data-orientation"));
     }
 }
