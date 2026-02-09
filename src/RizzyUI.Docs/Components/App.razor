@@ -25,15 +25,15 @@
     <title>RizzyUI</title>
     
     <script nonce="@Nonce" src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
-    <script nonce="@Nonce" defer src="/_content/Rizzy/js/rizzy.js"></script>
+    <script nonce="@Nonce" defer type="module" src="/_content/Rizzy/js/rizzy.js"></script>
     
     @if (UseContentSecurityPolicy)
     {
-        <script nonce="@Nonce" defer src="@Assets["/_content/RizzyUI/js/rizzyui-csp.js"]"></script>
+        <script nonce="@Nonce" defer type="module" src="@Assets["/_content/RizzyUI/js/rizzyui-csp.js"]"></script>
     }
     else
     {
-        <script nonce="@Nonce" defer src="@Assets["/_content/RizzyUI/js/rizzyui.js"]"></script>
+        <script nonce="@Nonce" defer type="module" src="@Assets["/_content/RizzyUI/js/rizzyui.js"]"></script>
     }
     <script nonce="@Nonce" src="/js/site.js"></script>
 
