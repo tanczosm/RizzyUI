@@ -18,180 +18,166 @@
             </RzParagraph>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Usage" class="scroll-mt-20">
-                    Usage
-                </RzHeading>
-                <RzParagraph>
-                    Apply height and width classes directly to shape each skeleton block.
-                </RzParagraph>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Usage" class="scroll-mt-20">Usage</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto p-8 mb-5 flex justify-center items-center min-h-20">
                         <RzSkeleton class="h-5 w-24 rounded-full" />
                     </div>
                 </RzBrowser>
-                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-                    &lt;RzSkeleton class=&quot;h-5 w-24 rounded-full&quot; /&gt;
-                </RzCodeViewer>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">&lt;RzSkeleton class=&quot;h-5 w-24 rounded-full&quot; /&gt;</RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Avatar" class="scroll-mt-20">
-                    Avatar
-                </RzHeading>
-                <RzParagraph>
-                    Circular skeletons are useful for profile photos and user chips.
-                </RzParagraph>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Avatar" class="scroll-mt-20">Avatar</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto p-8 mb-5 flex items-center gap-4 min-h-20">
-                        <RzSkeleton class="h-12 w-12 rounded-full" />
-                        <div class="space-y-2">
-                            <RzSkeleton class="h-4 w-[200px]" />
+                    <div class="mx-auto p-8 mb-5 flex w-fit items-center gap-4">
+                        <RzSkeleton class="size-10 shrink-0 rounded-full" />
+                        <div class="grid gap-2">
                             <RzSkeleton class="h-4 w-[150px]" />
+                            <RzSkeleton class="h-4 w-[100px]" />
                         </div>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-                    &lt;div class=&quot;flex items-center gap-4&quot;&gt;
-                        &lt;RzSkeleton class=&quot;h-12 w-12 rounded-full&quot; /&gt;
-                        &lt;div class=&quot;space-y-2&quot;&gt;
-                            &lt;RzSkeleton class=&quot;h-4 w-[200px]&quot; /&gt;
+                    &lt;div class=&quot;flex w-fit items-center gap-4&quot;&gt;
+                        &lt;RzSkeleton class=&quot;size-10 shrink-0 rounded-full&quot; /&gt;
+                        &lt;div class=&quot;grid gap-2&quot;&gt;
                             &lt;RzSkeleton class=&quot;h-4 w-[150px]&quot; /&gt;
+                            &lt;RzSkeleton class=&quot;h-4 w-[100px]&quot; /&gt;
                         &lt;/div&gt;
                     &lt;/div&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Card" class="scroll-mt-20">
-                    Card
-                </RzHeading>
-                <RzParagraph>
-                    Combine multiple skeleton slots to mimic a complete card layout.
-                </RzParagraph>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Card" class="scroll-mt-20">Card</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto p-8 mb-5 max-w-md border rounded-lg bg-background space-y-4">
-                        <RzSkeleton class="h-[180px] w-full" />
-                        <RzSkeleton class="h-6 w-3/4" />
-                        <RzSkeleton class="h-4 w-full" />
-                        <RzSkeleton class="h-4 w-5/6" />
-                        <div class="flex justify-end gap-2 pt-2">
-                            <RzSkeleton class="h-9 w-20 rounded-md" />
-                            <RzSkeleton class="h-9 w-24 rounded-md" />
+                    <div class="mx-auto p-8 mb-5 w-full max-w-xs rounded-lg border bg-background">
+                        <div class="space-y-2 p-6">
+                            <RzSkeleton class="h-4 w-2/3" />
+                            <RzSkeleton class="h-4 w-1/2" />
+                        </div>
+                        <div class="px-6 pb-6">
+                            <RzSkeleton class="aspect-video w-full" />
                         </div>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-                    &lt;div class=&quot;max-w-md border rounded-lg p-8 space-y-4&quot;&gt;
-                        &lt;RzSkeleton class=&quot;h-[180px] w-full&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-6 w-3/4&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-full&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-5/6&quot; /&gt;
-                    &lt;/div&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-2/3&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-1/2&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;aspect-video w-full&quot; /&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Text" class="scroll-mt-20">
-                    Text
-                </RzHeading>
-                <RzParagraph>
-                    Render text-like placeholders with varied widths to look more natural.
-                </RzParagraph>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Text" class="scroll-mt-20">Text</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto p-8 mb-5 max-w-2xl space-y-2">
+                    <div class="mx-auto p-8 mb-5 flex w-full max-w-xs flex-col gap-2">
                         <RzSkeleton class="h-4 w-full" />
-                        <RzSkeleton class="h-4 w-[96%]" />
-                        <RzSkeleton class="h-4 w-[92%]" />
-                        <RzSkeleton class="h-4 w-[85%]" />
-                        <RzSkeleton class="h-4 w-[70%]" />
+                        <RzSkeleton class="h-4 w-full" />
+                        <RzSkeleton class="h-4 w-3/4" />
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
                     &lt;RzSkeleton class=&quot;h-4 w-full&quot; /&gt;
-                    &lt;RzSkeleton class=&quot;h-4 w-[96%]&quot; /&gt;
-                    &lt;RzSkeleton class=&quot;h-4 w-[92%]&quot; /&gt;
-                    &lt;RzSkeleton class=&quot;h-4 w-[85%]&quot; /&gt;
-                    &lt;RzSkeleton class=&quot;h-4 w-[70%]&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-full&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-3/4&quot; /&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Form" class="scroll-mt-20">
-                    Form
-                </RzHeading>
-                <RzParagraph>
-                    Use skeletons for labels, input fields, and action buttons while form data loads.
-                </RzParagraph>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Form" class="scroll-mt-20">Form</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto p-8 mb-5 max-w-lg space-y-5">
-                        <div class="space-y-2">
+                    <div class="mx-auto p-8 mb-5 flex w-full max-w-xs flex-col gap-7">
+                        <div class="flex flex-col gap-3">
                             <RzSkeleton class="h-4 w-20" />
-                            <RzSkeleton class="h-10 w-full rounded-md" />
+                            <RzSkeleton class="h-8 w-full" />
                         </div>
-                        <div class="space-y-2">
+                        <div class="flex flex-col gap-3">
                             <RzSkeleton class="h-4 w-24" />
-                            <RzSkeleton class="h-10 w-full rounded-md" />
+                            <RzSkeleton class="h-8 w-full" />
                         </div>
-                        <div class="space-y-2">
-                            <RzSkeleton class="h-4 w-16" />
-                            <RzSkeleton class="h-24 w-full rounded-md" />
-                        </div>
-                        <div class="flex justify-end gap-2 pt-2">
-                            <RzSkeleton class="h-10 w-24 rounded-md" />
-                            <RzSkeleton class="h-10 w-28 rounded-md" />
-                        </div>
+                        <RzSkeleton class="h-8 w-24" />
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-                    &lt;div class=&quot;space-y-2&quot;&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-20&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-10 w-full rounded-md&quot; /&gt;
-                    &lt;/div&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-20&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-8 w-full&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-8 w-24&quot; /&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Table" class="scroll-mt-20">
-                    Table
-                </RzHeading>
-                <RzParagraph>
-                    Build row and column placeholders to communicate data-table loading states.
-                </RzParagraph>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Table" class="scroll-mt-20">Table</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto p-8 mb-5 max-w-3xl space-y-3">
-                        <div class="grid grid-cols-4 gap-3">
-                            <RzSkeleton class="h-4 w-24" />
-                            <RzSkeleton class="h-4 w-20" />
-                            <RzSkeleton class="h-4 w-16" />
-                            <RzSkeleton class="h-4 w-12" />
-                        </div>
-                        @for (var i = 0; i < 5; i++)
+                    <div class="mx-auto p-8 mb-5 flex w-full max-w-sm flex-col gap-2">
+                        @for (var index = 0; index < 5; index++)
                         {
-                            <div class="grid grid-cols-4 gap-3 items-center">
-                                <RzSkeleton class="h-8 w-full rounded-md" />
-                                <RzSkeleton class="h-8 w-full rounded-md" />
-                                <RzSkeleton class="h-8 w-full rounded-md" />
-                                <RzSkeleton class="h-8 w-full rounded-md" />
+                            <div class="flex gap-4">
+                                <RzSkeleton class="h-4 flex-1" />
+                                <RzSkeleton class="h-4 w-24" />
+                                <RzSkeleton class="h-4 w-20" />
                             </div>
                         }
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-                    &lt;div class=&quot;grid grid-cols-4 gap-3&quot;&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-24&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-20&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-16&quot; /&gt;
-                        &lt;RzSkeleton class=&quot;h-4 w-12&quot; /&gt;
-                    &lt;/div&gt;
+                    &lt;RzSkeleton class=&quot;h-4 flex-1&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-24&quot; /&gt;
+                    &lt;RzSkeleton class=&quot;h-4 w-20&quot; /&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Composing Patterns" class="scroll-mt-20">
-                    Composing Patterns
-                </RzHeading>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Media List" class="scroll-mt-20">Media List</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto p-8 mb-5 max-w-lg space-y-4">
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            <div class="flex items-start gap-4">
+                                <RzSkeleton class="h-14 w-14 rounded-md" />
+                                <div class="space-y-2 w-full">
+                                    <RzSkeleton class="h-4 w-1/2" />
+                                    <RzSkeleton class="h-4 w-full" />
+                                    <RzSkeleton class="h-4 w-4/5" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Dashboard Cards" class="scroll-mt-20">Dashboard Cards</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto p-8 mb-5 grid max-w-3xl gap-4 md:grid-cols-3">
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            <div class="space-y-3 rounded-lg border p-4">
+                                <RzSkeleton class="h-4 w-1/3" />
+                                <RzSkeleton class="h-8 w-1/2" />
+                                <RzSkeleton class="h-3 w-2/3" />
+                            </div>
+                        }
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Chat Messages" class="scroll-mt-20">Chat Messages</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto p-8 mb-5 max-w-xl space-y-4">
+                        <div class="flex justify-start"><RzSkeleton class="h-10 w-2/3 rounded-2xl" /></div>
+                        <div class="flex justify-end"><RzSkeleton class="h-10 w-1/2 rounded-2xl" /></div>
+                        <div class="flex justify-start"><RzSkeleton class="h-10 w-3/4 rounded-2xl" /></div>
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Complex Page" class="scroll-mt-20">Complex Page</RzHeading>
                 <RzParagraph>
-                    Because RzSkeleton accepts standard attributes and CSS classes, you can compose reusable loading layouts for any complex page.
+                    Compose multiple RzSkeleton groups to build realistic placeholders for entire pages while data loads.
                 </RzParagraph>
             </section>
         </MainContent>

@@ -3,8 +3,8 @@
 
 <HtmlElement Element="@EffectiveElement"
              id="@Id"
+             @attributes="@AdditionalAttributes"
              class="@SlotClasses.GetBase()"
-             data-slot="skeleton"
-             @attributes="@AdditionalAttributes">
+             data-slot="skeleton">
     @ChildContent
 </HtmlElement>
