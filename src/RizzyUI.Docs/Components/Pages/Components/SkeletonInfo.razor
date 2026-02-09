@@ -1,0 +1,66 @@
+@page "/components/skeleton"
+@using RizzyUI
+
+<PageTitle>RzSkeleton</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzHeading Level="HeadingLevel.H1" class="scroll-mt-20">
+                RzSkeleton
+            </RzHeading>
+            <RzParagraph>
+                The RzSkeleton component reproduces the shadcn/ui skeleton pattern as a feedback placeholder for loading states.
+            </RzParagraph>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Default" class="scroll-mt-20">
+                    Default
+                </RzHeading>
+                <RzParagraph>
+                    Use the default skeleton block with custom height and width classes.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto p-8 mb-5 flex justify-center items-center min-h-20">
+                        <RzSkeleton class="h-5 w-24 rounded-full" />
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+                    &lt;RzSkeleton class=&quot;h-5 w-24 rounded-full&quot; /&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Examples" class="scroll-mt-20">
+                    Examples
+                </RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto p-8 mb-5 space-y-3 max-w-md">
+                        <div class="flex items-center gap-4">
+                            <RzSkeleton class="h-12 w-12 rounded-full" />
+                            <div class="space-y-2">
+                                <RzSkeleton class="h-4 w-[240px]" />
+                                <RzSkeleton class="h-4 w-[180px]" />
+                            </div>
+                        </div>
+                        <RzSkeleton class="h-[180px] w-full" />
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+                    &lt;div class=&quot;flex items-center gap-4&quot;&gt;
+                        &lt;RzSkeleton class=&quot;h-12 w-12 rounded-full&quot; /&gt;
+                        &lt;div class=&quot;space-y-2&quot;&gt;
+                            &lt;RzSkeleton class=&quot;h-4 w-[240px]&quot; /&gt;
+                            &lt;RzSkeleton class=&quot;h-4 w-[180px]&quot; /&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;RzSkeleton class=&quot;h-[180px] w-full&quot; /&gt;
+                </RzCodeViewer>
+            </section>
+
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>
