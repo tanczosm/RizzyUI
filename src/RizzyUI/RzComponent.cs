@@ -83,6 +83,14 @@ public abstract partial class RzComponent : ComponentBase
     [Parameter]
     public string Id { get; set; } = IdGenerator.UniqueId("rz");
 
+
+    /// <summary>
+    /// Defines when the component's JavaScript should be loaded by Async Alpine.
+    /// Options include "eager" (default), "visible", "idle", "media (...)" and "event:...".
+    /// </summary>
+    [Parameter]
+    public string LoadStrategy { get; set; } = "eager";
+
     /// <summary>
     /// Captures unmatched HTML attributes passed to the component. These attributes are typically
     /// applied to the root element rendered by the component. Use the `class` attribute here

@@ -4,7 +4,7 @@
 
 <div @attributes="AdditionalAttributes"
      id="@Id"
-     x-data="rzCommandItem"
+     x-data="rzCommandItem" x-load="@LoadStrategy"
      data-alpine-root="@Id"
      data-value="@Value"
      data-name="@Name"

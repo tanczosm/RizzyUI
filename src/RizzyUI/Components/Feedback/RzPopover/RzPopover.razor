@@ -7,7 +7,7 @@
 	             id="@Id"
 	             class="@SlotClasses.GetBase()"
 	             @attributes="@AdditionalAttributes"
-	             x-data="rzPopover"
+	             x-data="rzPopover" x-load="@LoadStrategy"
 	             data-alpine-root="@Id"
 	             data-anchor="@Anchor.ToString().ToKebabCase()"
 	             data-offset="@Offset"
