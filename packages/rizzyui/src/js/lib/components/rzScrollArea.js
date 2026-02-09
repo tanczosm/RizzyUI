@@ -8,6 +8,7 @@ export default function registerRzScrollArea(Alpine) {
         _roContent: null,
         _dragAxis: null,
         _dragPointerOffset: 0,
+        _viewport: null,
 
         init() {
             this.type = this.$el.dataset.type || 'hover';
@@ -16,6 +17,7 @@ export default function registerRzScrollArea(Alpine) {
 
             const viewport = this.$refs.viewport;
             if (!viewport) return;
+            this._viewport = viewport;
 
             this.onScroll = this.onScroll.bind(this);
             this.onPointerMove = this.onPointerMove.bind(this);
@@ -32,14 +34,15 @@ export default function registerRzScrollArea(Alpine) {
             this.setState(this.type === 'always' ? 'visible' : 'hidden');
             this.update();
 
-            this.$cleanup(() => {
-                viewport.removeEventListener('scroll', this.onScroll);
-                window.removeEventListener('pointermove', this.onPointerMove);
-                window.removeEventListener('pointerup', this.onPointerUp);
-                this._roViewport?.disconnect();
-                this._roContent?.disconnect();
-                if (this.hideTimer) window.clearTimeout(this.hideTimer);
-            });
+        },
+
+        destroy() {
+            if (this._viewport) this._viewport.removeEventListener('scroll', this.onScroll);
+            window.removeEventListener('pointermove', this.onPointerMove);
+            window.removeEventListener('pointerup', this.onPointerUp);
+            this._roViewport?.disconnect();
+            this._roContent?.disconnect();
+            if (this.hideTimer) window.clearTimeout(this.hideTimer);
         },
 
         setState(state) {
@@ -56,6 +59,7 @@ export default function registerRzScrollArea(Alpine) {
         update() {
             const viewport = this.$refs.viewport;
             if (!viewport) return;
+            this._viewport = viewport;
 
             const showX = viewport.scrollWidth > viewport.clientWidth;
             const showY = viewport.scrollHeight > viewport.clientHeight;
@@ -74,6 +78,7 @@ export default function registerRzScrollArea(Alpine) {
         updateThumbSizes() {
             const viewport = this.$refs.viewport;
             if (!viewport) return;
+            this._viewport = viewport;
 
             if (this.$refs.thumbY && this.$refs.scrollbarY && viewport.scrollHeight > 0) {
                 const ratio = viewport.clientHeight / viewport.scrollHeight;
@@ -91,6 +96,7 @@ export default function registerRzScrollArea(Alpine) {
         updateThumbPositions() {
             const viewport = this.$refs.viewport;
             if (!viewport) return;
+            this._viewport = viewport;
 
             if (this.$refs.thumbY && this.$refs.scrollbarY && viewport.scrollHeight > viewport.clientHeight) {
                 const maxScroll = viewport.scrollHeight - viewport.clientHeight;
