@@ -1,7 +1,6 @@
 
 // packages/rizzyui/src/js/lib/components/rzCommand.js
-export default function(Alpine) {
-    Alpine.data('rzCommand', () => ({
+export default () => ({
         // --- STATE ---
         search: '',
         selectedValue: null,
@@ -413,5 +412,4 @@ export default function(Alpine) {
 
             return commandScoreInner(fullString, search, formatInput(fullString), formatInput(search), 0, 0, {});
         }
-    }));
-}
+    });

@@ -4,8 +4,7 @@
 // This component manages the overall accordion container.
 // Provides 'selected' and 'allowMultiple' properties to child rzAccordionSection components.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzAccordion', () => ({
+export default () => ({
         selected: '',          // ID of the currently selected/opened section (if not allowMultiple)
         allowMultiple: false,  // Whether multiple sections can be open
         init() {
@@ -14,5 +13,4 @@ export default function(Alpine) {
         destroy() {
             // Cleanup if needed
         }
-    }));
-}
+    });

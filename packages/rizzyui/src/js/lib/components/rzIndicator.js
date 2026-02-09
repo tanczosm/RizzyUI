@@ -1,6 +1,5 @@
 
-export default function(Alpine) {
-    Alpine.data('rzIndicator', () => ({
+export default () => ({
         visible: false,
         init() {
             const colorValue = this.$el.dataset.color;
@@ -25,5 +24,4 @@ export default function(Alpine) {
         setVisible(value) {
             this.visible = value;
         }
-    }));
-}
+    });

@@ -4,8 +4,7 @@
 // Manages an iframe preview and adjusts its height dynamically.
 // It also passes dark mode settings to the iframe via postMessage.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzEmbeddedPreview', () => {
+export default () => {
         return {
             iframe: null,
             onDarkModeToggle: null,
@@ -70,5 +69,4 @@ export default function(Alpine) {
                 window.removeEventListener('darkModeToggle', this.onDarkModeToggle);
             }
         };
-    });
-}
+    };

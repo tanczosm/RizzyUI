@@ -1,7 +1,6 @@
 import { computePosition, offset, flip, shift } from '@floating-ui/dom';
 
-export default function(Alpine) {
-    Alpine.data('rzPopover', () => ({
+export default () => ({
         open: false,
         ariaExpanded: 'false',
         triggerEl: null,
@@ -74,5 +73,4 @@ export default function(Alpine) {
                 this.$nextTick(() => this.triggerEl?.focus());
             }
         }
-    }));
-}
+    });

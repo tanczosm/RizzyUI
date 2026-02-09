@@ -4,8 +4,7 @@
 // Implements a progress bar with dynamic percentage calculation, ARIA attributes,
 // and methods to update, increment, or decrement progress.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzProgress', () => ({
+export default () => ({
         currentVal: 0,
         minVal: 0,
         maxVal: 100,
@@ -89,5 +88,4 @@ export default function(Alpine) {
         decrement(val = 1) {
             this.currentVal = Math.max(this.currentVal - val, this.minVal);
         }
-    }));
-}
+    });
