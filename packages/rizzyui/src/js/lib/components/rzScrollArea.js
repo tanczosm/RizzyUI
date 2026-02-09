@@ -142,7 +142,8 @@ export default function registerRzScrollArea(Alpine) {
             }
         },
 
-        onTrackPointerDown(event, axis) {
+        onTrackPointerDown(event) {
+            const axis = event.currentTarget?.dataset.orientation || 'vertical';
             const scrollbar = this.$refs[`scrollbar${axis === 'vertical' ? 'Y' : 'X'}`];
             if (!scrollbar || scrollbar.hidden) return;
             if (event.target === this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`]) return;
@@ -165,7 +166,8 @@ export default function registerRzScrollArea(Alpine) {
             }
         },
 
-        onThumbPointerDown(event, axis) {
+        onThumbPointerDown(event) {
+            const axis = event.currentTarget?.dataset.orientation || 'vertical';
             const thumb = this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`];
             const scrollbar = this.$refs[`scrollbar${axis === 'vertical' ? 'Y' : 'X'}`];
             if (!thumb || !scrollbar || scrollbar.hidden) return;
