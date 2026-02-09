@@ -1,7 +1,8 @@
+import Alpine from 'alpinejs';
+
 
 // packages/rizzyui/src/js/lib/components/rzCommandGroup.js
-export default function(Alpine) {
-    Alpine.data('rzCommandGroup', () => ({
+export default () => ({
         parent: null,
         heading: '',
         templateId: '',
@@ -22,4 +23,3 @@ export default function(Alpine) {
             }
         }
     }));
-}

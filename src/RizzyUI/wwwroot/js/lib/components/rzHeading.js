@@ -3,8 +3,7 @@
 // Alpine.js component: rzHeading
 // Observes heading elements to automatically update the current heading in the quick-reference.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzHeading', () => {
+export default () => {
         return {
             observer: null,
             headingId: '',
@@ -35,4 +34,3 @@ export default function(Alpine) {
             }
         };
     });
-}

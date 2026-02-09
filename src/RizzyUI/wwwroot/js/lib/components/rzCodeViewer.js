@@ -1,11 +1,12 @@
+import { require as rizzyRequire } from '../components.js';
+
 
 // --------------------------------------------------------------------------------
 // Alpine.js component: rzCodeViewer
 // This component handles code display, syntax highlighting, copy-to-clipboard,
 // and expand/collapse functionality.
 // --------------------------------------------------------------------------------
-export default function(Alpine, require) {
-    Alpine.data('rzCodeViewer', () => {
+export default () => {
         return {
             expand: false,
             border: true,
@@ -20,7 +21,7 @@ export default function(Alpine, require) {
                 this.copyTitle = this.$el.dataset.copyTitle || this.copyTitle;
                 this.copiedTitle = this.$el.dataset.copiedTitle || this.copiedTitle;
 
-                require(assets, {
+                rizzyRequire(assets, {
                     success: function () {
                         const codeBlock = document.getElementById(codeId);
                         if (window.hljs && codeBlock) {
@@ -67,4 +68,3 @@ export default function(Alpine, require) {
             }
         };
     });
-}

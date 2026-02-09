@@ -5,8 +5,7 @@ import {computePosition, flip, shift, offset} from '@floating-ui/dom';
 // Handles dropdown menus including open/close behavior, keyboard navigation,
 // and dynamically computing placement classes.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzDropdownMenu', () => ({
+export default () => ({
         dropdownEl: null,
         triggerEl: null,
         floatingEl: null,
@@ -69,4 +68,3 @@ export default function(Alpine) {
             }
         }
     }));
-}

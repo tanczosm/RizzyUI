@@ -1,10 +1,11 @@
+import Alpine from 'alpinejs';
+
 
 // --------------------------------------------------------------------------------
 // Alpine.js component: rzSidebarLinkItem
 // Manages individual sidebar link items, including collapsible behavior.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzSidebarLinkItem', () => {
+export default () => {
         return {
             isExpanded: false,
             chevronExpandedClass: "",
@@ -40,4 +41,3 @@ export default function(Alpine) {
             }
         };
     });
-}
