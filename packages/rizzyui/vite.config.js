@@ -5,7 +5,7 @@ import copy from 'rollup-plugin-copy';
 const ROOT           = __dirname;
 const SRC_DIR        = path.resolve(ROOT, 'src/js');
 const DIST_DIR       = path.resolve(ROOT, 'dist/js');
-const TARGET_WWWROOT = path.resolve(ROOT, '../../src/RizzyUI/wwwroot/');
+const TARGET_WWWROOT = path.resolve(ROOT, '../../src/RizzyUI/wwwroot/js');
 
 const entryName   = process.env.ENTRY || 'rizzyui';
 const isMinified  = process.env.MINIFY === 'true';
