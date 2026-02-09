@@ -8,8 +8,7 @@
 // Dispatches lifecycle events: rz:modal-initialized, rz:modal-before-open,
 // rz:modal-after-open, rz:modal-before-close, rz:modal-after-close.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzDialog', () => ({
+export default () => ({
         modalOpen: false, // Main state variable
         eventTriggerName: '',
         closeEventName: 'rz:modal-close', // Default value, corresponds to Constants.Events.ModalClose
@@ -155,5 +154,4 @@ export default function(Alpine) {
                 this.closeModalInternally('backdrop');
             }
         }
-    }));
-}
+    });

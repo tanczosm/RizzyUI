@@ -3,8 +3,7 @@
 // Alpine.js component: rzBrowser
 // This component simulates a browser preview with adjustable screen sizes.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzBrowser', () => {
+export default () => {
         return {
             screenSize: '',
             setDesktopScreenSize() {
@@ -34,4 +33,3 @@ export default function(Alpine) {
             }
         };
     });
-}

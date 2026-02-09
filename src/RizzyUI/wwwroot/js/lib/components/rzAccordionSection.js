@@ -4,8 +4,7 @@
 // This component controls each individual accordion section.
 // It accesses 'selected' and 'allowMultiple' from the parent rzAccordion scope.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzAccordionSection', () => ({
+export default () => ({
         open: false,
         sectionId: "",
         expandedClass: "",
@@ -45,4 +44,3 @@ export default function(Alpine) {
             return this.open ? 'true' : 'false';
         }
     }));
-}

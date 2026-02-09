@@ -3,10 +3,9 @@
 @inherits RzComponent<RzDropdownMenu.Slots>
 
 <CascadingValue Value="this" IsFixed="true">
-    <!-- Invisible Alpine controller: no visual wrapper, retains a stable $el -->
     <div id="@Id"
          class="@SlotClasses.GetBase()"
-         x-data="rzDropdownMenu"
+         x-data="rzDropdownMenu" x-load="@LoadStrategy"
          data-alpine-root="@Id"
          data-offset="@Offset"
          data-anchor="@Anchor.ToString().ToKebabCase()"

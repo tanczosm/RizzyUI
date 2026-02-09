@@ -9,7 +9,7 @@
              data-slot="input-group-addon"
              role="group"
              data-align="@Align.ToString().ToKebabCase()"
-             x-data="rzInputGroupAddon"
+             x-data="rzInputGroupAddon" x-load="@LoadStrategy"
              x-on:click="handleClick">
     @ChildContent
 </HtmlElement>

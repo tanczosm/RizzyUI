@@ -1,14 +1,17 @@
+import Alpine from 'alpinejs';
 
-export default function(Alpine, require) {
-    Alpine.data('rzCombobox', () => ({
+import { require as rizzyRequire } from '../components.js';
+
+
+export default () => ({
         tomSelect: null,
 
         init() {
             const assets = JSON.parse(this.$el.dataset.assets || '[]');
             const nonce = this.$el.dataset.nonce;
 
-            if (assets.length > 0 && typeof require === 'function') {
-                require(assets, {
+            if (assets.length > 0 && typeof rizzyRequire === 'function') {
+                rizzyRequire(assets, {
                     success: () => this.initTomSelect(),
                     error: (err) => console.error('RzCombobox: Failed to load assets.', err)
                 }, nonce);
@@ -80,5 +83,4 @@ export default function(Alpine, require) {
                 this.tomSelect = null;
             }
         }
-    }));
-}
+    });

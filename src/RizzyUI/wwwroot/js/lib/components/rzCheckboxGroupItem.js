@@ -3,8 +3,7 @@
 // Alpine.js component: rzCheckboxGroupItem
 // Manages a checkbox's state and its associated icon visibility.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzCheckboxGroupItem', () => {
+export default () => {
         return {
             checkbox: null,
             isChecked: false,
@@ -20,4 +19,3 @@ export default function(Alpine) {
             }
         };
     });
-}

@@ -1,7 +1,6 @@
 import { computePosition, offset, flip, shift } from '@floating-ui/dom';
 
-export default function (Alpine, $data) {
-  Alpine.data('rzNavigationMenu', () => ({
+export default () => ({
     activeItemId : null,
     open         : false,
     closeTimeout : null,
@@ -175,4 +174,3 @@ export default function (Alpine, $data) {
       }, 150);
     },
   }));
-}

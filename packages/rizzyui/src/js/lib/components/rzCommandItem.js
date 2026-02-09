@@ -1,7 +1,8 @@
+import Alpine from 'alpinejs';
+
 
 // packages/rizzyui/src/js/lib/components/rzCommandItem.js
-export default function(Alpine) {
-    Alpine.data('rzCommandItem', () => ({
+export default () => ({
         parent: null,
         itemData: {},
 
@@ -32,5 +33,4 @@ export default function(Alpine) {
                 this.parent.unregisterItem(this.itemData.id);
             }
         }
-    }));
-}
+    });

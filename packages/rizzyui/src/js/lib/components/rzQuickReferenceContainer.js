@@ -3,8 +3,7 @@
 // Alpine.js component: rzQuickReferenceContainer
 // Manages the state for the quick reference sidebar, including headings and current selection.
 // --------------------------------------------------------------------------------
-export default function(Alpine) {
-    Alpine.data('rzQuickReferenceContainer', () => {
+export default () => {
         return {
             headings: [],          // Array of heading IDs
             currentHeadingId: '',  // ID of the currently highlighted heading
@@ -46,5 +45,4 @@ export default function(Alpine) {
                 return this.currentHeadingId === id ? 'true' : null; // Set aria-current="true" if current
             }
         };
-    });
-}
+    };

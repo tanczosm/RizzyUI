@@ -1,6 +1,7 @@
+import Alpine from 'alpinejs';
 
-export default function(Alpine) {
-    Alpine.data('rzCommandList', () => ({
+
+export default () => ({
         parent: null,
         dataItemTemplate: null,
 
@@ -106,5 +107,4 @@ export default function(Alpine) {
                 container.appendChild(groupContainer);
             });
         }
-    }));
-}
+    });

@@ -1,6 +1,5 @@
 // packages/rizzyui/src/js/lib/components/rzSheet.js
-export default function(Alpine) {
-    Alpine.data('rzSheet', () => ({
+export default () => ({
         open: false,
 
         init() {
@@ -23,4 +22,3 @@ export default function(Alpine) {
             return this.open ? 'open' : 'closed';
         }
     }));
-}

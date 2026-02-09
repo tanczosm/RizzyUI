@@ -1,6 +1,5 @@
 
-export default function(Alpine) {
-    Alpine.data('rzCollapsible', () => ({
+export default () => ({
         isOpen: false,
 
         init() {
@@ -14,5 +13,4 @@ export default function(Alpine) {
         state() {
             return this.isOpen ? 'open' : 'closed';
         }
-    }));
-}
+    });

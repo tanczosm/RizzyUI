@@ -1,6 +1,5 @@
 
-export default function(Alpine) {
-    Alpine.data('rzSidebar', () => ({
+export default () => ({
         open: false,
         openMobile: false,
         isMobile: false,
@@ -69,5 +68,4 @@ export default function(Alpine) {
         getCollapsibleAttribute() {
             return this.desktopState() === 'collapsed' ? this.collapsible : '';
         }
-    }));
-}
+    });

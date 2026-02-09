@@ -1,11 +1,12 @@
+import { require as rizzyRequire } from '../components.js';
+
 
 // --------------------------------------------------------------------------------
 // Alpine.js component: rzDateEdit
 // This component initializes a date picker (using Flatpickr) on an input element.
 // It retrieves its configuration and assets from data attributes.
 // --------------------------------------------------------------------------------
-export default function(Alpine, require) {
-    Alpine.data('rzDateEdit', () => ({
+export default () => ({
         options: {},
         placeholder: '',
         prependText: '',
@@ -25,7 +26,7 @@ export default function(Alpine, require) {
             const assets = JSON.parse(this.$el.dataset.assets);
             const nonce = this.$el.dataset.nonce;
 
-            require(assets, {
+            rizzyRequire(assets, {
                 success: function () {
                     if (window.flatpickr && inputElem) {
                         window.flatpickr(inputElem, this.options);
@@ -36,5 +37,4 @@ export default function(Alpine, require) {
                 }
             }, nonce);
         }
-    }));
-}
+    });

@@ -1,6 +1,5 @@
 
-export default function(Alpine) {
-    Alpine.data('rzAspectRatio', () => ({
+export default () => ({
         init() {
             const ratio = parseFloat(this.$el.dataset.ratio);
             if (!isNaN(ratio) && ratio > 0) {
@@ -11,5 +10,4 @@ export default function(Alpine) {
                 this.$el.style.paddingBottom = '100%';
             }
         }
-    }));
-}
+    });

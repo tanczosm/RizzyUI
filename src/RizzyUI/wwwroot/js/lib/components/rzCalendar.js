@@ -1,5 +1,6 @@
-export default function(Alpine, require) {
-    Alpine.data('rzCalendar', () => ({
+import { require as rizzyRequire } from '../components.js';
+
+export default () => ({
         calendar: null,
         initialized: false,
 
@@ -14,7 +15,7 @@ export default function(Alpine, require) {
             }
 
             // Wait for assets to load
-            require(assets, {
+            rizzyRequire(assets, {
                 success: () => {
                     this.initCalendar(configId);
                 },
@@ -119,4 +120,3 @@ export default function(Alpine, require) {
             }
         }
     }));
-}

@@ -1,6 +1,5 @@
 
-export default function(Alpine) {
-    Alpine.data('rzTabs', () => ({
+export default () => ({
         selectedTab: '',
         _triggers: [],
         _observer: null,
@@ -117,5 +116,4 @@ export default function(Alpine) {
                 }
             }
         }
-    }));
-}
+    });

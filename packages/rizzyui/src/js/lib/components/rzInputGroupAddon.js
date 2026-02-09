@@ -1,5 +1,4 @@
-﻿export default function(Alpine) {
-    Alpine.data('rzInputGroupAddon', () => ({
+﻿export default () => ({
         handleClick(event) {
             if (event.target.closest('button')) {
                 return;
@@ -10,5 +9,4 @@
                 input?.focus();
             }
         }
-    }));
-}
+    });

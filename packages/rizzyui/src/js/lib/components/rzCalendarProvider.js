@@ -1,6 +1,5 @@
 
-export default function(Alpine) {
-    Alpine.data('rzCalendarProvider', () => ({
+export default () => ({
         // --- Public State ---
         mode: 'single', 
         dates: [], // Canonical state: Flat array of ISO strings ['YYYY-MM-DD', ...], always sorted/unique
@@ -264,5 +263,4 @@ export default function(Alpine) {
             }
             this.dates = this._normalize(newDates);
         }
-    }));
-}
+    });
