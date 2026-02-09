@@ -1,7 +1,6 @@
 export default function registerRzScrollArea(Alpine) {
     Alpine.data('rzScrollArea', () => ({
         hideTimer: null,
-        visible: false,
         type: 'hover',
         orientation: 'vertical',
         scrollHideDelay: 600,
@@ -30,6 +29,7 @@ export default function registerRzScrollArea(Alpine) {
             this._roViewport.observe(viewport);
             if (this.$refs.content) this._roContent.observe(this.$refs.content);
 
+            this.setState(this.type === 'always' ? 'visible' : 'hidden');
             this.update();
 
             this.$cleanup(() => {
@@ -42,6 +42,17 @@ export default function registerRzScrollArea(Alpine) {
             });
         },
 
+        setState(state) {
+            if (this.$refs.scrollbarX) this.$refs.scrollbarX.dataset.state = state;
+            if (this.$refs.scrollbarY) this.$refs.scrollbarY.dataset.state = state;
+        },
+
+        setBarMounted(axis, mounted) {
+            const bar = this.$refs[`scrollbar${axis === 'vertical' ? 'Y' : 'X'}`];
+            if (!bar) return;
+            bar.hidden = !mounted;
+        },
+
         update() {
             const viewport = this.$refs.viewport;
             if (!viewport) return;
@@ -49,19 +60,15 @@ export default function registerRzScrollArea(Alpine) {
             const showX = viewport.scrollWidth > viewport.clientWidth;
             const showY = viewport.scrollHeight > viewport.clientHeight;
 
-            if (this.$refs.scrollbarX) {
-                this.$refs.scrollbarX.style.display = showX ? 'flex' : 'none';
-            }
-            if (this.$refs.scrollbarY) {
-                this.$refs.scrollbarY.style.display = showY ? 'flex' : 'none';
-            }
+            this.setBarMounted('horizontal', showX);
+            this.setBarMounted('vertical', showY);
 
             this.updateThumbSizes();
             this.updateThumbPositions();
             this.updateCorner();
 
-            if (this.type === 'always') this.setVisible(true);
-            if (this.type === 'auto') this.setVisible(showX || showY);
+            if (this.type === 'always') this.setState('visible');
+            if (this.type === 'auto') this.setState(showX || showY ? 'visible' : 'hidden');
         },
 
         updateThumbSizes() {
@@ -102,52 +109,48 @@ export default function registerRzScrollArea(Alpine) {
 
         updateCorner() {
             if (!this.$refs.corner) return;
-            const showCorner = this.$refs.scrollbarX?.style.display !== 'none' && this.$refs.scrollbarY?.style.display !== 'none';
+            const showCorner = !this.$refs.scrollbarX?.hidden && !this.$refs.scrollbarY?.hidden;
             if (showCorner) {
-                this.$refs.corner.style.display = 'block';
+                this.$refs.corner.hidden = false;
                 this.$refs.corner.style.width = `${this.$refs.scrollbarY?.offsetWidth || 0}px`;
                 this.$refs.corner.style.height = `${this.$refs.scrollbarX?.offsetHeight || 0}px`;
             } else {
-                this.$refs.corner.style.display = 'none';
+                this.$refs.corner.hidden = true;
             }
         },
 
         onScroll() {
             this.updateThumbPositions();
             if (this.type === 'scroll') {
-                this.setVisible(true);
+                this.setState('visible');
                 if (this.hideTimer) window.clearTimeout(this.hideTimer);
-                this.hideTimer = window.setTimeout(() => this.setVisible(false), this.scrollHideDelay);
+                this.hideTimer = window.setTimeout(() => this.setState('hidden'), this.scrollHideDelay);
             }
         },
 
         onPointerEnter() {
             if (this.type === 'hover') {
                 if (this.hideTimer) window.clearTimeout(this.hideTimer);
-                this.setVisible(true);
+                this.setState('visible');
             }
         },
 
         onPointerLeave() {
             if (this.type === 'hover') {
                 if (this.hideTimer) window.clearTimeout(this.hideTimer);
-                this.hideTimer = window.setTimeout(() => this.setVisible(false), this.scrollHideDelay);
+                this.hideTimer = window.setTimeout(() => this.setState('hidden'), this.scrollHideDelay);
             }
         },
 
-        setVisible(visible) {
-            this.visible = visible;
-            const opacity = visible ? '1' : '0';
-            if (this.$refs.scrollbarX) this.$refs.scrollbarX.style.opacity = opacity;
-            if (this.$refs.scrollbarY) this.$refs.scrollbarY.style.opacity = opacity;
-        },
-
         onTrackPointerDown(event, axis) {
-            if (event.target === this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`]) return;
-            const viewport = this.$refs.viewport;
             const scrollbar = this.$refs[`scrollbar${axis === 'vertical' ? 'Y' : 'X'}`];
+            if (!scrollbar || scrollbar.hidden) return;
+            if (event.target === this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`]) return;
+
+            const viewport = this.$refs.viewport;
             const thumb = this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`];
-            if (!viewport || !scrollbar || !thumb) return;
+            if (!viewport || !thumb) return;
+
             const rect = scrollbar.getBoundingClientRect();
             if (axis === 'vertical') {
                 const clickPos = event.clientY - rect.top - thumb.offsetHeight / 2;
@@ -164,7 +167,9 @@ export default function registerRzScrollArea(Alpine) {
 
         onThumbPointerDown(event, axis) {
             const thumb = this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`];
-            if (!thumb) return;
+            const scrollbar = this.$refs[`scrollbar${axis === 'vertical' ? 'Y' : 'X'}`];
+            if (!thumb || !scrollbar || scrollbar.hidden) return;
+
             const rect = thumb.getBoundingClientRect();
             this._dragAxis = axis;
             this._dragPointerOffset = axis === 'vertical' ? (event.clientY - rect.top) : (event.clientX - rect.left);
@@ -177,7 +182,8 @@ export default function registerRzScrollArea(Alpine) {
             const viewport = this.$refs.viewport;
             const scrollbar = this.$refs[`scrollbar${axis === 'vertical' ? 'Y' : 'X'}`];
             const thumb = this.$refs[`thumb${axis === 'vertical' ? 'Y' : 'X'}`];
-            if (!axis || !viewport || !scrollbar || !thumb) return;
+            if (!axis || !viewport || !scrollbar || !thumb || scrollbar.hidden) return;
+
             const rect = scrollbar.getBoundingClientRect();
             if (axis === 'vertical') {
                 const pointer = event.clientY - rect.top;

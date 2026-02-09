@@ -28,6 +28,7 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
 
         var scrollbar = cut.Find("[data-slot='scroll-area-scrollbar']");
         Assert.Equal("vertical", scrollbar.GetAttribute("data-orientation"));
+        Assert.Equal("hidden", scrollbar.GetAttribute("data-state"));
         cut.Find("[data-slot='scroll-area-thumb']");
     }
 
@@ -61,5 +62,18 @@ public class RzScrollAreaTests : BunitAlbaContext, IClassFixture<WebAppFixture>
 
         // Assert
         Assert.Empty(cut.FindAll("[data-slot='scroll-area-scrollbar']"));
+    }
+
+    [Fact]
+    public void RzScrollArea_AlwaysType_InitializesScrollbarVisibleState()
+    {
+        // Act
+        var cut = RenderComponent<RzScrollArea>(parameters => parameters
+            .Add(p => p.Type, ScrollAreaType.Always)
+        );
+
+        // Assert
+        var scrollbar = cut.Find("[data-slot='scroll-area-scrollbar']");
+        Assert.Equal("visible", scrollbar.GetAttribute("data-state"));
     }
 }

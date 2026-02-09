@@ -31,17 +31,17 @@
 
     @if (ShowVertical)
     {
-        <div x-ref="scrollbarY" data-slot="scroll-area-scrollbar" data-orientation="vertical" class="@SlotClasses.GetScrollbar()" x-on:pointerdown="onTrackPointerDown($event, 'vertical')">
+        <div x-ref="scrollbarY" data-slot="scroll-area-scrollbar" data-orientation="vertical" data-state="@InitialScrollbarState" class="@($"{SlotClasses.GetScrollbar()} {SlotClasses.GetScrollbarVertical()}")" x-on:pointerdown="onTrackPointerDown($event, 'vertical')">
             <div x-ref="thumbY" data-slot="scroll-area-thumb" class="@SlotClasses.GetThumb()" x-on:pointerdown.stop.prevent="onThumbPointerDown($event, 'vertical')"></div>
         </div>
     }
 
     @if (ShowHorizontal)
     {
-        <div x-ref="scrollbarX" data-slot="scroll-area-scrollbar" data-orientation="horizontal" class="@SlotClasses.GetScrollbar()" x-on:pointerdown="onTrackPointerDown($event, 'horizontal')">
+        <div x-ref="scrollbarX" data-slot="scroll-area-scrollbar" data-orientation="horizontal" data-state="@InitialScrollbarState" class="@($"{SlotClasses.GetScrollbar()} {SlotClasses.GetScrollbarHorizontal()}")" x-on:pointerdown="onTrackPointerDown($event, 'horizontal')">
             <div x-ref="thumbX" data-slot="scroll-area-thumb" class="@SlotClasses.GetThumb()" x-on:pointerdown.stop.prevent="onThumbPointerDown($event, 'horizontal')"></div>
         </div>
     }
 
-    <div x-ref="corner" data-slot="scroll-area-corner" class="@SlotClasses.GetCorner()"></div>
+    <div x-ref="corner" data-slot="scroll-area-corner" class="@SlotClasses.GetCorner()" hidden></div>
 </HtmlElement>
