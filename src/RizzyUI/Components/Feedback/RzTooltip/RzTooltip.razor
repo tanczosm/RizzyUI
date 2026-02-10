@@ -1,0 +1,13 @@
+@namespace RizzyUI
+@inherits RzComponent<RzTooltip.Slots>
+
+<CascadingValue Value="this" IsFixed="true">
+    <HtmlElement Element="@EffectiveElement"
+                 id="@Id"
+                 @attributes="@AdditionalAttributes"
+                 class="@SlotClasses.GetBase()"
+                 x-data="@AlpineData"
+                 data-slot="tooltip">
+        @ChildContent
+    </HtmlElement>
+</CascadingValue>

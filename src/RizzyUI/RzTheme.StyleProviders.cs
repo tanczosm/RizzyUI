@@ -101,6 +101,10 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<RzEmpty.Slots>, RzEmpty.Slots> RzEmpty { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzPopover"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzPopover.Slots>, RzPopover.Slots> RzPopover { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzTooltip"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzTooltip.Slots>, RzTooltip.Slots> RzTooltip { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzTooltipProvider"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzTooltipProvider.Slots>, RzTooltipProvider.Slots> RzTooltipProvider { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzSheet"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzSheet.Slots>, RzSheet.Slots> RzSheet { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzSpinner"/> component. </summary>
@@ -119,6 +123,10 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<SheetHeader.Slots>, SheetHeader.Slots> SheetHeader { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.SheetTitle"/> component. </summary>
     public virtual TvDescriptor<RzComponent<SheetTitle.Slots>, SheetTitle.Slots> SheetTitle { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TooltipContent"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TooltipContent.Slots>, TooltipContent.Slots> TooltipContent { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TooltipTrigger"/> component. </summary>
+    public virtual TvDescriptor<RzAsChildComponent<TooltipTrigger.Slots>, TooltipTrigger.Slots> TooltipTrigger { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.SheetTrigger"/> component. </summary>
     public virtual TvDescriptor<RzAsChildComponent<SheetTrigger.Slots>, SheetTrigger.Slots> SheetTrigger { get; set; }
 
