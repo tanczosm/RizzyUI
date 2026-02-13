@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using TailwindVariants.NET;
 
 namespace RizzyUI;
@@ -9,8 +8,6 @@ namespace RizzyUI;
 /// </summary>
 public partial class RzToggle : RzComponent<RzToggle.Slots>
 {
-    private bool _uncontrolledPressed;
-
     /// <summary>
     /// Defines the default styling for the RzToggle component.
     /// </summary>
@@ -63,42 +60,20 @@ public partial class RzToggle : RzComponent<RzToggle.Slots>
     public bool DefaultPressed { get; set; }
 
     /// <summary>
-    /// Gets or sets a callback that is invoked when the pressed state changes.
-    /// </summary>
-    [Parameter]
-    public EventCallback<bool> PressedChanged { get; set; }
-
-    /// <summary>
-    /// Gets or sets a callback that is invoked when the pressed state changes.
-    /// </summary>
-    [Parameter]
-    public EventCallback<bool> OnPressedChange { get; set; }
-
-
-    /// <summary>
-    /// Gets or sets a callback that is invoked when the toggle is clicked.
-    /// </summary>
-    [Parameter]
-    public EventCallback<MouseEventArgs> OnClick { get; set; }
-
-    /// <summary>
     /// Gets or sets whether the toggle is disabled.
     /// </summary>
     [Parameter]
     public bool Disabled { get; set; }
 
     /// <summary>
-    /// Gets the current pressed state.
+    /// Gets the serialized value used by Alpine for controlled mode.
     /// </summary>
-    public bool EffectivePressed => Pressed ?? _uncontrolledPressed;
-
-    private string? DataDisabled => Disabled ? string.Empty : null;
+    protected string? PressedAttributeValue => Pressed.HasValue ? Pressed.Value.ToString().ToLowerInvariant() : null;
 
     /// <inheritdoc />
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _uncontrolledPressed = DefaultPressed;
 
         if (string.IsNullOrEmpty(Element))
             Element = "button";
@@ -106,26 +81,6 @@ public partial class RzToggle : RzComponent<RzToggle.Slots>
 
     /// <inheritdoc />
     protected override TvDescriptor<RzComponent<Slots>, Slots> GetDescriptor() => Theme.RzToggle;
-
-    private async Task HandleClick(MouseEventArgs args)
-    {
-        if (OnClick.HasDelegate)
-            await OnClick.InvokeAsync(args);
-
-        if (Disabled)
-            return;
-
-        var nextValue = !EffectivePressed;
-
-        if (!Pressed.HasValue)
-            _uncontrolledPressed = nextValue;
-
-        if (PressedChanged.HasDelegate)
-            await PressedChanged.InvokeAsync(nextValue);
-
-        if (OnPressedChange.HasDelegate)
-            await OnPressedChange.InvokeAsync(nextValue);
-    }
 
     /// <summary>
     /// Defines the slots available for styling in the RzToggle component.

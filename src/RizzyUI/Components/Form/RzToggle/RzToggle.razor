@@ -7,10 +7,15 @@
              class="@SlotClasses.GetBase()"
              type="button"
              disabled="@Disabled"
-             aria-pressed="@EffectivePressed"
-             data-state="@(EffectivePressed ? "on" : "off")"
-             data-disabled="@DataDisabled"
+             data-default-pressed="@DefaultPressed.ToString().ToLowerInvariant()"
+             data-pressed="@PressedAttributeValue"
+             data-disabled="@Disabled.ToString().ToLowerInvariant()"
              data-slot="toggle"
-             @onclick="HandleClick">
+             data-alpine-root="@Id"
+             x-data="rzToggle"
+             x-on:click="toggle"
+             :data-state="pressed ? 'on' : 'off'"
+             :aria-pressed="pressed.toString()"
+             :data-disabled="disabled ? '' : null">
     @ChildContent
 </HtmlElement>

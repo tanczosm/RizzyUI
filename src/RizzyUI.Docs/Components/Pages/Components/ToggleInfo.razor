@@ -1,5 +1,6 @@
 @page "/components/toggle"
 @using RizzyUI
+@using Blazicons
 
 <PageTitle>Toggle</PageTitle>
 
@@ -35,12 +36,16 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center p-8">
-                        <RzToggle class="font-semibold">B</RzToggle>
+                        <RzToggle aria-label="Toggle bold">
+                            <Blazicon Svg="Lucide.Bold" />
+                        </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle class=&quot;font-semibold&quot;&gt;B&lt;/RzToggle&gt;
+&lt;RzToggle aria-label=&quot;Toggle bold&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
 
@@ -49,12 +54,16 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center p-8">
-                        <RzToggle Variant="ToggleVariant.Outline" class="font-semibold">B</RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" aria-label="Toggle italic">
+                            <Blazicon Svg="Lucide.Italic" />
+                        </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; class=&quot;font-semibold&quot;&gt;B&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; aria-label=&quot;Toggle italic&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Italic&quot; /&gt;
+&lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
 
@@ -63,16 +72,34 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
-                        <RzToggle Variant="ToggleVariant.Outline">Bold</RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline">Italic</RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline">Underline</RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" aria-label="Toggle bold text">
+                            <Blazicon Svg="Lucide.Bold" class="mr-2 size-4" />
+                            Bold
+                        </RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" aria-label="Toggle italic text">
+                            <Blazicon Svg="Lucide.Italic" class="mr-2 size-4" />
+                            Italic
+                        </RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" aria-label="Toggle underline text">
+                            <Blazicon Svg="Lucide.Underline" class="mr-2 size-4" />
+                            Underline
+                        </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot;&gt;Bold&lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot;&gt;Italic&lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot;&gt;Underline&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; aria-label=&quot;Toggle bold text&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bold
+&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; aria-label=&quot;Toggle italic text&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Italic&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Italic
+&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; aria-label=&quot;Toggle underline text&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Underline&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Underline
+&lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
 
@@ -81,16 +108,28 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
-                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Small" class="font-semibold">B</RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Default" class="font-semibold">B</RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Large" class="font-semibold">B</RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Small" aria-label="Small toggle">
+                            <Blazicon Svg="Lucide.Bold" />
+                        </RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Default" aria-label="Default toggle">
+                            <Blazicon Svg="Lucide.Bold" />
+                        </RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Large" aria-label="Large toggle">
+                            <Blazicon Svg="Lucide.Bold" />
+                        </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Small&quot; class=&quot;font-semibold&quot;&gt;B&lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Default&quot; class=&quot;font-semibold&quot;&gt;B&lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Large&quot; class=&quot;font-semibold&quot;&gt;B&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Small&quot; aria-label=&quot;Small toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Default&quot; aria-label=&quot;Default toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Large&quot; aria-label=&quot;Large toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
 
@@ -99,37 +138,24 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
-                        <RzToggle Variant="ToggleVariant.Outline" class="font-semibold" Disabled>B</RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline" class="font-semibold" Disabled Pressed>U</RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" Disabled aria-label="Disabled toggle">
+                            <Blazicon Svg="Lucide.Bold" />
+                        </RzToggle>
+                        <RzToggle Variant="ToggleVariant.Outline" Disabled Pressed="true" aria-label="Disabled pressed toggle">
+                            <Blazicon Svg="Lucide.Underline" />
+                        </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; class=&quot;font-semibold&quot; Disabled&gt;B&lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; class=&quot;font-semibold&quot; Disabled Pressed&gt;U&lt;/RzToggle&gt;
-                </RzCodeViewer>
-            </section>
-
-            <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Controlled" class="scroll-mt-20">Controlled</RzHeading>
-                <RzParagraph>Use two-way binding with <code>@@bind-Pressed</code> for controlled scenarios.</RzParagraph>
-
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto flex min-h-32 flex-col items-center justify-center gap-3 p-8">
-                        <RzToggle @bind-Pressed="_isPressed" Variant="ToggleVariant.Outline">Italic</RzToggle>
-                        <RzParagraph class="m-0 text-sm">Pressed: @_isPressed</RzParagraph>
-                    </div>
-                </RzBrowser>
-
-                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle @@bind-Pressed=&quot;_isPressed&quot; Variant=&quot;ToggleVariant.Outline&quot;&gt;Italic&lt;/RzToggle&gt;
-&lt;RzParagraph class=&quot;m-0 text-sm&quot;&gt;Pressed: @@_isPressed&lt;/RzParagraph&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Disabled aria-label=&quot;Disabled toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;/RzToggle&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Disabled Pressed=&quot;true&quot; aria-label=&quot;Disabled pressed toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Underline&quot; /&gt;
+&lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
         </MainContent>
     </RzArticle>
 </RzQuickReferenceContainer>
-
-@code {
-    private bool _isPressed;
-}
