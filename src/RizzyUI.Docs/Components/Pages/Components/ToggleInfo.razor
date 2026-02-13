@@ -36,15 +36,17 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center p-8">
-                        <RzToggle aria-label="Toggle bold">
-                            <Blazicon Svg="Lucide.Bold" />
+                        <RzToggle aria-label="Toggle bookmark">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle aria-label=&quot;Toggle bold&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;RzToggle aria-label=&quot;Toggle bookmark&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
@@ -54,15 +56,17 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center p-8">
-                        <RzToggle Variant="ToggleVariant.Outline" aria-label="Toggle italic">
-                            <Blazicon Svg="Lucide.Italic" />
+                        <RzToggle Variant="ToggleVariant.Outline" aria-label="Toggle bookmark">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; aria-label=&quot;Toggle italic&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Italic&quot; /&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; aria-label=&quot;Toggle bookmark&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
@@ -108,27 +112,33 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
-                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Small" aria-label="Small toggle">
-                            <Blazicon Svg="Lucide.Bold" />
+                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Small" aria-label="Small bookmark toggle">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Default" aria-label="Default toggle">
-                            <Blazicon Svg="Lucide.Bold" />
+                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Default" aria-label="Default bookmark toggle">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Large" aria-label="Large toggle">
-                            <Blazicon Svg="Lucide.Bold" />
+                        <RzToggle Variant="ToggleVariant.Outline" Size="ToggleSize.Large" aria-label="Large bookmark toggle">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Small&quot; aria-label=&quot;Small toggle&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Small&quot; aria-label=&quot;Small bookmark toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Default&quot; aria-label=&quot;Default toggle&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Default&quot; aria-label=&quot;Default bookmark toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Large&quot; aria-label=&quot;Large toggle&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Size=&quot;ToggleSize.Large&quot; aria-label=&quot;Large bookmark toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
@@ -138,21 +148,25 @@
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
-                        <RzToggle Variant="ToggleVariant.Outline" Disabled aria-label="Disabled toggle">
-                            <Blazicon Svg="Lucide.Bold" />
+                        <RzToggle Variant="ToggleVariant.Outline" Disabled aria-label="Disabled bookmark toggle">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
-                        <RzToggle Variant="ToggleVariant.Outline" Disabled Pressed="true" aria-label="Disabled pressed toggle">
-                            <Blazicon Svg="Lucide.Underline" />
+                        <RzToggle Variant="ToggleVariant.Outline" Disabled Pressed="true" aria-label="Disabled pressed bookmark toggle">
+                            <Blazicon Svg="Lucide.Bookmark" class="mr-2 size-4" />
+                            Bookmark
                         </RzToggle>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Disabled aria-label=&quot;Disabled toggle&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Bold&quot; /&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Disabled aria-label=&quot;Disabled bookmark toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
-&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Disabled Pressed=&quot;true&quot; aria-label=&quot;Disabled pressed toggle&quot;&gt;
-    &lt;Blazicon Svg=&quot;Lucide.Underline&quot; /&gt;
+&lt;RzToggle Variant=&quot;ToggleVariant.Outline&quot; Disabled Pressed=&quot;true&quot; aria-label=&quot;Disabled pressed bookmark toggle&quot;&gt;
+    &lt;Blazicon Svg=&quot;Lucide.Bookmark&quot; class=&quot;mr-2 size-4&quot; /&gt;
+    Bookmark
 &lt;/RzToggle&gt;
                 </RzCodeViewer>
             </section>
