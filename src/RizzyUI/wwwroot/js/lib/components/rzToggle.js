@@ -21,6 +21,18 @@ export default function (Alpine) {
             if (this.disabled) return;
             if (this.controlled) return;
             this.pressed = !this.pressed;
+        },
+
+        state() {
+            return this.pressed ? "on" : "off";
+        },
+
+        ariaPressed() {
+            return this.pressed.toString();
+        },
+
+        dataDisabled() {
+            return this.disabled ? "" : null;
         }
     }));
 }

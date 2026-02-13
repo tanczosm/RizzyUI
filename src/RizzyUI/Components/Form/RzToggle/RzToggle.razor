@@ -14,8 +14,8 @@
              data-alpine-root="@Id"
              x-data="rzToggle"
              x-on:click="toggle"
-             :data-state="pressed ? 'on' : 'off'"
-             :aria-pressed="pressed.toString()"
-             :data-disabled="disabled ? '' : null">
+             x-bind:data-state="state"
+             x-bind:aria-pressed="ariaPressed"
+             x-bind:data-disabled="dataDisabled">
     @ChildContent
 </HtmlElement>
