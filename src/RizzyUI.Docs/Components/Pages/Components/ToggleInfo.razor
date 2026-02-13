@@ -33,6 +33,9 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Default" class="scroll-mt-20">Default</RzHeading>
+                <RzParagraph>
+                    The default variant is lightweight and ideal when a toggle should blend into nearby controls while still showing clear on/off state.
+                </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center p-8">
@@ -53,6 +56,9 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Outline" class="scroll-mt-20">Outline</RzHeading>
+                <RzParagraph>
+                    The outline variant adds a visible boundary that works well in toolbars and settings panels where controls need stronger separation.
+                </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center p-8">
@@ -73,6 +79,9 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="With Text" class="scroll-mt-20">With Text</RzHeading>
+                <RzParagraph>
+                    Text labels improve scanability when multiple formatting actions are shown together, while the icon preserves quick visual recognition.
+                </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
@@ -109,6 +118,9 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Sizes" class="scroll-mt-20">Sizes</RzHeading>
+                <RzParagraph>
+                    Choose a size that matches your layout density. Small fits compact toolbars, while large gives touch-friendly targets.
+                </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
@@ -145,6 +157,9 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Disabled" class="scroll-mt-20">Disabled</RzHeading>
+                <RzParagraph>
+                    Disabled toggles communicate unavailable actions. You can still render a pressed disabled state to indicate a locked selection.
+                </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex min-h-32 items-center justify-center gap-2 p-8">
@@ -169,6 +184,60 @@
     Bookmark
 &lt;/RzToggle&gt;
                 </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="RzToggle Parameters" class="scroll-mt-20">RzToggle Component Parameters</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/5 px-4 py-3">Property</th>
+                                <th scope="col" class="w-2/5 px-4 py-3">Description</th>
+                                <th scope="col" class="w-1/5 px-4 py-3">Type</th>
+                                <th scope="col" class="px-4 py-3">Default</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Variant</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>ToggleVariant</code> – Selects the visual style of the toggle (<code>Default</code> or <code>Outline</code>).</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">ToggleVariant</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">ToggleVariant.Default</code></td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Size</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>ToggleSize</code> – Controls toggle dimensions (<code>Small</code>, <code>Default</code>, <code>Large</code>).</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">ToggleSize</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">ToggleSize.Default</code></td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Pressed</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>bool?</code> – Optional controlled state. When set, the toggle reflects this value.</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool?</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">null</code></td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">DefaultPressed</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>bool</code> – Initial pressed state used in uncontrolled mode.</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">false</code></td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Disabled</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>bool</code> – Prevents interaction and applies disabled styling.</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">false</code></td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">ChildContent</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>RenderFragment?</code> – Content rendered inside the toggle, typically an icon and label.</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">RenderFragment?</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">null</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </MainContent>
     </RzArticle>
