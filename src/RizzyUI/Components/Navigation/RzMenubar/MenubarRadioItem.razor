@@ -1,0 +1,27 @@
+@namespace RizzyUI
+@using Blazicons
+@inherits RzComponent<MenubarRadioItem.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             @attributes="@AdditionalAttributes"
+             id="@Id"
+             class="@SlotClasses.GetBase()"
+             role="menuitemradio"
+             tabindex="-1"
+             aria-checked="@Checked.ToString().ToLowerInvariant()"
+             data-radio-item-value="@Value"
+             x-on:click="selectRadioItem"
+             x-on:mouseenter="handleItemMouseEnter"
+             data-slot="menubar-radio-item">
+    <span class="@SlotClasses.GetIndicator()" data-slot="menubar-radio-item-indicator">
+        @if (Checked)
+        {
+            <Blazicon Svg="MdiIcon.CircleMedium" aria-hidden="true"/>
+        }
+    </span>
+    @ChildContent
+    @if (ShortcutContent is not null)
+    {
+        @ShortcutContent
+    }
+</HtmlElement>

@@ -1,0 +1,18 @@
+
+@namespace RizzyUI
+@inherits RzComponent<MenubarSub.Slots>
+
+<CascadingValue Value="this" IsFixed="true">
+    <HtmlElement Element="@EffectiveElement"
+                 @attributes="@AdditionalAttributes"
+                 id="@Id"
+                 class="@SlotClasses.GetBase()"
+                 x-data="rzMenubarSubmenu"
+                 data-alpine-root="@Id"
+                 data-parent-id="@ParentMenuId"
+                 data-sub-anchor="@Anchor.ToString().ToKebabCase()"
+                 data-sub-offset="@Offset"
+                 data-slot="menubar-sub">
+        @ChildContent
+    </HtmlElement>
+</CascadingValue>

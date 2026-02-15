@@ -1,0 +1,11 @@
+
+@namespace RizzyUI
+@inherits RzComponent<MenubarShortcut.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             @attributes="@AdditionalAttributes"
+             id="@Id"
+             class="@SlotClasses.GetBase()"
+             data-slot="menubar-shortcut">
+    @ChildContent
+</HtmlElement>

@@ -1,0 +1,57 @@
+@page "/components/menubar"
+@namespace RizzyUI.Pages
+@inherits RzComponent
+
+<PageTitle>Menubar</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink Href="/">Docs</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>Menubar</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Menubar">Menubar</RzHeading>
+            <RzParagraph>Menubar provides a desktop-style horizontal menu system with nested submenus, keyboard navigation, and checkbox/radio items.</RzParagraph>
+
+            <RzBrowser Layout="typeof(PreviewLayout)">
+                <div class="p-8">
+                    <RzMenubar class="w-fit">
+                        <MenubarMenu Value="file">
+                            <MenubarTrigger>File</MenubarTrigger>
+                            <MenubarContent>
+                                <MenubarItem>New Tab<MenubarShortcut>⌘T</MenubarShortcut></MenubarItem>
+                                <MenubarItem>Save<MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+                                <MenubarSeparator />
+                                <MenubarSub>
+                                    <MenubarSubTrigger>Share</MenubarSubTrigger>
+                                    <MenubarSubContent>
+                                        <MenubarItem>Email Link</MenubarItem>
+                                        <MenubarItem>Messages</MenubarItem>
+                                    </MenubarSubContent>
+                                </MenubarSub>
+                            </MenubarContent>
+                        </MenubarMenu>
+                        <MenubarMenu Value="view">
+                            <MenubarTrigger>View</MenubarTrigger>
+                            <MenubarContent>
+                                <MenubarCheckboxItem Checked="true">Always Show Bookmarks Bar</MenubarCheckboxItem>
+                                <MenubarSeparator />
+                                <MenubarRadioGroup Value="compact">
+                                    <MenubarRadioItem Value="default">Default</MenubarRadioItem>
+                                    <MenubarRadioItem Value="compact" Checked="true">Compact</MenubarRadioItem>
+                                </MenubarRadioGroup>
+                            </MenubarContent>
+                        </MenubarMenu>
+                    </RzMenubar>
+                </div>
+            </RzBrowser>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>

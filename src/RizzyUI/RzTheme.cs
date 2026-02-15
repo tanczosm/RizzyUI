@@ -154,6 +154,27 @@ public partial class RzTheme
         DropdownMenuSubTrigger = RizzyUI.DropdownMenuSubTrigger.DefaultDescriptor;
         DropdownMenuTrigger = RizzyUI.DropdownMenuTrigger.DefaultDescriptor;
 
+
+        // RzMenubar Family
+        RzMenubar = RizzyUI.RzMenubar.DefaultDescriptor;
+        MenubarMenu = RizzyUI.MenubarMenu.DefaultDescriptor;
+        MenubarTrigger = RizzyUI.MenubarTrigger.DefaultDescriptor;
+        MenubarContent = RizzyUI.MenubarContent.DefaultDescriptor;
+        MenubarGroup = RizzyUI.MenubarGroup.DefaultDescriptor;
+        MenubarLabel = RizzyUI.MenubarLabel.DefaultDescriptor;
+        MenubarItem = RizzyUI.MenubarItem.DefaultDescriptor;
+        MenubarCheckboxItem = RizzyUI.MenubarCheckboxItem.DefaultDescriptor;
+        MenubarRadioGroup = RizzyUI.MenubarRadioGroup.DefaultDescriptor;
+        MenubarRadioItem = RizzyUI.MenubarRadioItem.DefaultDescriptor;
+        MenubarItemIndicator = RizzyUI.MenubarItemIndicator.DefaultDescriptor;
+        MenubarSeparator = RizzyUI.MenubarSeparator.DefaultDescriptor;
+        MenubarArrow = RizzyUI.MenubarArrow.DefaultDescriptor;
+        MenubarPortal = RizzyUI.MenubarPortal.DefaultDescriptor;
+        MenubarSub = RizzyUI.MenubarSub.DefaultDescriptor;
+        MenubarSubTrigger = RizzyUI.MenubarSubTrigger.DefaultDescriptor;
+        MenubarSubContent = RizzyUI.MenubarSubContent.DefaultDescriptor;
+        MenubarShortcut = RizzyUI.MenubarShortcut.DefaultDescriptor;
+
         // RzEmbeddedPreview Family
         RzEmbeddedPreview = RizzyUI.RzEmbeddedPreview.DefaultDescriptor;
 
