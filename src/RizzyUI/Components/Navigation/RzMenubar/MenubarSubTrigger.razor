@@ -1,0 +1,21 @@
+@namespace RizzyUI
+@using Blazicons
+@inherits RzComponent<MenubarSubTrigger.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@TriggerId"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             role="menuitem"
+             tabindex="-1"
+             aria-haspopup="menu"
+             aria-controls="@ContentId"
+             x-bind:aria-expanded="ariaExpanded"
+             x-ref="subTrigger"
+             x-on:click="toggleSubmenu"
+             x-on:mouseenter="handleSubTriggerMouseEnter"
+             x-on:keydown="handleSubTriggerKeydown"
+             data-slot="menubar-sub-trigger">
+    @ChildContent
+    <Blazicon Svg="MdiIcon.ChevronRight" class="@SlotClasses.GetChevron()" data-slot="@MenubarSubTrigger.SlotNames.NameOf(SlotTypes.Chevron)" aria-hidden="true" />
+</HtmlElement>

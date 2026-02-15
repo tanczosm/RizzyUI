@@ -1,0 +1,10 @@
+@namespace RizzyUI
+@inherits RzComponent<MenubarPortal.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="menubar-portal">
+    @ChildContent
+</HtmlElement>

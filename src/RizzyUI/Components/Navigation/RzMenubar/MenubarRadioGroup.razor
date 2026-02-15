@@ -1,0 +1,13 @@
+@namespace RizzyUI
+@inherits RzComponent<MenubarRadioGroup.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             role="group"
+             data-menubar-radio-group
+             data-selected-value="@Value"
+             data-slot="menubar-radio-group">
+    @ChildContent
+</HtmlElement>

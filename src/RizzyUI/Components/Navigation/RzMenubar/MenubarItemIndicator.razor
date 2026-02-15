@@ -1,0 +1,10 @@
+@namespace RizzyUI
+@inherits RzComponent<MenubarItemIndicator.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="menubar-item-indicator">
+    @ChildContent
+</HtmlElement>

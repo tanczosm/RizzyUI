@@ -1,0 +1,17 @@
+@namespace RizzyUI
+@inherits RzComponent<MenubarSubContent.Slots>
+
+<template x-teleport="body">
+    <div id="@ContentId"
+         @attributes="@AdditionalAttributes"
+         x-ref="subContent"
+         role="menu"
+         aria-labelledby="@TriggerId"
+         x-show="open"
+         x-cloak
+         x-on:keydown.escape.prevent="closeSubmenu"
+         class="@SlotClasses.GetBase()"
+         data-slot="menubar-sub-content">
+        @ChildContent
+    </div>
+</template>
