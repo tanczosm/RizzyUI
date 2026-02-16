@@ -1,0 +1,13 @@
+@namespace RizzyUI
+@inherits RzComponent<RzSimpleTableSlots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="table-container">
+    <table class="@SlotClasses.GetTable()"
+           data-slot="table">
+        @ChildContent
+    </table>
+</HtmlElement>

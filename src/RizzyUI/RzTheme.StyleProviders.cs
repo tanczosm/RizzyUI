@@ -293,6 +293,23 @@ public partial class RzTheme
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzSteps"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzSteps.Slots>, RzSteps.Slots> RzSteps { get; set; }
 
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzSimpleTable"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzSimpleTableSlots>, RzSimpleTableSlots> RzSimpleTableLayout { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableBodySection"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableBodySection.Slots>, TableBodySection.Slots> RzSimpleTableBodySection { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableCaption"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableCaption.Slots>, TableCaption.Slots> RzSimpleTableCaption { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableCellItem"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableCellItem.Slots>, TableCellItem.Slots> RzSimpleTableCellItem { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableFooter"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableFooter.Slots>, TableFooter.Slots> RzSimpleTableFooter { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableHead"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableHead.Slots>, TableHead.Slots> RzSimpleTableHead { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableHeader"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableHeader.Slots>, TableHeader.Slots> RzSimpleTableHeader { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.TableRowItem"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<TableRowItem.Slots>, TableRowItem.Slots> RzSimpleTableRowItem { get; set; }
+
     #endregion
 
     #region Navigation Components

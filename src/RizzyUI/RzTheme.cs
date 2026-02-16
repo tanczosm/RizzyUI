@@ -87,6 +87,16 @@ public partial class RzTheme
         CardDescription = RizzyUI.CardDescription.DefaultDescriptor;
         CardTitle = RizzyUI.CardTitle.DefaultDescriptor;
 
+        // RzSimpleTable (Layout) Family
+        RzSimpleTableLayout = RizzyUI.RzSimpleTable.DefaultDescriptor;
+        RzSimpleTableBodySection = RizzyUI.TableBodySection.DefaultDescriptor;
+        RzSimpleTableCaption = RizzyUI.TableCaption.DefaultDescriptor;
+        RzSimpleTableCellItem = RizzyUI.TableCellItem.DefaultDescriptor;
+        RzSimpleTableFooter = RizzyUI.TableFooter.DefaultDescriptor;
+        RzSimpleTableHead = RizzyUI.TableHead.DefaultDescriptor;
+        RzSimpleTableHeader = RizzyUI.TableHeader.DefaultDescriptor;
+        RzSimpleTableRowItem = RizzyUI.TableRowItem.DefaultDescriptor;
+
         // RzCarousel Family
         RzCarousel = RizzyUI.RzCarousel.DefaultDescriptor;
         CarouselNext = RizzyUI.CarouselNext.DefaultDescriptor;
