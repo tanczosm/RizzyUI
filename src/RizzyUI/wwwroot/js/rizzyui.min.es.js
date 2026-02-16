@@ -5981,8 +5981,8 @@ function _c(t) {
     selectRadioItem(e) {
       const n = e.currentTarget, i = n.getAttribute("data-radio-group");
       if (!i) return;
-      this.$el.querySelectorAll(`[data-radio-group="${i}"][role="menuitemradio"]`).forEach((s) => {
-        s.setAttribute("data-state", "unchecked"), s.setAttribute("aria-checked", "false");
+      (this.$el.closest(`[role="group"][data-radio-group="${i}"]`)?.querySelectorAll(`[role="menuitemradio"][data-radio-group="${i}"]`) ?? []).forEach((o) => {
+        o.setAttribute("data-state", "unchecked"), o.setAttribute("aria-checked", "false");
       }), n.setAttribute("data-state", "checked"), n.setAttribute("aria-checked", "true");
     },
     buildPathToSubTrigger(e) {
@@ -6031,12 +6031,12 @@ function _c(t) {
     syncSubmenus() {
       ((this.currentMenuValue ? this.$el.querySelector(`[data-menu-content="${this.currentMenuValue}"]`) ?? document.querySelector(`[data-menu-content="${this.currentMenuValue}"]`) : null)?.querySelectorAll('[data-slot="menubar-sub"]') ?? []).forEach((i) => {
         const r = i.querySelector(':scope > [data-slot="menubar-sub-trigger"]'), s = i.querySelector(':scope > [data-slot="menubar-sub-content"]'), o = r?.id, a = !!o && this.openPath.includes(o);
-        s && o && (s.dataset.submenuOwner = o), this.setTriggerState(r, a), a && r && s && Tt(r, s, {
+        this.setTriggerState(r, a), s && (s.style.display = a ? "" : "none", s.dataset.state = a ? "open" : "closed", a && r && Tt(r, s, {
           placement: "right-start",
           middleware: [_t(4), Et(), xt({ padding: 8 })]
         }).then(({ x: l, y: c }) => {
           Object.assign(s.style, { left: `${l}px`, top: `${c}px` });
-        });
+        }));
       });
     },
     scheduleCloseAll() {

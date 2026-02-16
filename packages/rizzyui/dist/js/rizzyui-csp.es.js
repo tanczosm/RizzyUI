@@ -9329,7 +9329,8 @@ function registerRzMenubar(Alpine2) {
       const item = event2.currentTarget;
       const group = item.getAttribute("data-radio-group");
       if (!group) return;
-      const allItems = this.$el.querySelectorAll(`[data-radio-group="${group}"][role="menuitemradio"]`);
+      const groupEl = this.$el.closest(`[role="group"][data-radio-group="${group}"]`);
+      const allItems = groupEl?.querySelectorAll(`[role="menuitemradio"][data-radio-group="${group}"]`) ?? [];
       allItems.forEach((candidate) => {
         candidate.setAttribute("data-state", "unchecked");
         candidate.setAttribute("aria-checked", "false");
@@ -9399,17 +9400,18 @@ function registerRzMenubar(Alpine2) {
         const content = subRoot.querySelector(':scope > [data-slot="menubar-sub-content"]');
         const triggerId = trigger2?.id;
         const isOpen = !!triggerId && this.openPath.includes(triggerId);
-        if (content && triggerId) {
-          content.dataset.submenuOwner = triggerId;
-        }
         this.setTriggerState(trigger2, isOpen);
-        if (isOpen && trigger2 && content) {
-          computePosition(trigger2, content, {
-            placement: "right-start",
-            middleware: [offset(4), flip(), shift({ padding: 8 })]
-          }).then(({ x, y }) => {
-            Object.assign(content.style, { left: `${x}px`, top: `${y}px` });
-          });
+        if (content) {
+          content.style.display = isOpen ? "" : "none";
+          content.dataset.state = isOpen ? "open" : "closed";
+          if (isOpen && trigger2) {
+            computePosition(trigger2, content, {
+              placement: "right-start",
+              middleware: [offset(4), flip(), shift({ padding: 8 })]
+            }).then(({ x, y }) => {
+              Object.assign(content.style, { left: `${x}px`, top: `${y}px` });
+            });
+          }
         }
       });
     },

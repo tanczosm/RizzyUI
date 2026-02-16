@@ -193,7 +193,9 @@ export default function(Alpine) {
             const item = event.currentTarget;
             const group = item.getAttribute('data-radio-group');
             if (!group) return;
-            const allItems = this.$el.querySelectorAll(`[data-radio-group="${group}"][role="menuitemradio"]`);
+            const groupEl = this.$el.closest(`[role="group"][data-radio-group="${group}"]`);
+            const allItems = groupEl?.querySelectorAll(`[role="menuitemradio"][data-radio-group="${group}"]`) ?? [];
+
             allItems.forEach((candidate) => {
                 candidate.setAttribute('data-state', 'unchecked');
                 candidate.setAttribute('aria-checked', 'false');
@@ -271,26 +273,35 @@ export default function(Alpine) {
                 ? this.$el.querySelector(`[data-menu-content="${this.currentMenuValue}"]`) ?? document.querySelector(`[data-menu-content="${this.currentMenuValue}"]`)
                 : null;
 
+            // Find all submenus within the currently open menu
             const subRoots = openMenuContent?.querySelectorAll('[data-slot="menubar-sub"]') ?? [];
+
             subRoots.forEach((subRoot) => {
+                // We manually find the trigger and content here, so we don't need to pass $el
                 const trigger = subRoot.querySelector(':scope > [data-slot="menubar-sub-trigger"]');
                 const content = subRoot.querySelector(':scope > [data-slot="menubar-sub-content"]');
                 const triggerId = trigger?.id;
-                const isOpen = !!triggerId && this.openPath.includes(triggerId);
 
-                if (content && triggerId) {
-                    content.dataset.submenuOwner = triggerId;
-                }
+                // Calculate open state based on the trigger ID and the current path
+                const isOpen = !!triggerId && this.openPath.includes(triggerId);
 
                 this.setTriggerState(trigger, isOpen);
 
-                if (isOpen && trigger && content) {
-                    computePosition(trigger, content, {
-                        placement: 'right-start',
-                        middleware: [offset(4), flip(), shift({ padding: 8 })],
-                    }).then(({ x, y }) => {
-                        Object.assign(content.style, { left: `${x}px`, top: `${y}px` });
-                    });
+                if (content) {
+                    // DIRECTLY toggle visibility. 
+                    // This bypasses the need for x-show and works perfectly with CSP.
+                    content.style.display = isOpen ? '' : 'none';
+                    content.dataset.state = isOpen ? 'open' : 'closed';
+
+                    // Only compute position if open
+                    if (isOpen && trigger) {
+                        computePosition(trigger, content, {
+                            placement: 'right-start',
+                            middleware: [offset(4), flip(), shift({ padding: 8 })],
+                        }).then(({ x, y }) => {
+                            Object.assign(content.style, { left: `${x}px`, top: `${y}px` });
+                        });
+                    }
                 }
             });
         },
