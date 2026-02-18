@@ -18,16 +18,17 @@ public partial class RzEventViewer : RzComponent<RzEventViewer.Slots>
         slots: new()
         {
             [s => s.Container] = "flex flex-col",
-            [s => s.Header] = "flex items-center justify-between gap-2 border-b border-outline bg-secondary px-4 py-2",
-            [s => s.Title] = "font-mono text-xs font-semibold uppercase tracking-wide text-secondary-foreground",
+            [s => s.Header] = "flex items-center justify-between gap-2 border-b-0 border-outline bg-secondary px-4 py-1 text-sm text-secondary-foreground",
+            [s => s.Title] = "text-foreground",
             [s => s.Controls] = "flex items-center gap-2",
-            [s => s.ToggleButton] = "rounded-md border border-outline bg-background px-2 py-1 text-xs text-foreground hover:bg-accent hover:text-accent-foreground",
-            [s => s.ToggleText] = "inline-block",
-            [s => s.CopyButton] = "rounded-md border border-outline bg-background px-2 py-1 text-xs text-foreground hover:bg-accent hover:text-accent-foreground",
-            [s => s.ClearButton] = "rounded-md border border-outline bg-background px-2 py-1 text-xs text-foreground hover:bg-accent hover:text-accent-foreground",
+            [s => s.IconButton] = "my-auto overflow-hidden rounded-full p-1 hover:bg-background/10 focus:outline-none focus:outline-offset-0 focus-visible:outline-2 active:-outline-offset-2",
+            [s => s.ActionIcon] = "text-foreground font-bold size-6 cursor-pointer",
             [s => s.Error] = "border-b border-destructive/30 bg-destructive/10 px-4 py-2 font-mono text-xs text-destructive",
             [s => s.Console] = "max-h-64 overflow-y-auto bg-background p-4 font-mono text-xs",
-            [s => s.Entry] = "whitespace-pre-wrap break-words border-b border-dashed border-outline/60 py-1 text-foreground last:border-b-0"
+            [s => s.Entry] = "whitespace-pre-wrap break-words border-b border-dashed border-outline/60 py-1 text-foreground last:border-b-0",
+            [s => s.Timestamp] = "text-muted-foreground/80",
+            [s => s.EventName] = "pl-1 text-accent-foreground",
+            [s => s.EntryBody] = "pl-1 text-foreground"
         }
     );
 
@@ -226,28 +227,16 @@ public partial class RzEventViewer : RzComponent<RzEventViewer.Slots>
         public string? Controls { get; set; }
 
         /// <summary>
-        /// The pause toggle button slot.
+        /// The icon button slot.
         /// </summary>
-        [Slot("toggle")]
-        public string? ToggleButton { get; set; }
+        [Slot("icon-button")]
+        public string? IconButton { get; set; }
 
         /// <summary>
-        /// The pause toggle text slot.
+        /// The action icon slot.
         /// </summary>
-        [Slot("toggle-text")]
-        public string? ToggleText { get; set; }
-
-        /// <summary>
-        /// The copy button slot.
-        /// </summary>
-        [Slot("copy")]
-        public string? CopyButton { get; set; }
-
-        /// <summary>
-        /// The clear button slot.
-        /// </summary>
-        [Slot("clear")]
-        public string? ClearButton { get; set; }
+        [Slot("action-icon")]
+        public string? ActionIcon { get; set; }
 
         /// <summary>
         /// The error message slot.
@@ -266,5 +255,23 @@ public partial class RzEventViewer : RzComponent<RzEventViewer.Slots>
         /// </summary>
         [Slot("entry")]
         public string? Entry { get; set; }
+
+        /// <summary>
+        /// The timestamp slot.
+        /// </summary>
+        [Slot("timestamp")]
+        public string? Timestamp { get; set; }
+
+        /// <summary>
+        /// The event name slot.
+        /// </summary>
+        [Slot("event-name")]
+        public string? EventName { get; set; }
+
+        /// <summary>
+        /// The entry body slot.
+        /// </summary>
+        [Slot("entry-body")]
+        public string? EntryBody { get; set; }
     }
 }

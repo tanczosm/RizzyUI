@@ -1,4 +1,5 @@
 @namespace RizzyUI
+@using Blazicons
 @inherits RzComponent<RzEventViewer.Slots>
 
 <HtmlElement Element="@EffectiveElement"
@@ -29,19 +30,41 @@
             <span class="@SlotClasses.GetTitle()" data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.Title)">@ViewerTitle</span>
             <div class="@SlotClasses.GetControls()" data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.Controls)">
                 <button type="button"
-                        x-on:click="togglePaused"
-                        class="@SlotClasses.GetToggleButton()"
-                        data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ToggleButton)">
-                    <span x-text="getToggleText" class="@SlotClasses.GetToggleText()" data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ToggleText)"></span>
+                        x-on:click="copyEntries"
+                        aria-label="@CopyButtonText"
+                        class="@SlotClasses.GetIconButton()"
+                        data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.IconButton)">
+                    <Blazicon Svg="Lucide.Copy"
+                              class="@SlotClasses.GetActionIcon()"
+                              data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ActionIcon)"
+                              aria-hidden="true" />
                 </button>
                 <button type="button"
-                        x-on:click="copyEntries"
-                        class="@SlotClasses.GetCopyButton()"
-                        data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.CopyButton)">@CopyButtonText</button>
+                        x-on:click="togglePaused"
+                        aria-label="@PauseButtonText"
+                        class="@SlotClasses.GetIconButton()"
+                        data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.IconButton)">
+                    <Blazicon Svg="Lucide.CirclePause"
+                              x-show="notPaused"
+                              class="@SlotClasses.GetActionIcon()"
+                              data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ActionIcon)"
+                              aria-hidden="true" />
+                    <Blazicon Svg="Lucide.CirclePlay"
+                              x-show="isPaused"
+                              class="@SlotClasses.GetActionIcon()"
+                              data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ActionIcon)"
+                              aria-hidden="true" />
+                </button>
                 <button type="button"
                         x-on:click="clearEntries"
-                        class="@SlotClasses.GetClearButton()"
-                        data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ClearButton)">@ClearButtonText</button>
+                        aria-label="@ClearButtonText"
+                        class="@SlotClasses.GetIconButton()"
+                        data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.IconButton)">
+                    <Blazicon Svg="Lucide.CircleX"
+                              class="@SlotClasses.GetActionIcon()"
+                              data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.ActionIcon)"
+                              aria-hidden="true" />
+                </button>
             </div>
         </div>
 
@@ -57,10 +80,20 @@
              class="@SlotClasses.GetConsole()"
              data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.Console)">
             <template x-for="entry in entries" :key="entry.id">
-                <div x-text="entry.text"
-                     :data-event="entry.type"
+                <div :data-event="entry.type"
                      class="@SlotClasses.GetEntry()"
-                     data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.Entry)"></div>
+                     data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.Entry)">
+                    <span x-text="entry.timestamp"
+                          x-show="entry.hasTimestamp"
+                          class="@SlotClasses.GetTimestamp()"
+                          data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.Timestamp)"></span>
+                    <span x-text="entry.type"
+                          class="@SlotClasses.GetEventName()"
+                          data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.EventName)"></span>
+                    <span x-text="entry.body"
+                          class="@SlotClasses.GetEntryBody()"
+                          data-slot="@RzEventViewer.SlotNames.NameOf(SlotTypes.EntryBody)"></span>
+                </div>
             </template>
         </div>
     </div>

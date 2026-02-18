@@ -13,8 +13,6 @@ export default function (Alpine) {
         showEventMeta: false,
         level: 'info',
         filterPath: '',
-        pauseText: 'Pause',
-        resumeText: 'Resume',
         _handlers: new Map(),
         _boundEvents: new Set(),
         _entryId: 0,
@@ -23,8 +21,12 @@ export default function (Alpine) {
             return this.error !== null;
         },
 
-        getToggleText() {
-            return this.paused ? this.resumeText : this.pauseText;
+        isPaused() {
+            return this.paused;
+        },
+
+        notPaused() {
+            return !this.paused;
         },
 
         init() {
@@ -36,8 +38,6 @@ export default function (Alpine) {
             this.showEventMeta = this.parseBoolean(this.$el.dataset.showEventMeta, false);
             this.level = this.$el.dataset.level || 'info';
             this.filterPath = this.$el.dataset.filter || '';
-            this.pauseText = this.$el.dataset.pauseText || this.pauseText;
-            this.resumeText = this.$el.dataset.resumeText || this.resumeText;
 
             this.eventNames = this.resolveEventNames();
             if (this.eventNames.length === 0) {
@@ -62,14 +62,10 @@ export default function (Alpine) {
         },
 
         destroy() {
-            if (!this.targetEl) {
-                this._handlers.clear();
-                this._boundEvents.clear();
-                return;
-            }
-
-            for (const [eventName, handler] of this._handlers.entries()) {
-                this.targetEl.removeEventListener(eventName, handler);
+            if (this.targetEl) {
+                for (const [eventName, handler] of this._handlers.entries()) {
+                    this.targetEl.removeEventListener(eventName, handler);
+                }
             }
 
             this._handlers.clear();
@@ -152,51 +148,43 @@ export default function (Alpine) {
                 const eventType = evt?.type || eventName;
                 const rawDetail = evt instanceof CustomEvent ? evt.detail : evt?.detail;
                 const filteredDetail = this.applyFilter(rawDetail, this.filterPath);
-                const text = this.formatEntry(eventType, filteredDetail);
-
-                this.entries.push({
-                    id: `${eventType}-${this._entryId++}`,
-                    type: eventType,
-                    level: this.level,
-                    text
-                });
-
-                if (this.entries.length > this.maxEntries) {
-                    this.entries.splice(0, this.entries.length - this.maxEntries);
-                }
-
-                if (this.autoScroll) {
-                    this.$nextTick(() => {
-                        if (this.$refs.console) {
-                            this.$refs.console.scrollTop = this.$refs.console.scrollHeight;
-                        }
-                    });
-                }
+                this.entries.push(this.buildEntry(eventType, filteredDetail));
+                this.enforceMaxEntries();
+                this.scrollToBottom();
             };
         },
 
-        formatEntry(eventType, detail) {
+        buildEntry(eventType, detail) {
+            const timestamp = this.showTimestamp ? `[${new Date().toLocaleTimeString()}]` : '';
             const body = this.stringifyDetail(detail);
-            const parts = [];
+            const metaSuffix = this.showEventMeta ? ` [level:${this.level}]` : '';
 
-            if (this.showTimestamp) {
-                parts.push(`[${new Date().toLocaleTimeString()}]`);
+            return {
+                id: `${eventType}-${this._entryId++}`,
+                type: eventType,
+                level: this.level,
+                hasTimestamp: this.showTimestamp,
+                timestamp,
+                body: `${body}${metaSuffix}`
+            };
+        },
+
+        enforceMaxEntries() {
+            if (this.entries.length > this.maxEntries) {
+                this.entries.splice(0, this.entries.length - this.maxEntries);
+            }
+        },
+
+        scrollToBottom() {
+            if (!this.autoScroll) {
+                return;
             }
 
-            const shouldPrefixType = this.showEventMeta || this.eventNames.length > 1;
-            if (shouldPrefixType) {
-                parts.push(`[${eventType}]`);
-            }
-
-            if (this.showEventMeta) {
-                parts.push(`[level:${this.level}]`);
-            }
-
-            if (body.length > 0) {
-                parts.push(body);
-            }
-
-            return parts.join(' ');
+            this.$nextTick(() => {
+                if (this.$refs.console) {
+                    this.$refs.console.scrollTop = this.$refs.console.scrollHeight;
+                }
+            });
         },
 
         stringifyDetail(value) {
@@ -255,8 +243,12 @@ export default function (Alpine) {
                 id: `system-${this._entryId++}`,
                 type: 'system',
                 level: 'info',
-                text: message
+                hasTimestamp: false,
+                timestamp: '',
+                body: message
             });
+            this.enforceMaxEntries();
+            this.scrollToBottom();
         },
 
         clearEntries() {
@@ -268,7 +260,10 @@ export default function (Alpine) {
         },
 
         copyEntries() {
-            const payload = this.entries.map(entry => entry.text).join('\n');
+            const payload = this.entries
+                .map(entry => `${entry.hasTimestamp ? `${entry.timestamp} ` : ''}${entry.type} ${entry.body}`)
+                .join('\n');
+
             if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
                 navigator.clipboard.writeText(payload);
             }
