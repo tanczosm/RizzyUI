@@ -101,6 +101,12 @@ public partial class RzCommand : RzComponent<RzCommand.Slots>
     public bool Loop { get; set; }
 
     /// <summary>
+    /// Gets or sets the maximum number of filtered results to render in the DOM at once.
+    /// </summary>
+    [Parameter]
+    public int MaxRender { get; set; } = 100;
+
+    /// <summary>
     /// Gets or sets the currently selected value. This can be used to programmatically control the selection.
     /// </summary>
     [Parameter]
@@ -118,6 +124,11 @@ public partial class RzCommand : RzComponent<RzCommand.Slots>
     {
         base.OnParametersSet();
         AriaLabel ??= Localizer["RzCommand.DefaultAriaLabel"];
+
+        if (MaxRender < 1)
+        {
+            MaxRender = 1;
+        }
 
         if (string.IsNullOrEmpty(ItemsUrl) && Items.Any())
         {
