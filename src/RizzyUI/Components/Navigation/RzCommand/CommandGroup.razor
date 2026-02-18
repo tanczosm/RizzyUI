@@ -8,9 +8,8 @@
          x-data="rzCommandGroup"
          data-slot="command-group"
          data-alpine-root="@Id"
-         data-heading="@Heading"
-         data-template-id="@HeadingTemplateId">
-        <template x-if="firstRender" id="@HeadingTemplateId" data-heading-id="@HeadingId">
+         data-heading="@Heading">
+        <template id="@HeadingTemplateId" data-heading-id="@HeadingId">
             <div class="@SlotClasses.GetHeading()" id="@HeadingId" data-slot="command-group-heading">@Heading</div>
         </template>
         @ChildContent

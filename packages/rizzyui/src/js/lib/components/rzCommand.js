@@ -1,39 +1,42 @@
-
 // packages/rizzyui/src/js/lib/components/rzCommand.js
 export default function(Alpine) {
     Alpine.data('rzCommand', () => ({
-        // --- STATE ---
         search: '',
         selectedValue: null,
         selectedIndex: -1,
         items: [],
+        itemsById: new Map(),
         filteredItems: [],
+        filteredItemIndexById: new Map(),
+        filteredItemIndexByValue: new Map(),
         groupTemplates: new Map(),
         activeDescendantId: null,
         isOpen: false,
         isEmpty: true,
-        firstRender: true,
         isLoading: false,
         error: null,
-        
-        // --- CONFIG ---
+        totalMatches: 0,
+        firstRender: true,
+
         loop: false,
         shouldFilter: true,
         itemsUrl: null,
         fetchTrigger: 'immediate',
         serverFiltering: false,
         dataItemTemplateId: null,
+        maxRender: 100,
         _dataFetched: false,
         _debounceTimer: null,
+        _listRef: null,
+        _lastQuery: '',
+        _lastMatchedItems: [],
 
-        // --- COMPUTED (CSP-Compliant Methods) ---
         showLoading() { return this.isLoading; },
         hasError() { return this.error !== null; },
         notHasError() { return this.error == null; },
         shouldShowEmpty() { return this.isEmpty && this.search && !this.isLoading && !this.error; },
         shouldShowEmptyOrError() { return (this.isEmpty && this.search && !this.isLoading) || this.error !== null; },
 
-        // --- LIFECYCLE ---
         init() {
             this.loop = this.$el.dataset.loop === 'true';
             this.shouldFilter = this.$el.dataset.shouldFilter !== 'false';
@@ -42,6 +45,9 @@ export default function(Alpine) {
             this.fetchTrigger = this.$el.dataset.fetchTrigger || 'immediate';
             this.serverFiltering = this.$el.dataset.serverFiltering === 'true';
             this.dataItemTemplateId = this.$el.dataset.templateId || null;
+
+            const parsedMaxRender = Number.parseInt(this.$el.dataset.maxRender || '100', 10);
+            this.maxRender = Number.isFinite(parsedMaxRender) && parsedMaxRender > 0 ? parsedMaxRender : 100;
 
             const itemsScriptId = this.$el.dataset.itemsId;
             let staticItems = [];
@@ -60,26 +66,32 @@ export default function(Alpine) {
                 console.error('RzCommand: `Items` were provided, but no `<CommandItemTemplate>` was found to render them.');
             }
 
-            staticItems.forEach(item => {
-                item.id = item.id || `static-item-${crypto.randomUUID()}`;
-                item.isDataItem = true; 
-                this.registerItem(item);
-            });
+            if (staticItems.length > 0) {
+                const preparedItems = staticItems.map(item => ({
+                    ...item,
+                    id: item.id || `static-item-${crypto.randomUUID()}`,
+                    isDataItem: true
+                }));
+                this.registerItems(preparedItems, { suppressFilter: true });
+            }
 
             if (this.itemsUrl && this.fetchTrigger === 'immediate') {
                 this.fetchItems();
+            } else {
+                this.filterAndSortItems();
             }
 
             this.$watch('search', (newValue) => {
-                this.firstRender = false;
+                this.firstRender = !(newValue || '').trim();
                 if (this.serverFiltering) {
                     clearTimeout(this._debounceTimer);
                     this._debounceTimer = setTimeout(() => {
                         this.fetchItems(newValue);
-                    }, 300); // Debounce server requests
-                } else {
-                    this.filterAndSortItems();
+                    }, 300);
+                    return;
                 }
+
+                this.filterAndSortItems();
             });
 
             this.$watch('selectedIndex', (newIndex, oldIndex) => {
@@ -97,7 +109,7 @@ export default function(Alpine) {
                 if (newIndex > -1 && this.filteredItems[newIndex]) {
                     const selectedItem = this.filteredItems[newIndex];
                     this.activeDescendantId = selectedItem.id;
-                    
+
                     const el = this.$el.querySelector(`[data-command-item-id="${selectedItem.id}"]`);
                     if (el) {
                         el.setAttribute('data-selected', 'true');
@@ -117,30 +129,80 @@ export default function(Alpine) {
             });
 
             this.$watch('selectedValue', (newValue) => {
-                const index = this.filteredItems.findIndex(item => item.value === newValue);
+                const index = this.filteredItemIndexByValue.get(newValue ?? '') ?? -1;
                 if (this.selectedIndex !== index) {
                     this.selectedIndex = index;
                 }
             });
-
-            this.$watch('filteredItems', (items) => {
-                this.isOpen = items.length > 0 || this.isLoading;
-                this.isEmpty = items.length === 0;
-
-                if (!this.firstRender)
-                {
-                    window.dispatchEvent(new CustomEvent('rz:command:list-changed', {
-                        detail: {
-                            items: this.filteredItems,
-                            groups: this.groupTemplates,
-                            commandId: this.$el.id
-                        }
-                    }));
-                }
-            });
         },
 
-        // --- METHODS ---
+        registerList(listComponent) {
+            this._listRef = listComponent;
+            this._renderList();
+        },
+
+        _renderList() {
+            if (this._listRef && typeof this._listRef.renderList === 'function') {
+                this._listRef.renderList();
+            }
+        },
+
+        normalizeItem(item) {
+            const name = item.name || item.value || '';
+            const keywordsArray = Array.isArray(item.keywords) ? item.keywords : [];
+            return {
+                ...item,
+                name,
+                keywords: keywordsArray,
+                _order: item._order ?? this.items.length,
+                _searchText: `${name} ${keywordsArray.join(' ')}`.toLowerCase()
+            };
+        },
+
+        registerItems(items, options = {}) {
+            const suppressFilter = options.suppressFilter === true;
+            let registeredAny = false;
+
+            items.forEach(item => {
+                if (!item.id) {
+                    item.id = `command-item-${crypto.randomUUID()}`;
+                }
+
+                if (this.itemsById.has(item.id)) {
+                    return;
+                }
+
+                const normalizedItem = this.normalizeItem(item);
+                this.items.push(normalizedItem);
+                this.itemsById.set(normalizedItem.id, normalizedItem);
+                registeredAny = true;
+            });
+
+            if (!suppressFilter && registeredAny && !this.serverFiltering) {
+                this.filterAndSortItems();
+            }
+        },
+
+        registerItem(item) {
+            this.registerItems([item]);
+        },
+
+        unregisterItem(itemId) {
+            if (!this.itemsById.has(itemId)) {
+                return;
+            }
+
+            this.itemsById.delete(itemId);
+            this.items = this.items.filter(item => item.id !== itemId);
+            this.filterAndSortItems();
+        },
+
+        registerGroupTemplate(name, templateContent) {
+            if (name && templateContent && !this.groupTemplates.has(name)) {
+                this.groupTemplates.set(name, templateContent);
+            }
+        },
+
         async fetchItems(query = '') {
             if (!this.itemsUrl) return;
             if (!this.dataItemTemplateId) {
@@ -157,24 +219,26 @@ export default function(Alpine) {
                 if (this.serverFiltering && query) {
                     url.searchParams.append('q', query);
                 }
-                
+
                 const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.statusText}`);
                 }
                 const data = await response.json();
 
-                // On server filtering, we replace items. Otherwise, we merge.
                 if (this.serverFiltering) {
-                    this.items = this.items.filter(i => !i.isDataItem); // Keep declarative items
+                    const declarativeItems = this.items.filter(item => !item.isDataItem);
+                    this.items = declarativeItems;
+                    this.itemsById = new Map(declarativeItems.map(item => [item.id, item]));
                 }
 
-                data.forEach(item => {
-                    item.id = item.id || `data-item-${crypto.randomUUID()}`;
-                    item.isDataItem = true;
-                    this.registerItem(item);
-                });
-                
+                const preparedDataItems = data.map(item => ({
+                    ...item,
+                    id: item.id || `data-item-${crypto.randomUUID()}`,
+                    isDataItem: true
+                }));
+
+                this.registerItems(preparedDataItems, { suppressFilter: true });
                 this._dataFetched = true;
             } catch (e) {
                 this.error = e.message || 'Failed to fetch command items.';
@@ -185,134 +249,142 @@ export default function(Alpine) {
             }
         },
 
-        /**
-         * Executes the `handleInteraction` operation.
-         * @returns {any} Returns the result of `handleInteraction` when applicable.
-         */
         handleInteraction() {
             if (this.itemsUrl && this.fetchTrigger === 'on-open' && !this._dataFetched) {
                 this.fetchItems();
             }
         },
 
-        /**
-         * Executes the `registerItem` operation.
-         * @param {any} item Input value for this method.
-         * @returns {any} Returns the result of `registerItem` when applicable.
-         */
-        registerItem(item) {
-            if (this.items.some(i => i.id === item.id)) return;
-            item._order = this.items.length;
-            this.items.push(item);
-            
-            if (this.selectedIndex === -1)
-                this.selectedIndex = 0;
-            
-            if (!this.serverFiltering) {
-                this.filterAndSortItems();
+        commandScore(searchText, query) {
+            if (!query) return 1;
+
+            const exactIndex = searchText.indexOf(query);
+            if (exactIndex === -1) {
+                return 0;
             }
-        },
 
-        /**
-         * Executes the `unregisterItem` operation.
-         * @param {any} itemId Input value for this method.
-         * @returns {any} Returns the result of `unregisterItem` when applicable.
-         */
-        unregisterItem(itemId) {
-            this.items = this.items.filter(i => i.id !== itemId);
-            this.filterAndSortItems();
-        },
-
-        /**
-         * Executes the `registerGroupTemplate` operation.
-         * @param {any} name Input value for this method.
-         * @param {any} templateId Input value for this method.
-         * @returns {any} Returns the result of `registerGroupTemplate` when applicable.
-         */
-        registerGroupTemplate(name, templateId) {
-            if (!this.groupTemplates.has(name)) {
-                this.groupTemplates.set(name, templateId);
+            if (exactIndex === 0) {
+                return 120 - query.length;
             }
+
+            const wordBoundaryIndex = searchText.indexOf(` ${query}`);
+            if (wordBoundaryIndex > -1) {
+                return 100 - wordBoundaryIndex;
+            }
+
+            return 80 - exactIndex;
         },
 
-        /**
-         * Executes the `filterAndSortItems` operation.
-         * @returns {any} Returns the result of `filterAndSortItems` when applicable.
-         */
+        _rebuildFilteredIndexes() {
+            this.filteredItemIndexById = new Map();
+            this.filteredItemIndexByValue = new Map();
+            this.filteredItems.forEach((item, index) => {
+                this.filteredItemIndexById.set(item.id, index);
+                if (item.value != null) {
+                    this.filteredItemIndexByValue.set(String(item.value), index);
+                }
+            });
+        },
+
         filterAndSortItems() {
             if (this.serverFiltering && this._dataFetched) {
-                this.filteredItems = this.items;
-                this.selectedIndex = this.filteredItems.length > 0 ? 0 : -1;
+                this.totalMatches = this.items.length;
+                this.filteredItems = this.items.slice(0, this.maxRender);
+                this._rebuildFilteredIndexes();
+                this._syncSelection();
+                this._renderList();
+                this.isOpen = this.totalMatches > 0 || this.isLoading;
+                this.isEmpty = this.totalMatches === 0;
                 return;
             }
-            
-            let items;
-            if (!this.shouldFilter || !this.search) {
-                items = this.items.map(item => ({ ...item, score: 1 }));
-            } else {
-                items = this.items
-                    .map(item => ({
-                        ...item,
-                        score: item.forceMount ? 0 : this.commandScore(item.name, this.search, item.keywords)
-                    }))
-                    .filter(item => item.score > 0 || item.forceMount)
-                    .sort((a, b) => {
-                        if (a.forceMount && !b.forceMount) return 1;
-                        if (!a.forceMount && b.forceMount) return -1;
-                        if (b.score !== a.score) return b.score - a.score;
-                        return (a._order || 0) - (b._order || 0);
-                    });
+
+            const query = (this.search || '').trim().toLowerCase();
+            const candidates = query && query.startsWith(this._lastQuery)
+                ? this._lastMatchedItems
+                : this.items;
+
+            const scored = [];
+            const forceMounted = [];
+
+            candidates.forEach(item => {
+                if (item.forceMount) {
+                    forceMounted.push(item);
+                    return;
+                }
+
+                if (!this.shouldFilter || !query) {
+                    scored.push({ item, score: 1 });
+                    return;
+                }
+
+                const score = this.commandScore(item._searchText, query);
+                if (score > 0) {
+                    scored.push({ item, score });
+                }
+            });
+
+            if (this.shouldFilter && query) {
+                scored.sort((a, b) => {
+                    if (b.score !== a.score) return b.score - a.score;
+                    return (a.item._order || 0) - (b.item._order || 0);
+                });
             }
-            this.filteredItems = items;
-            
-            if (this.selectedValue) {
-                const newIndex = this.filteredItems.findIndex(item => item.value === this.selectedValue);
-                this.selectedIndex = newIndex > -1 ? newIndex : (this.filteredItems.length > 0 ? 0 : -1);
-            } else {
-                this.selectedIndex = this.filteredItems.length > 0 ? 0 : -1;
-            }
+
+            const matchedItems = scored.map(entry => entry.item);
+            const allMatches = [...matchedItems, ...forceMounted];
+
+            this._lastQuery = query;
+            this._lastMatchedItems = matchedItems;
+
+            this.totalMatches = allMatches.length;
+            this.filteredItems = allMatches.slice(0, this.maxRender);
+            this._rebuildFilteredIndexes();
+            this._syncSelection();
+
+            this.isOpen = this.totalMatches > 0 || this.isLoading;
+            this.isEmpty = this.totalMatches === 0;
+            this._renderList();
         },
 
-        // --- EVENT HANDLERS ---
+        _syncSelection() {
+            if (this.selectedValue) {
+                const selectedIndex = this.filteredItemIndexByValue.get(String(this.selectedValue)) ?? -1;
+                this.selectedIndex = selectedIndex > -1 ? selectedIndex : (this.filteredItems.length > 0 ? 0 : -1);
+                return;
+            }
+
+            this.selectedIndex = this.filteredItems.length > 0 ? 0 : -1;
+        },
+
         handleItemClick(event) {
             const host = event.target.closest('[data-command-item-id]');
             if (!host) return;
 
             const itemId = host.dataset.commandItemId;
-            const index = this.filteredItems.findIndex(item => item.id === itemId);
+            const index = this.filteredItemIndexById.get(itemId);
+            if (index === undefined) return;
 
-            if (index > -1) {
-                const item = this.filteredItems[index];
-                if (item && !item.disabled) {
-                    this.selectedIndex = index;
-                    this.$dispatch('rz:command:execute', { value: item.value });
-                }
+            const item = this.filteredItems[index];
+            if (item && !item.disabled) {
+                this.selectedIndex = index;
+                this.$dispatch('rz:command:execute', { value: item.value });
             }
         },
 
-        /**
-         * Executes the `handleItemHover` operation.
-         * @param {any} event Input value for this method.
-         * @returns {any} Returns the result of `handleItemHover` when applicable.
-         */
         handleItemHover(event) {
             const host = event.target.closest('[data-command-item-id]');
             if (!host) return;
 
             const itemId = host.dataset.commandItemId;
-            const index = this.filteredItems.findIndex(item => item.id === itemId);
+            const index = this.filteredItemIndexById.get(itemId);
+            if (index === undefined) return;
 
-            if (index > -1) {
-                const item = this.filteredItems[index];
-                if (item && !item.disabled) {
-                    if (this.selectedIndex !== index) {
-                        this.selectedIndex = index;
-                    }
-                }
+            const item = this.filteredItems[index];
+            if (item && !item.disabled && this.selectedIndex !== index) {
+                this.selectedIndex = index;
             }
         },
 
-        // --- KEYBOARD NAVIGATION ---
         handleKeydown(e) {
             switch (e.key) {
                 case 'ArrowDown':
@@ -331,23 +403,21 @@ export default function(Alpine) {
                     e.preventDefault();
                     this.selectLast();
                     break;
-                case 'Enter':
+                case 'Enter': {
                     e.preventDefault();
                     const item = this.filteredItems[this.selectedIndex];
                     if (item && !item.disabled) {
                         this.$dispatch('rz:command:execute', { value: item.value });
                     }
                     break;
+                }
             }
         },
 
-        /**
-         * Executes the `selectNext` operation.
-         * @returns {any} Returns the result of `selectNext` when applicable.
-         */
         selectNext() {
             if (this.filteredItems.length === 0) return;
-            let i = this.selectedIndex, count = 0;
+            let i = this.selectedIndex;
+            let count = 0;
             do {
                 i = (i + 1 >= this.filteredItems.length) ? (this.loop ? 0 : this.filteredItems.length - 1) : i + 1;
                 count++;
@@ -356,13 +426,10 @@ export default function(Alpine) {
             } while (count <= this.filteredItems.length);
         },
 
-        /**
-         * Executes the `selectPrev` operation.
-         * @returns {any} Returns the result of `selectPrev` when applicable.
-         */
         selectPrev() {
             if (this.filteredItems.length === 0) return;
-            let i = this.selectedIndex, count = 0;
+            let i = this.selectedIndex;
+            let count = 0;
             do {
                 i = (i - 1 < 0) ? (this.loop ? this.filteredItems.length - 1 : 0) : i - 1;
                 count++;
@@ -371,10 +438,6 @@ export default function(Alpine) {
             } while (count <= this.filteredItems.length);
         },
 
-        /**
-         * Executes the `selectFirst` operation.
-         * @returns {any} Returns the result of `selectFirst` when applicable.
-         */
         selectFirst() {
             if (this.filteredItems.length > 0) {
                 const firstEnabledIndex = this.filteredItems.findIndex(item => !item.disabled);
@@ -382,81 +445,11 @@ export default function(Alpine) {
             }
         },
 
-        /**
-         * Executes the `selectLast` operation.
-         * @returns {any} Returns the result of `selectLast` when applicable.
-         */
         selectLast() {
             if (this.filteredItems.length > 0) {
                 const lastEnabledIndex = this.filteredItems.map(item => item.disabled).lastIndexOf(false);
                 if (lastEnabledIndex > -1) this.selectedIndex = lastEnabledIndex;
             }
-        },
-
-        // --- SCORING ALGORITHM (Adapted from cmdk) ---
-        commandScore(string, search, keywords = []) {
-            const SCORE_CONTINUE_MATCH = 1;
-            const SCORE_SPACE_WORD_JUMP = 0.9;
-            const SCORE_NON_SPACE_WORD_JUMP = 0.8;
-            const SCORE_CHARACTER_JUMP = 0.17;
-            const PENALTY_SKIPPED = 0.999;
-            const PENALTY_CASE_MISMATCH = 0.9999;
-            const PENALTY_NOT_COMPLETE = 0.99;
-
-            const IS_GAP_REGEXP = /[\\/_+.#"@[\(\{&]/;
-            const IS_SPACE_REGEXP = /[\s-]/;
-
-            const fullString = `${string} ${keywords ? keywords.join(' ') : ''}`;
-
-            function formatInput(str) {
-                return str.toLowerCase().replace(/[\s-]/g, ' ');
-            }
-
-            function commandScoreInner(str, abbr, lowerStr, lowerAbbr, strIndex, abbrIndex, memo) {
-                if (abbrIndex === abbr.length) {
-                    return strIndex === str.length ? SCORE_CONTINUE_MATCH : PENALTY_NOT_COMPLETE;
-                }
-
-                const memoKey = `${strIndex},${abbrIndex}`;
-                if (memo[memoKey] !== undefined) return memo[memoKey];
-
-                const abbrChar = lowerAbbr.charAt(abbrIndex);
-                let index = lowerStr.indexOf(abbrChar, strIndex);
-                let highScore = 0;
-
-                while (index >= 0) {
-                    let score = commandScoreInner(str, abbr, lowerStr, lowerAbbr, index + 1, abbrIndex + 1, memo);
-                    if (score > highScore) {
-                        if (index === strIndex) {
-                            score *= SCORE_CONTINUE_MATCH;
-                        } else if (IS_GAP_REGEXP.test(str.charAt(index - 1))) {
-                            score *= SCORE_NON_SPACE_WORD_JUMP;
-                        } else if (IS_SPACE_REGEXP.test(str.charAt(index - 1))) {
-                            score *= SCORE_SPACE_WORD_JUMP;
-                        } else {
-                            score *= SCORE_CHARACTER_JUMP;
-                            if (strIndex > 0) {
-                                score *= Math.pow(PENALTY_SKIPPED, index - strIndex);
-                            }
-                        }
-
-                        if (str.charAt(index) !== abbr.charAt(abbrIndex)) {
-                            score *= PENALTY_CASE_MISMATCH;
-                        }
-                    }
-                    
-                    if (score > highScore) {
-                        highScore = score;
-                    }
-
-                    index = lowerStr.indexOf(abbrChar, index + 1);
-                }
-
-                memo[memoKey] = highScore;
-                return highScore;
-            }
-
-            return commandScoreInner(fullString, search, formatInput(fullString), formatInput(search), 0, 0, {});
         }
     }));
 }

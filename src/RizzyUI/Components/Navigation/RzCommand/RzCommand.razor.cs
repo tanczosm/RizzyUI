@@ -105,6 +105,13 @@ public partial class RzCommand : RzComponent<RzCommand.Slots>
     /// </summary>
     [Parameter]
     public string? SelectedValue { get; set; }
+    /// <summary>
+    /// Gets or sets the maximum number of matched items rendered in the DOM at one time.
+    /// Defaults to 100 for responsive filtering on large datasets.
+    /// </summary>
+    [Parameter]
+    public int MaxRender { get; set; } = 100;
+
 
     /// <inheritdoc/>
     protected override void OnInitialized()
