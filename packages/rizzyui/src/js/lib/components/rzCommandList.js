@@ -24,6 +24,18 @@ export default function(Alpine) {
         },
 
         /**
+         * Indicates whether the parent command is currently loading data.
+         * @returns {boolean} True when loading should be displayed.
+         */
+        showLoading() {
+            if (!this.parent || typeof this.parent.showLoading !== 'function') {
+                return false;
+            }
+
+            return this.parent.showLoading();
+        },
+
+        /**
          * Returns a cached row for an item, creating one from a template when needed.
          * @param {object} item The command item.
          * @returns {Element|null} The row element or null when unavailable.
