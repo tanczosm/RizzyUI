@@ -25,13 +25,14 @@
 
             <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Color Picker" class="scroll-mt-20">Color Picker</RzHeading>
             <RzParagraph>
-                <code>RzColorPicker</code> wraps Coloris and keeps the visual style aligned with RizzyUI form controls.
+                <code>RzColorPicker</code> wraps Coloris with SSR-first configuration, Alpine-driven behavior, and RizzyUI styling.
             </RzParagraph>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic" class="scroll-mt-20">Basic</RzHeading>
+                <RzParagraph>Default hex color selection with a start thumbnail.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md p-8">
+                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
                         <EditForm Model="_model">
                             <Field>
                                 <FieldLabel For="@(() => _model.BrandColor)">Brand Color</FieldLabel>
@@ -40,12 +41,21 @@
                         </EditForm>
                     </div>
                 </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;EditForm Model="_model"&gt;
+    &lt;Field&gt;
+        &lt;FieldLabel For="@@(() =&gt; _model.BrandColor)"&gt;Brand Color&lt;/FieldLabel&gt;
+        &lt;RzColorPicker For="@@(() =&gt; _model.BrandColor)" Value="@@_model.BrandColor" /&gt;
+    &lt;/Field&gt;
+&lt;/EditForm&gt;
+                </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="With Alpha">With Alpha</RzHeading>
+                <RzParagraph>Enable alpha support and RGB output formatting.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md p-8">
+                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
                         <EditForm Model="_model">
                             <Field>
                                 <FieldLabel For="@(() => _model.OverlayColor)">Overlay Color</FieldLabel>
@@ -54,12 +64,19 @@
                         </EditForm>
                     </div>
                 </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzColorPicker For="@@(() =&gt; _model.OverlayColor)"
+               Value="@@_model.OverlayColor"
+               Alpha="true"
+               Format="ColorFormat.Rgb" /&gt;
+                </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Swatches">Swatches</RzHeading>
+                <RzParagraph>Provide a palette of reusable swatch values.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md p-8">
+                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
                         <EditForm Model="_model">
                             <Field>
                                 <FieldLabel For="@(() => _model.PaletteColor)">Palette Color</FieldLabel>
@@ -68,26 +85,41 @@
                         </EditForm>
                     </div>
                 </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzColorPicker For="@@(() =&gt; _model.PaletteColor)"
+               Value="@@_model.PaletteColor"
+               Swatches="@@_swatches" /&gt;
+                </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Swatches Only">Swatches Only</RzHeading>
+                <RzParagraph>Render only preset swatches, with close and clear actions enabled.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md p-8">
+                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
                         <EditForm Model="_model">
                             <Field>
                                 <FieldLabel For="@(() => _model.AccentColor)">Accent Color</FieldLabel>
-                                <RzColorPicker For="@(() => _model.AccentColor)" Value="@_model.AccentColor" Swatches="@_swatches" SwatchesOnly="true" CloseButton="true" />
+                                <RzColorPicker For="@(() => _model.AccentColor)" Value="@_model.AccentColor" Swatches="@_swatches" SwatchesOnly="true" CloseButton="true" ClearButton="true" />
                             </Field>
                         </EditForm>
                     </div>
                 </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzColorPicker For="@@(() =&gt; _model.AccentColor)"
+               Value="@@_model.AccentColor"
+               Swatches="@@_swatches"
+               SwatchesOnly="true"
+               CloseButton="true"
+               ClearButton="true" /&gt;
+                </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Thumbnail Position">Thumbnail Position</RzHeading>
+                <RzParagraph>Place the swatch at either start or end of the input group.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 grid w-full max-w-lg gap-4 p-8">
+                    <div class="mx-auto mb-5 grid w-full max-w-lg min-h-96 gap-4 p-8">
                         <EditForm Model="_model">
                             <Field>
                                 <FieldLabel For="@(() => _model.StartThumbColor)">Thumbnail Start</FieldLabel>
@@ -95,11 +127,70 @@
                             </Field>
                             <Field>
                                 <FieldLabel For="@(() => _model.EndThumbColor)">Thumbnail End</FieldLabel>
-                                <RzColorPicker For="@(() => _model.EndThumbColor)" Value="@_model.EndThumbColor" ThumbnailPosition="ColorThumbnailPosition.End" ClearButton="true" />
+                                <RzColorPicker For="@(() => _model.EndThumbColor)" Value="@_model.EndThumbColor" ThumbnailPosition="ColorThumbnailPosition.End" />
                             </Field>
                         </EditForm>
                     </div>
                 </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzColorPicker For="@@(() =&gt; _model.StartThumbColor)"
+               Value="@@_model.StartThumbColor"
+               ThumbnailPosition="ColorThumbnailPosition.Start" /&gt;
+
+&lt;RzColorPicker For="@@(() =&gt; _model.EndThumbColor)"
+               Value="@@_model.EndThumbColor"
+               ThumbnailPosition="ColorThumbnailPosition.End" /&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="API">API</RzHeading>
+                <table>
+                    <thead>
+                        <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>For</code></td><td><code>Expression&lt;Func&lt;string&gt;&gt;</code></td><td>Required</td><td>Model expression for the bound field.</td></tr>
+                        <tr><td><code>Value</code></td><td><code>string?</code></td><td><code>null</code></td><td>Current color value used by the input.</td></tr>
+                        <tr><td><code>Format</code></td><td><code>ColorFormat</code></td><td><code>Hex</code></td><td>Color output format.</td></tr>
+                        <tr><td><code>Alpha</code></td><td><code>bool</code></td><td><code>false</code></td><td>Enables alpha channel selection.</td></tr>
+                        <tr><td><code>Swatches</code></td><td><code>IEnumerable&lt;string&gt;?</code></td><td><code>null</code></td><td>Preset swatch values shown by Coloris.</td></tr>
+                        <tr><td><code>SwatchesOnly</code></td><td><code>bool</code></td><td><code>false</code></td><td>Hides spectrum controls and only allows swatch selection.</td></tr>
+                        <tr><td><code>CloseButton</code></td><td><code>bool</code></td><td><code>false</code></td><td>Shows the Coloris close button.</td></tr>
+                        <tr><td><code>ClearButton</code></td><td><code>bool</code></td><td><code>false</code></td><td>Shows the Coloris clear button.</td></tr>
+                        <tr><td><code>Placeholder</code></td><td><code>string?</code></td><td>Localized</td><td>Input placeholder text.</td></tr>
+                        <tr><td><code>ThumbnailPosition</code></td><td><code>ColorThumbnailPosition</code></td><td><code>Start</code></td><td>Swatch location relative to input.</td></tr>
+                        <tr><td><code>ComponentAssetKeys</code></td><td><code>string[]</code></td><td><code>["Coloris", "ColorisCss"]</code></td><td>Asset keys resolved from <code>RizzyUIConfig.AssetUrls</code>.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine Integration">Alpine Integration</RzHeading>
+                <RzParagraph>
+                    <code>RzColorPicker</code> initializes <code>x-data="rzColorPicker"</code>, lazy-loads Coloris via <code>Rizzy.require</code>, then applies Coloris with
+                    <code>wrap: false</code> so RizzyUI keeps ownership of the visible input-group UI.
+                </RzParagraph>
+                <RzCodeViewer Language="@CodeLanguage.JavaScript" class="mb-10">
+require(assets, nonce)
+  .then(() =&gt; this.initializeColoris())
+  .catch((e) =&gt; this.handleAssetError(e));
+
+initializeColoris() {
+  const input = this.$refs.input;
+  if (!input || !window.Coloris) return;
+
+  window.Coloris.init();
+  window.Coloris({
+    el: '#' + this.inputId,
+    wrap: false,
+    themeMode: 'auto',
+    ...this.config
+  });
+
+  input.addEventListener('input', () =&gt; this.handleInput());
+}
+                </RzCodeViewer>
             </section>
         </MainContent>
     </RzArticle>

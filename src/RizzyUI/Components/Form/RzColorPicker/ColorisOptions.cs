@@ -85,4 +85,14 @@ public sealed record ColorisA11yOptions
     /// Gets or sets the swatch label format text.
     /// </summary>
     public string Swatch { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the color value input label.
+    /// </summary>
+    public string Input { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets keyboard instruction text for marker control.
+    /// </summary>
+    public string Instruction { get; init; } = string.Empty;
 }

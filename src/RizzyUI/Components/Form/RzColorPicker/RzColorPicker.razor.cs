@@ -117,7 +117,9 @@ public partial class RzColorPicker : InputBase<string, RzColorPicker.Slots>
                 HueSlider = Localizer["RzColorPicker.A11y.HueSlider"],
                 AlphaSlider = Localizer["RzColorPicker.A11y.AlphaSlider"],
                 Format = Localizer["RzColorPicker.A11y.Format"],
-                Swatch = Localizer["RzColorPicker.A11y.Swatch"]
+                Swatch = Localizer["RzColorPicker.A11y.Swatch"],
+                Input = Localizer["RzColorPicker.A11y.Input"],
+                Instruction = Localizer["RzColorPicker.A11y.Instruction"]
             }
         };
 

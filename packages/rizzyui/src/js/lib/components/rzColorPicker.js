@@ -15,8 +15,8 @@ export default function(Alpine, require) {
             const nonce = this.$el.dataset.nonce;
 
             require(assets, nonce)
-                .then(this.initializeColoris)
-                .catch(this.handleAssetError);
+                .then(() => this.initializeColoris())
+                .catch((e) => this.handleAssetError(e));
         },
 
         readConfig() {
@@ -41,13 +41,14 @@ export default function(Alpine, require) {
             window.Coloris.init();
             window.Coloris({
                 el: '#' + this.inputId,
+                wrap: false,
                 themeMode: 'auto',
                 ...this.config
             });
 
             this.colorValue = input.value || this.colorValue;
             this.refreshSwatch();
-            input.addEventListener('input', this.handleInput);
+            input.addEventListener('input', () => this.handleInput());
         },
 
         handleInput() {
@@ -64,8 +65,8 @@ export default function(Alpine, require) {
             this.swatchStyle = 'background-color: ' + normalized + ';';
         },
 
-        handleAssetError() {
-            console.error('Failed to load Coloris assets.');
+        handleAssetError(error) {
+            console.error('Failed to load Coloris assets.', error);
         }
     }));
 }
