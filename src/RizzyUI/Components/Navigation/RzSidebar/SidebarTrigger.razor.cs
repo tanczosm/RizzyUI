@@ -14,7 +14,7 @@ public partial class SidebarTrigger : RzComponent<SidebarTrigger.Slots>
     /// Defines the default styling for the SidebarTrigger component.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
-        @base: "inline-flex items-center justify-center rounded-md p-2 text-sidebar-foreground hover:bg-sidebar-accent focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sidebar-ring"
+        @base: "inline-flex items-center justify-center rounded-md p-2 text-sidebar-foreground hover:bg-sidebar-accent focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
     );
 
     /// <summary>

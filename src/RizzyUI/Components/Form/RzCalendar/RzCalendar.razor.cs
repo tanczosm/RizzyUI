@@ -35,12 +35,12 @@ public partial class RzCalendar : RzComponent<RzCalendar.Slots>
             // Header & Navigation
             [s => s.Header] = "flex justify-center pt-1 relative items-center gap-1 mb-4",
             [s => s.HeaderContent] = "text-sm font-medium", 
-            [s => s.Month] = "text-sm font-medium hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            [s => s.Year] = "text-sm font-medium hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            [s => s.Month] = "text-sm font-medium hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+            [s => s.Year] = "text-sm font-medium hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
             
             // Arrows (Absolute positioning to match Shadcn)
-            [s => s.ArrowPrev] = $"absolute left-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 flex items-center justify-center rounded-md border border-input hover:bg-accent hover:text-accent-foreground transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rizzy-vc-arrow",
-            [s => s.ArrowNext] = $"absolute right-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 flex items-center justify-center rounded-md border border-input hover:bg-accent hover:text-accent-foreground transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rizzy-vc-arrow",
+            [s => s.ArrowPrev] = $"absolute left-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 flex items-center justify-center rounded-md border border-input hover:bg-accent hover:text-accent-foreground transition-colors z-10 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 rizzy-vc-arrow",
+            [s => s.ArrowNext] = $"absolute right-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 flex items-center justify-center rounded-md border border-input hover:bg-accent hover:text-accent-foreground transition-colors z-10 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 rizzy-vc-arrow",
             
             // Grid Layouts
             [s => s.Grid] = "w-full border-collapse space-y-1",
@@ -58,7 +58,7 @@ public partial class RzCalendar : RzComponent<RzCalendar.Slots>
             // We use group-data-* modifiers to target the attributes VCP applies to the parent DayCell or self
             [s => s.DayButton] = 
                 // Base
-                "h-9 w-9 p-0 font-normal aria-selected:opacity-100 inline-flex items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 " +
+                "h-9 w-9 p-0 font-normal aria-selected:opacity-100 inline-flex items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 " +
                 // Hover (when not selected)
                 "hover:bg-accent hover:text-accent-foreground " +
                 // Today (parent has data-vc-date-today)
@@ -78,8 +78,8 @@ public partial class RzCalendar : RzComponent<RzCalendar.Slots>
                 "group-data-[vc-date-selected=first-and-last]:rounded-md",
 
             // Months/Years View Items
-            [s => s.MonthsMonth] = "flex items-center justify-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring text-sm aria-selected:bg-primary aria-selected:text-primary-foreground",
-            [s => s.YearsYear] = "flex items-center justify-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring text-sm aria-selected:bg-primary aria-selected:text-primary-foreground",
+            [s => s.MonthsMonth] = "flex items-center justify-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 text-sm aria-selected:bg-primary aria-selected:text-primary-foreground",
+            [s => s.YearsYear] = "flex items-center justify-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 text-sm aria-selected:bg-primary aria-selected:text-primary-foreground",
 
             // Time Picker
             [s => s.Time] = "flex flex-col items-center justify-center border-t border-border mt-3 pt-3 gap-2",
