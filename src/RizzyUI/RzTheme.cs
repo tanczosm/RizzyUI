@@ -113,6 +113,9 @@ public partial class RzTheme
         // RzCombobox Family
         RzCombobox = RizzyUI.RzComboboxStyles.DefaultDescriptor;
 
+        // RzColorPicker Family
+        RzColorPicker = RizzyUI.RzColorPicker.DefaultDescriptor;
+
         // RzCommand Family
         RzCommand = RizzyUI.RzCommand.DefaultDescriptor;
         RzCommandDialog = RizzyUI.RzCommandDialog.DefaultDescriptor;

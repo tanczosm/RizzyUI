@@ -7,3 +7,15 @@
 
 
 
+
+:root {
+    --clr-background: var(--popover);
+    --clr-text: var(--popover-foreground);
+    --clr-outline: var(--border);
+    --clr-picker-bg: var(--popover);
+    --clr-picker-border: var(--border);
+}
+
+.clr-field {
+    border-radius: var(--radius);
+}

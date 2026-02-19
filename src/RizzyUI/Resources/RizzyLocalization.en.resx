@@ -440,4 +440,31 @@
     <value>Copied!</value>
     <comment>Default copy tooltip title for RzEventViewer after copying.</comment>
   </data>
+  <data name="RzColorPicker.DefaultAriaLabel" xml:space="preserve">
+    <value>Select color</value>
+  </data>
+  <data name="RzColorPicker.A11y.Open" xml:space="preserve">
+    <value>Open color picker</value>
+  </data>
+  <data name="RzColorPicker.A11y.Close" xml:space="preserve">
+    <value>Close color picker</value>
+  </data>
+  <data name="RzColorPicker.A11y.Clear" xml:space="preserve">
+    <value>Clear the selected color</value>
+  </data>
+  <data name="RzColorPicker.A11y.Marker" xml:space="preserve">
+    <value>Saturation: {s}. Brightness: {v}.</value>
+  </data>
+  <data name="RzColorPicker.A11y.HueSlider" xml:space="preserve">
+    <value>Hue slider</value>
+  </data>
+  <data name="RzColorPicker.A11y.AlphaSlider" xml:space="preserve">
+    <value>Opacity slider</value>
+  </data>
+  <data name="RzColorPicker.A11y.Format" xml:space="preserve">
+    <value>Color format</value>
+  </data>
+  <data name="RzColorPicker.A11y.Swatch" xml:space="preserve">
+    <value>Color swatch</value>
+  </data>
 </root>

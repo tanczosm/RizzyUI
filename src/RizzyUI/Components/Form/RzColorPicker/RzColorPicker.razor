@@ -1,0 +1,53 @@
+@namespace RizzyUI
+@using Rizzy
+@inherits InputBase<string, RzColorPicker.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="color-picker">
+    <div data-alpine-root="@Id"
+         x-data="rzColorPicker"
+         data-assets="@_assets"
+         data-nonce="@Nonce"
+         data-input-id="@_inputId"
+         data-config="@_serializedOptions"
+         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.InputGroup)">
+        <RzInputGroup class="@SlotClasses.GetInputGroup()"
+                      data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.InputGroup)">
+            @if (ThumbnailPosition == AddonPosition.Start)
+            {
+                <InputGroupAddon Align="InputGroupAddonAlign.InlineStart"
+                                 class="@SlotClasses.GetThumbnailContainer()"
+                                 data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.ThumbnailContainer)">
+                    <div class="@SlotClasses.GetThumbnail()"
+                         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Thumbnail)"
+                         style="background-color: var(--rz-color-picker-value, transparent);"
+                         x-bind:style="swatchStyle"
+                         aria-hidden="true"></div>
+                </InputGroupAddon>
+            }
+
+            <InputGroupInput For="@For"
+                             id="@_inputId"
+                             placeholder="@Placeholder"
+                             data-coloris="true"
+                             data-slot="input-group-control"
+                             aria-label="@AriaLabel" />
+
+            @if (ThumbnailPosition == AddonPosition.End)
+            {
+                <InputGroupAddon Align="InputGroupAddonAlign.InlineEnd"
+                                 class="@SlotClasses.GetThumbnailContainer()"
+                                 data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.ThumbnailContainer)">
+                    <div class="@SlotClasses.GetThumbnail()"
+                         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Thumbnail)"
+                         style="background-color: var(--rz-color-picker-value, transparent);"
+                         x-bind:style="swatchStyle"
+                         aria-hidden="true"></div>
+                </InputGroupAddon>
+            }
+        </RzInputGroup>
+    </div>
+</HtmlElement>
