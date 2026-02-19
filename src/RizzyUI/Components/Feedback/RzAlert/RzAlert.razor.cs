@@ -16,14 +16,14 @@ public partial class RzAlert : RzComponent<RzAlert.Slots>
     /// Defines the default styling for the RzAlert component.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
-        @base: "not-prose relative w-full overflow-hidden rounded-lg border text-sm",
+        @base: "not-prose relative w-full overflow-hidden rounded-xl border text-sm",
         slots: new()
         {
             [s => s.InnerContainer] = "flex w-full items-start gap-x-3 px-4 py-3",
             [s => s.IconContainer] = "relative flex size-6 shrink-0 text-2xl translate-y-0.5",
             [s => s.IconPulse] = "absolute animate-ping motion-reduce:animate-none size-6 aspect-square rounded-full",
             [s => s.ContentContainer] = "flex flex-col flex-1 gap-y-0.5 translate-y-0.5",
-            [s => s.CloseButton] = "ml-auto self-start p-1 rounded-full opacity-70 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring dark:focus-visible:ring-offset-background transition-opacity text-foreground",
+            [s => s.CloseButton] = "ml-auto self-start p-1 rounded-full opacity-70 hover:opacity-100 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 transition-opacity text-foreground",
             [s => s.CloseButtonIcon] = "size-4 shrink-0"
         },
         variants: new()
