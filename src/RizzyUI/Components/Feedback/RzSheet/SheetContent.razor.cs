@@ -18,7 +18,7 @@ public partial class SheetContent : RzComponent<SheetContent.Slots>
         slots: new()
         {
             [s => s.Overlay] = "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-            [s => s.CloseButton] = "ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none",
+            [s => s.CloseButton] = "data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-[3px] focus:ring-ring/50 focus:outline-none disabled:pointer-events-none",
             [s => s.CloseButtonIcon] = "size-4"
         },
         variants: new()
