@@ -235,6 +235,8 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<InputGroupTextarea.Slots>, InputGroupTextarea.Slots> InputGroupTextarea { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzCombobox{TItem, TValue}"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzComboboxSlots>, RzComboboxSlots> RzCombobox { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzColorPicker"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzColorPicker.Slots>, RzColorPicker.Slots> RzColorPicker { get; set; }
 
     #endregion
 

@@ -454,3 +454,18 @@ pre:has(> code) {
         background-color: var(--color-background);
     }
 }
+/* Coloris theme integration */
+:root {
+    --clr-background: var(--popover);
+    --clr-text: var(--popover-foreground);
+    --clr-border: var(--border);
+    --clr-marker: var(--ring);
+    --clr-alpha: var(--muted);
+    --clr-shadow: var(--shadow-lg);
+}
+
+.clr-picker {
+    border-radius: var(--radius);
+    border-color: var(--clr-border);
+    box-shadow: var(--clr-shadow);
+}

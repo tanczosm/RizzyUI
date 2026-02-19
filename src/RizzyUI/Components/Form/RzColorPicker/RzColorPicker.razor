@@ -1,0 +1,39 @@
+@namespace RizzyUI
+@inherits InputBase<string, RzColorPicker.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="color-picker">
+    <div data-alpine-root="@Id"
+         x-data="rzColorPicker"
+         data-assets="@_assets"
+         data-nonce="@Nonce"
+         data-config="@_serializedConfig"
+         data-input-id="@_inputId"
+         data-default-color="@Value"
+         class="contents">
+        <RzInputGroup class="@SlotClasses.GetInputGroup()"
+                      data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.InputGroup)">
+            @if (ThumbnailPosition == ColorPickerThumbnailPosition.Start)
+            {
+                @ThumbnailAddon
+            }
+
+            <RzInputText For="@For"
+                         Value="@Value"
+                         Placeholder="@Placeholder"
+                         id="@_inputId"
+                         class="@SlotClasses.GetInput()"
+                         aria-label="@AriaLabel"
+                         aria-invalid="@(IsInvalid ? "true" : null)"
+                         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Input)" />
+
+            @if (ThumbnailPosition == ColorPickerThumbnailPosition.End)
+            {
+                @ThumbnailAddon
+            }
+        </RzInputGroup>
+    </div>
+</HtmlElement>
