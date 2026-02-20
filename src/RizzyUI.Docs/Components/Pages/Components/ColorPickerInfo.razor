@@ -37,7 +37,7 @@
                     A complete starter setup that keeps Hex format, enables alpha, shows reusable swatches, and includes close/clear controls.
                     You can open the picker by clicking either the input or the color thumbnail.
                 </RzParagraph>
-                <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
+                <div class="mx-auto mb-5 w-full max-w-md p-8">
                     <EditForm Model="_model">
                         <Field>
                             <FieldLabel For="@(() => _model.BrandColor)">Brand Color</FieldLabel>
@@ -72,7 +72,7 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="With Alpha">With Alpha + RGB</RzHeading>
                 <RzParagraph>Enable alpha support and output values in RGB format.</RzParagraph>
                 
-                <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
+                <div class="mx-auto mb-5 w-full max-w-md p-8">
                     <EditForm Model="_model">
                         <Field>
                             <FieldLabel For="@(() => _model.OverlayColor)">Overlay Color</FieldLabel>
@@ -93,7 +93,7 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Swatches Only">Swatches Only</RzHeading>
                 <RzParagraph>Render only preset swatches while still allowing clear and close actions.</RzParagraph>
                 
-                <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
+                <div class="mx-auto mb-5 w-full max-w-md p-8">
                     <EditForm Model="_model">
                         <Field>
                             <FieldLabel For="@(() => _model.AccentColor)">Accent Color</FieldLabel>
@@ -119,7 +119,7 @@
                     The thumbnail is also a picker trigger, matching common color-input UX conventions.
                 </RzParagraph>
                 
-                <div class="mx-auto mb-5 grid w-full max-w-lg min-h-96 gap-4 p-8">
+                <div class="mx-auto mb-5 grid w-full max-w-lg gap-4 p-8">
                     <EditForm Model="_model">
                         <RzFieldSet>
                             <Field>
