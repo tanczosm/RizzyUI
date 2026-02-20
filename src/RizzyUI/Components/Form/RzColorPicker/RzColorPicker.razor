@@ -15,16 +15,14 @@
          data-nonce="@Nonce">
         <RzInputGroup class="@SlotClasses.GetInputGroup()"
                       data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.InputGroup)">
-            @if (ThumbnailPosition == ColorThumbnailPosition.Start)
-            {
-                <InputGroupAddon class="@SlotClasses.GetThumbnailContainer()"
-                                 data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.ThumbnailContainer)">
-                    <div class="@SlotClasses.GetThumbnail()"
-                         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Thumbnail)"
-                         x-bind:style="swatchStyle"
-                         aria-hidden="true"></div>
-                </InputGroupAddon>
-            }
+	        <InputGroupAddon Align="@(ThumbnailPosition == ColorThumbnailPosition.Start ? InputGroupAddonAlign.InlineStart : InputGroupAddonAlign.InlineEnd)"
+	                         class="@SlotClasses.GetThumbnailContainer()"
+	                         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.ThumbnailContainer)">
+		        <div class="@SlotClasses.GetThumbnail()"
+		             data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Thumbnail)"
+		             x-bind:style="swatchStyle"
+		             aria-hidden="true"></div>
+	        </InputGroupAddon>
 
             <InputGroupInput For="@For"
                              class="@SlotClasses.GetInput()"
@@ -34,17 +32,6 @@
                              data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Input)"
                              x-ref="input"
                              x-on:input="handleInput" />
-
-            @if (ThumbnailPosition == ColorThumbnailPosition.End)
-            {
-                <InputGroupAddon class="@SlotClasses.GetThumbnailContainer()"
-                                 data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.ThumbnailContainer)">
-                    <div class="@SlotClasses.GetThumbnail()"
-                         data-slot="@RzColorPicker.SlotNames.NameOf(SlotTypes.Thumbnail)"
-                         x-bind:style="swatchStyle"
-                         aria-hidden="true"></div>
-                </InputGroupAddon>
-            }
         </RzInputGroup>
     </div>
 </HtmlElement>
