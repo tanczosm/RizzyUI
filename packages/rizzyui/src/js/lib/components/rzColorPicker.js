@@ -37,6 +37,8 @@ export default function(Alpine, require) {
             if (!input || !window.Coloris) {
                 return;
             }
+            
+            
 
             window.Coloris({
                 el: input,

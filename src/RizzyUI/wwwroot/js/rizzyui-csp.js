@@ -9307,23 +9307,41 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         });
       },
       stringifyDetail(value) {
-        if (value === void 0) {
-          return "undefined";
-        }
-        if (value === null) {
-          return "null";
-        }
-        if (typeof value === "string") {
-          return value;
-        }
-        if (typeof value === "number" || typeof value === "boolean") {
-          return String(value);
-        }
-        try {
-          if (this.pretty) {
-            return JSON.stringify(value, null, 2);
+        if (value === void 0) return "undefined";
+        if (value === null) return "null";
+        if (typeof value === "string") return value;
+        if (typeof value === "number" || typeof value === "boolean") return String(value);
+        const seen = /* @__PURE__ */ new WeakSet();
+        const isDomObject = (v2) => {
+          if (!v2 || typeof v2 !== "object") return false;
+          if (typeof Node !== "undefined" && v2 instanceof Node) return true;
+          if (typeof Window !== "undefined" && v2 instanceof Window) return true;
+          return typeof v2.nodeType === "number" && typeof v2.nodeName === "string";
+        };
+        const replacer = (key, v2) => {
+          if (v2 === void 0) return "undefined";
+          if (typeof v2 === "function") {
+            return "function (hidden)";
           }
-          return JSON.stringify(value);
+          if (typeof v2 === "bigint") {
+            return `${v2}n`;
+          }
+          if (typeof v2 === "symbol") {
+            return "symbol (hidden)";
+          }
+          if (isDomObject(v2)) {
+            return "element (hidden)";
+          }
+          if (v2 && typeof v2 === "object") {
+            if (seen.has(v2)) {
+              return "[circular]";
+            }
+            seen.add(v2);
+          }
+          return v2;
+        };
+        try {
+          return this.pretty ? JSON.stringify(value, replacer, 2) : JSON.stringify(value, replacer);
         } catch {
           return "[unserializable detail]";
         }

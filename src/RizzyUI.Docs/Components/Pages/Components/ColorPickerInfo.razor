@@ -37,22 +37,20 @@
                     A complete starter setup that keeps Hex format, enables alpha, shows reusable swatches, and includes close/clear controls.
                     You can open the picker by clicking either the input or the color thumbnail.
                 </RzParagraph>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
-                        <EditForm Model="_model">
-                            <Field>
-                                <FieldLabel For="@(() => _model.BrandColor)">Brand Color</FieldLabel>
-                                <RzColorPicker For="@(() => _model.BrandColor)"
-                                               Value="@_model.BrandColor"
-                                               Format="ColorFormat.Hex"
-                                               Alpha="true"
-                                               Swatches="@_swatches"
-                                               CloseButton="true"
-                                               ClearButton="true" />
-                            </Field>
-                        </EditForm>
-                    </div>
-                </RzBrowser>
+                <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
+                    <EditForm Model="_model">
+                        <Field>
+                            <FieldLabel For="@(() => _model.BrandColor)">Brand Color</FieldLabel>
+                            <RzColorPicker For="@(() => _model.BrandColor)"
+                                           Value="@_model.BrandColor"
+                                           Format="ColorFormat.Hex"
+                                           Alpha="true"
+                                           Swatches="@_swatches"
+                                           CloseButton="true"
+                                           ClearButton="true" />
+                        </Field>
+                    </EditForm>
+                </div>
                 <RzEventViewer EventName="rz:colorpicker:on-change" class="mb-4" />
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;EditForm Model="_model"&gt;
@@ -73,16 +71,16 @@
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="With Alpha">With Alpha + RGB</RzHeading>
                 <RzParagraph>Enable alpha support and output values in RGB format.</RzParagraph>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
-                        <EditForm Model="_model">
-                            <Field>
-                                <FieldLabel For="@(() => _model.OverlayColor)">Overlay Color</FieldLabel>
-                                <RzColorPicker For="@(() => _model.OverlayColor)" Value="@_model.OverlayColor" Alpha="true" Format="ColorFormat.Rgb" />
-                            </Field>
-                        </EditForm>
-                    </div>
-                </RzBrowser>
+                
+                <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
+                    <EditForm Model="_model">
+                        <Field>
+                            <FieldLabel For="@(() => _model.OverlayColor)">Overlay Color</FieldLabel>
+                            <RzColorPicker For="@(() => _model.OverlayColor)" Value="@_model.OverlayColor" Alpha="true" Format="ColorFormat.Rgb" />
+                        </Field>
+                    </EditForm>
+                </div>
+                
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzColorPicker For="@@(() =&gt; _model.OverlayColor)"
                Value="@@_model.OverlayColor"
@@ -94,16 +92,16 @@
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Swatches Only">Swatches Only</RzHeading>
                 <RzParagraph>Render only preset swatches while still allowing clear and close actions.</RzParagraph>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
-                        <EditForm Model="_model">
-                            <Field>
-                                <FieldLabel For="@(() => _model.AccentColor)">Accent Color</FieldLabel>
-                                <RzColorPicker For="@(() => _model.AccentColor)" Value="@_model.AccentColor" Swatches="@_swatches" SwatchesOnly="true" CloseButton="true" ClearButton="true" />
-                            </Field>
-                        </EditForm>
-                    </div>
-                </RzBrowser>
+                
+                <div class="mx-auto mb-5 w-full max-w-md min-h-96 p-8">
+                    <EditForm Model="_model">
+                        <Field>
+                            <FieldLabel For="@(() => _model.AccentColor)">Accent Color</FieldLabel>
+                            <RzColorPicker For="@(() => _model.AccentColor)" Value="@_model.AccentColor" Swatches="@_swatches" SwatchesOnly="true" CloseButton="true" ClearButton="true" />
+                        </Field>
+                    </EditForm>
+                </div>
+            
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzColorPicker For="@@(() =&gt; _model.AccentColor)"
                Value="@@_model.AccentColor"
@@ -120,22 +118,22 @@
                     Choose whether the thumbnail appears at the start or end of the input group.
                     The thumbnail is also a picker trigger, matching common color-input UX conventions.
                 </RzParagraph>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 grid w-full max-w-lg min-h-96 gap-4 p-8">
-                        <EditForm Model="_model">
-                            <RzFieldSet>
-                                <Field>
-                                    <FieldLabel For="@(() => _model.StartThumbColor)">Thumbnail Start</FieldLabel>
-                                    <RzColorPicker For="@(() => _model.StartThumbColor)" Value="@_model.StartThumbColor" ThumbnailPosition="ColorThumbnailPosition.Start" />
-                                </Field>
-                                <Field>
-                                    <FieldLabel For="@(() => _model.EndThumbColor)">Thumbnail End</FieldLabel>
-                                    <RzColorPicker For="@(() => _model.EndThumbColor)" Value="@_model.EndThumbColor" ThumbnailPosition="ColorThumbnailPosition.End" />
-                                </Field>
-                            </RzFieldSet>
-                        </EditForm>
-                    </div>
-                </RzBrowser>
+                
+                <div class="mx-auto mb-5 grid w-full max-w-lg min-h-96 gap-4 p-8">
+                    <EditForm Model="_model">
+                        <RzFieldSet>
+                            <Field>
+                                <FieldLabel For="@(() => _model.StartThumbColor)">Thumbnail Start</FieldLabel>
+                                <RzColorPicker For="@(() => _model.StartThumbColor)" Value="@_model.StartThumbColor" ThumbnailPosition="ColorThumbnailPosition.Start" />
+                            </Field>
+                            <Field>
+                                <FieldLabel For="@(() => _model.EndThumbColor)">Thumbnail End</FieldLabel>
+                                <RzColorPicker For="@(() => _model.EndThumbColor)" Value="@_model.EndThumbColor" ThumbnailPosition="ColorThumbnailPosition.End" />
+                            </Field>
+                        </RzFieldSet>
+                    </EditForm>
+                </div>
+
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzColorPicker For="@@(() =&gt; _model.StartThumbColor)"
                Value="@@_model.StartThumbColor"
