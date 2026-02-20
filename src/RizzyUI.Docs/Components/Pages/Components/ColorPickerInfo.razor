@@ -184,18 +184,19 @@
                     The root exposes methods such as <code>handleInput</code>, <code>openPicker</code>, and <code>updateConfiguration(config)</code>.
                 </RzParagraph>
                 <RzParagraph>
-                    At the end of <code>handleInput</code>, the component dispatches a custom DOM event named
+                    When the color changes, RzColorPicker dispatches a custom DOM event named
                     <code>rz:colorpicker:on-change</code> (also available as <code>Constants.Events.ColorPickerOnChange</code> in C#).
                 </RzParagraph>
-                <div class="overflow-x-auto not-prose">
-                    <table class="w-full text-sm border-collapse">
-                        <thead>
+                <RzParagraph>
+                    <div class="overflow-x-auto not-prose">
+                        <table class="w-full text-sm border-collapse">
+                            <thead>
                             <tr class="border-b">
                                 <th class="text-left py-2 pr-4">Event Detail Field</th>
                                 <th class="text-left py-2">Description</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr class="border-b">
                                 <td class="py-2 pr-4"><code>rzColorPicker</code></td>
                                 <td class="py-2">Reference to the Alpine <code>rzColorPicker</code> component instance.</td>
@@ -208,40 +209,28 @@
                                 <td class="py-2 pr-4"><code>el</code></td>
                                 <td class="py-2">Reference to the underlying input element (<code>this.$refs.input</code>).</td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <RzCodeViewer Language="@CodeLanguage.JavaScript" class="mb-4">
-document.addEventListener('rz:colorpicker:on-change', (event) => {
-    const { rzColorPicker, updateConfiguration, el } = event.detail;
-
-    if (el && el.value && el.value.startsWith('#ff')) {
-        updateConfiguration({
-            format: 'rgb',
-            alpha: true,
-        });
-    }
-
-    console.log('Current value:', el?.value);
-    console.log('Component reference:', rzColorPicker);
-});
-                </RzCodeViewer>
+                            </tbody>
+                        </table>
+                    </div>
+                </RzParagraph>
                 <RzParagraph>
                     To close the currently active Coloris dialog from your own scripts, use the global API:
-                </RzParagraph>
-                <RzCodeViewer Language="@CodeLanguage.JavaScript" class="mb-10">
-// Close the dialog
-Coloris.close();
+                    
+                    <RzCodeViewer Language="@CodeLanguage.JavaScript" class="mb-10">
+                        // Close the dialog
+                        Coloris.close();
 
-// Close the dialog and revert the color to its original value
-Coloris.close(true);
-                </RzCodeViewer>
+                        // Close the dialog and revert the color to its original value
+                        Coloris.close(true);
+                    </RzCodeViewer>
+                    
+                </RzParagraph>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Setup">Setup</RzHeading>
                 <RzParagraph>
-                    When <code>RzColorPicker</code> is rendered, it dynamically loads the third-party Coloris JavaScript and CSS assets from
+                    When <code>RzColorPicker</code> is rendered, it dynamically loads the third-party Coloris JavaScript from
                     <code>jsdelivr.net</code> using the configured asset URLs.
                 </RzParagraph>
                 <RzParagraph>
@@ -253,7 +242,6 @@ builder.Services.AddRizzyUI(config =>
 {
 
     config.AssetUrls["Coloris"] = "https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js";
-    config.AssetUrls["ColorisCss"] = "https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css";
 });
                 </RzCodeViewer>
             </section>

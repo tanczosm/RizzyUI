@@ -4229,9 +4229,27 @@ function Nl(e, t) {
         ...this.config
       }), this.colorValue = i.value || this.colorValue, this.refreshSwatch(), i.addEventListener("input", () => this.handleInput()));
     },
+    openPicker() {
+      const i = this.$refs.input;
+      i && (i.focus(), i.dispatchEvent(new MouseEvent("click", { bubbles: !0 })));
+    },
+    updateConfiguration(i) {
+      this.config = {
+        ...this.config,
+        ...i
+      }, !(!window.Coloris || !this.$refs.input) && window.Coloris.setInstance(this.$refs.input, this.config);
+    },
     handleInput() {
       const i = this.$refs.input;
-      this.colorValue = i ? i.value : "", this.refreshSwatch();
+      this.colorValue = i ? i.value : "", this.refreshSwatch(), this.$el.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
+        bubbles: !0,
+        composed: !0,
+        detail: {
+          rzColorPicker: this,
+          updateConfiguration: this.updateConfiguration.bind(this),
+          el: this.$refs.input
+        }
+      }));
     },
     refreshSwatch() {
       const i = this.colorValue && this.colorValue.trim().length > 0 ? this.colorValue : "transparent";

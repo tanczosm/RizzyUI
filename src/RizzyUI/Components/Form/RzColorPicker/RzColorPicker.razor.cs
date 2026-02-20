@@ -80,7 +80,7 @@ public partial class RzColorPicker : InputBase<string, RzColorPicker.Slots>
     /// <summary>
     /// Gets or sets the logical keys used to resolve required assets.
     /// </summary>
-    [Parameter] public string[] ComponentAssetKeys { get; set; } = ["Coloris", "ColorisCss"];
+    [Parameter] public string[] ComponentAssetKeys { get; set; } = ["Coloris"];
 
     /// <inheritdoc/>
     protected override void OnInitialized()

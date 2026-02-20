@@ -50,10 +50,43 @@ export default function(Alpine, require) {
             input.addEventListener('input', () => this.handleInput());
         },
 
+        openPicker() {
+            const input = this.$refs.input;
+            if (!input) {
+                return;
+            }
+
+            input.focus();
+            input.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        },
+
+        updateConfiguration(config) {
+            this.config = {
+                ...this.config,
+                ...config
+            };
+
+            if (!window.Coloris || !this.$refs.input) {
+                return;
+            }
+
+            window.Coloris.setInstance(this.$refs.input, this.config);
+        },
+
         handleInput() {
             const input = this.$refs.input;
             this.colorValue = input ? input.value : '';
             this.refreshSwatch();
+
+            this.$el.dispatchEvent(new CustomEvent('rz:colorpicker:on-change', {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    rzColorPicker: this,
+                    updateConfiguration: this.updateConfiguration.bind(this),
+                    el: this.$refs.input,
+                }
+            }));
         },
 
         refreshSwatch() {
