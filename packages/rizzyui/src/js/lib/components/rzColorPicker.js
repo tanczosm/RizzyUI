@@ -38,9 +38,8 @@ export default function(Alpine, require) {
                 return;
             }
 
-            window.Coloris.init();
             window.Coloris({
-                el: '#' + this.inputId,
+                el: input,
                 wrap: false,
                 themeMode: 'auto',
                 ...this.config
