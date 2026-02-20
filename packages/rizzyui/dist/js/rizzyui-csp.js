@@ -6911,12 +6911,25 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         if (!input || !window.Coloris) {
           return;
         }
-        window.Coloris({
+        const self2 = this;
+        this.config = {
           el: input,
           wrap: false,
           themeMode: "auto",
+          onChange: (color, inputEl) => {
+            inputEl.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
+              bubbles: true,
+              composed: true,
+              detail: {
+                rzColorPicker: self2,
+                updateConfiguration: self2.updateConfiguration.bind(self2),
+                el: inputEl
+              }
+            }));
+          },
           ...this.config
-        });
+        };
+        window.Coloris(this.config);
         this.colorValue = input.value || this.colorValue;
         this.refreshSwatch();
         input.addEventListener("input", () => this.handleInput());
@@ -6943,15 +6956,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         const input = this.$refs.input;
         this.colorValue = input ? input.value : "";
         this.refreshSwatch();
-        this.$el.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
-          bubbles: true,
-          composed: true,
-          detail: {
-            rzColorPicker: this,
-            updateConfiguration: this.updateConfiguration.bind(this),
-            el: this.$refs.input
-          }
-        }));
       },
       refreshSwatch() {
         const normalized = this.colorValue && this.colorValue.trim().length > 0 ? this.colorValue : "transparent";

@@ -6125,12 +6125,25 @@ function registerRzColorPicker(Alpine2, require2) {
       if (!input || !window.Coloris) {
         return;
       }
-      window.Coloris({
+      const self = this;
+      this.config = {
         el: input,
         wrap: false,
         themeMode: "auto",
+        onChange: (color, inputEl) => {
+          inputEl.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
+            bubbles: true,
+            composed: true,
+            detail: {
+              rzColorPicker: self,
+              updateConfiguration: self.updateConfiguration.bind(self),
+              el: inputEl
+            }
+          }));
+        },
         ...this.config
-      });
+      };
+      window.Coloris(this.config);
       this.colorValue = input.value || this.colorValue;
       this.refreshSwatch();
       input.addEventListener("input", () => this.handleInput());
@@ -6157,15 +6170,6 @@ function registerRzColorPicker(Alpine2, require2) {
       const input = this.$refs.input;
       this.colorValue = input ? input.value : "";
       this.refreshSwatch();
-      this.$el.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
-        bubbles: true,
-        composed: true,
-        detail: {
-          rzColorPicker: this,
-          updateConfiguration: this.updateConfiguration.bind(this),
-          el: this.$refs.input
-        }
-      }));
     },
     refreshSwatch() {
       const normalized = this.colorValue && this.colorValue.trim().length > 0 ? this.colorValue : "transparent";

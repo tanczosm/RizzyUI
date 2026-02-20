@@ -4222,12 +4222,26 @@ function Nl(e, t) {
     },
     initializeColoris() {
       const i = this.$refs.input;
-      !i || !window.Coloris || (window.Coloris({
+      if (!i || !window.Coloris)
+        return;
+      const n = this;
+      this.config = {
         el: i,
         wrap: !1,
         themeMode: "auto",
+        onChange: (r, s) => {
+          s.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
+            bubbles: !0,
+            composed: !0,
+            detail: {
+              rzColorPicker: n,
+              updateConfiguration: n.updateConfiguration.bind(n),
+              el: s
+            }
+          }));
+        },
         ...this.config
-      }), this.colorValue = i.value || this.colorValue, this.refreshSwatch(), i.addEventListener("input", () => this.handleInput()));
+      }, window.Coloris(this.config), this.colorValue = i.value || this.colorValue, this.refreshSwatch(), i.addEventListener("input", () => this.handleInput());
     },
     openPicker() {
       const i = this.$refs.input;
@@ -4241,15 +4255,7 @@ function Nl(e, t) {
     },
     handleInput() {
       const i = this.$refs.input;
-      this.colorValue = i ? i.value : "", this.refreshSwatch(), this.$el.dispatchEvent(new CustomEvent("rz:colorpicker:on-change", {
-        bubbles: !0,
-        composed: !0,
-        detail: {
-          rzColorPicker: this,
-          updateConfiguration: this.updateConfiguration.bind(this),
-          el: this.$refs.input
-        }
-      }));
+      this.colorValue = i ? i.value : "", this.refreshSwatch();
     },
     refreshSwatch() {
       const i = this.colorValue && this.colorValue.trim().length > 0 ? this.colorValue : "transparent";

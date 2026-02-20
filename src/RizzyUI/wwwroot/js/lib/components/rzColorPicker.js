@@ -37,13 +37,27 @@ export default function(Alpine, require) {
             if (!input || !window.Coloris) {
                 return;
             }
-
-            window.Coloris({
+            
+            const self = this;
+            this.config = {
                 el: input,
                 wrap: false,
                 themeMode: 'auto',
+                onChange: (color, inputEl) => {
+                    inputEl.dispatchEvent(new CustomEvent('rz:colorpicker:on-change', {
+                        bubbles: true,
+                        composed: true,
+                        detail: {
+                            rzColorPicker: self,
+                            updateConfiguration: self.updateConfiguration.bind(self),
+                            el: inputEl,
+                        }
+                    }));
+                },
                 ...this.config
-            });
+            };
+
+            window.Coloris(this.config);
 
             this.colorValue = input.value || this.colorValue;
             this.refreshSwatch();
@@ -77,16 +91,6 @@ export default function(Alpine, require) {
             const input = this.$refs.input;
             this.colorValue = input ? input.value : '';
             this.refreshSwatch();
-
-            this.$el.dispatchEvent(new CustomEvent('rz:colorpicker:on-change', {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    rzColorPicker: this,
-                    updateConfiguration: this.updateConfiguration.bind(this),
-                    el: this.$refs.input,
-                }
-            }));
         },
 
         refreshSwatch() {
