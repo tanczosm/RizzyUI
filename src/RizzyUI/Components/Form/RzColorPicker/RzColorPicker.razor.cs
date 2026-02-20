@@ -19,10 +19,10 @@ public partial class RzColorPicker : InputBase<string, RzColorPicker.Slots>
         @base: "w-full",
         slots: new()
         {
-            [s => s.InputGroup] = "w-full",
+            [s => s.InputGroup] = "w-full ",
             [s => s.Input] = "",
-            [s => s.ThumbnailContainer] = "px-3",
-            [s => s.Thumbnail] = "size-5 rounded-md border border-border shadow-sm ring-offset-background"
+            [s => s.ThumbnailContainer] = "p-0",
+            [s => s.Thumbnail] = "size-8 rounded-md border border-border shadow-sm ring-offset-background"
         }
     );
 
