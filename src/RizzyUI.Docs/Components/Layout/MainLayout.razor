@@ -4,7 +4,7 @@
 @using RizzyUI
 @using Blazicons
 
-<RzSidebarProvider>
+<RzSidebarProvider class="overflow-y-hidden">
     <Sidebar>
         <SidebarHeader>
             <SidebarMenu>
@@ -221,7 +221,7 @@
             </div>
         </header>
 
-        <main class="flex flex-1 flex-col overflow-y-auto" id="content">
+        <main class="flex flex-1 flex-col overflow-y-auto min-h-0" id="content">
             <div class="flex flex-1 flex-col gap-4 p-4">
                 @Body
             </div>
