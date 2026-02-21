@@ -212,6 +212,7 @@ public partial class RzTheme
         RzInput = RizzyUI.FormInputStyles.DefaultDescriptor;
         RzInputText = RizzyUI.RzInputText.DefaultDescriptor;
         RzInputTextArea = RizzyUI.RzInputTextArea.DefaultDescriptor;
+        RzFileInput = RizzyUI.RzFileInput.DefaultDescriptor;
         RzInputNumber = RizzyUI.RzInputNumberStyles.DefaultDescriptor;
 
         // RzInputGroup Family
