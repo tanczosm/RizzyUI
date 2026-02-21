@@ -4293,13 +4293,8 @@ function Rl(e, t) {
     }
   }));
 }
-<<<<<<< HEAD
-function Rl(e) {
-  e.data("rzModal", () => ({
-=======
 function Ml(e) {
-  e.data("rzDialog", () => ({
->>>>>>> origin/main
+  e.data("rzModal", () => ({
     modalOpen: !1,
     // Main state variable
     eventTriggerName: "",

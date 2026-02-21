@@ -4898,13 +4898,8 @@ function jl(e, t) {
     }
   }));
 }
-<<<<<<< HEAD
-function jl(t) {
-  t.data("rzModal", () => ({
-=======
 function ql(e) {
-  e.data("rzDialog", () => ({
->>>>>>> origin/main
+  e.data("rzModal", () => ({
     modalOpen: !1,
     // Main state variable
     eventTriggerName: "",
@@ -4937,13 +4932,8 @@ function ql(e) {
         const i = document.body.offsetWidth;
         document.body.classList.toggle("overflow-hidden", t);
         const n = document.body.offsetWidth - i;
-<<<<<<< HEAD
-        document.body.style.setProperty("--page-scrollbar-width", `${n}px`), e ? this.$nextTick(() => {
-          this.$el.querySelector('[role="dialog"], [role="alertdialog"], [data-modal-panel="true"]')?.querySelector(`button, [href], input:not([type='hidden']), select, textarea, [tabindex]:not([tabindex="-1"])`)?.focus(), this.$el.dispatchEvent(new CustomEvent("rz:modal-after-open", {
-=======
         document.body.style.setProperty("--page-scrollbar-width", `${n}px`), t ? this.$nextTick(() => {
-          this.$el.querySelector('[role="document"]')?.querySelector(`button, [href], input:not([type='hidden']), select, textarea, [tabindex]:not([tabindex="-1"])`)?.focus(), this.$el.dispatchEvent(new CustomEvent("rz:modal-after-open", {
->>>>>>> origin/main
+          this.$el.querySelector('[role="dialog"], [role="alertdialog"], [data-modal-panel="true"]')?.querySelector(`button, [href], input:not([type='hidden']), select, textarea, [tabindex]:not([tabindex="-1"])`)?.focus(), this.$el.dispatchEvent(new CustomEvent("rz:modal-after-open", {
             detail: { modalId: this.modalId },
             bubbles: !0
           }));
