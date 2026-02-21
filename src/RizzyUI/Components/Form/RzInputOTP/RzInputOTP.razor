@@ -11,7 +11,7 @@
          data-assets="@_assets"
          data-nonce="@Nonce"
          data-length="@Length"
-         data-otp-type="@OtpType.ToString().ToLowerInvariant()"
+         data-otp-type="@OtpType.ToString().ToKebabCase()"
          data-value="@Value"
          data-disabled="@Disabled.ToString().ToLowerInvariant()"
          data-invalid="@GetInvalidValue().ToString().ToLowerInvariant()">

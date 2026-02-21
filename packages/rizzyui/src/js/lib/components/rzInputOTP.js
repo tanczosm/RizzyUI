@@ -27,8 +27,8 @@ export default function (Alpine) {
         /**
          * Handles input typing updates.
          */
-        onInput() {
-            this.syncFromInput();
+        onInput(event) {
+            this.syncFromInput(event?.target);
         },
 
         /**
@@ -40,7 +40,7 @@ export default function (Alpine) {
             const text = event.clipboardData ? event.clipboardData.getData('text') : '';
             const filtered = this.sanitizeValue(text);
             this.value = filtered;
-            this.activeIndex = Math.min(filtered.length, this.length - 1);
+            this.activeIndex = this.normalizeIndex(filtered.length);
             this.applyValueToInput();
             this.refreshSlots();
         },
@@ -136,8 +136,7 @@ export default function (Alpine) {
         },
 
         moveEnd() {
-            this.activeIndex = Math.max(this.value.length, this.length - 1);
-            this.activeIndex = this.normalizeIndex(this.activeIndex);
+            this.activeIndex = this.normalizeIndex(this.value.length);
             this.setCaretToActiveIndex();
             this.refreshSlots();
         },
@@ -155,8 +154,8 @@ export default function (Alpine) {
             this.refreshSlots();
         },
 
-        syncFromInput() {
-            const input = this.$refs.input;
+        syncFromInput(sourceInput) {
+            const input = sourceInput || this.$refs.input;
             if (!input) return;
 
             this.value = this.sanitizeValue(input.value || '');
@@ -164,7 +163,7 @@ export default function (Alpine) {
                 input.value = this.value;
             }
 
-            this.setActiveFromCaret();
+            this.setActiveFromCaret(this.value.length);
             this.refreshSlots();
         },
 
@@ -181,10 +180,18 @@ export default function (Alpine) {
             this.setCaretToActiveIndex();
         },
 
-        setActiveFromCaret() {
+        setActiveFromCaret(fallbackIndex) {
             const input = this.$refs.input;
-            if (!input) return;
-            const caret = Number(input.selectionStart || 0);
+            if (!input) {
+                this.activeIndex = this.normalizeIndex(fallbackIndex ?? 0);
+                return;
+            }
+
+            const selectionStart = input.selectionStart;
+            const caret = selectionStart == null
+                ? Number.isFinite(fallbackIndex) ? Number(fallbackIndex) : 0
+                : Number(selectionStart);
+
             this.activeIndex = this.normalizeIndex(caret);
         },
 
