@@ -340,7 +340,10 @@
         <value>Next slide</value>
         <comment>ARIA label for the next slide button</comment>
     </data>  
-    <data name="RzDialog.CloseButtonAriaLabel" xml:space="preserve">
+    <data name="RzAlertDialog.DefaultAriaLabel" xml:space="preserve">
+    <value>Important confirmation dialog</value>
+  </data>
+  <data name="RzDialog.CloseButtonAriaLabel" xml:space="preserve">
         <value>Close dialog</value>
         <comment>Aria-label for the close button.</comment>
     </data>    

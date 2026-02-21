@@ -87,6 +87,7 @@ public partial class RzDialog : RzComponent<RzDialog.Slots>
         /// <summary>
         /// The base slot for the component's root element.
         /// </summary>
+        [Slot("dialog")]
         public string? Base { get; set; }
     }
 }

@@ -1,0 +1,21 @@
+@namespace RizzyUI
+@using RizzyUI.Components.Internal
+@inherits RzComponent<AlertDialogContent.Slots>
+
+<RzModalPrimitive Id="@ParentAlertDialog!.Id"
+                  ModalId="@ParentAlertDialog.Id"
+                  BodyId="@ParentAlertDialog.BodyId"
+                  FooterId="@ParentAlertDialog.FooterId"
+                  Role="alertdialog"
+                  EventTriggerName="@ParentAlertDialog.EventTriggerName"
+                  CloseEventName="@ParentAlertDialog.CloseEventName"
+                  CloseOnEscape="@ParentAlertDialog.CloseOnEscape"
+                  CloseOnClickOutside="@ParentAlertDialog.CloseOnClickOutside"
+                  AriaLabelledBy="@ParentAlertDialog.AriaLabelId"
+                  OverlayClass="@SlotClasses.GetOverlay()"
+                  OverlayDataSlot="alert-dialog-overlay"
+                  ContentClass="@SlotClasses.GetBase()"
+                  ContentDataSlot="alert-dialog-content"
+                  ContentAttributes="@AdditionalAttributes">
+    @ChildContent
+</RzModalPrimitive>

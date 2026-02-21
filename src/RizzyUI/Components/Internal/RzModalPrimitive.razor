@@ -1,0 +1,50 @@
+@namespace RizzyUI.Components.Internal
+@inherits RzComponent
+
+<div x-data="rzModal"
+     id="@Id"
+     data-alpine-root="@Id"
+     data-modal-id="@ModalId"
+     data-body-id="@BodyId"
+     data-footer-id="@FooterId"
+     data-nonce="@Nonce"
+     data-event-trigger-name="@EventTriggerName"
+     data-close-event-name="@CloseEventName"
+     data-close-on-escape="@CloseOnEscape.ToString().ToLowerInvariant()"
+     data-close-on-click-outside="@CloseOnClickOutside.ToString().ToLowerInvariant()"
+     style="display: contents;">
+    <template x-teleport="body">
+        <div x-cloak
+             x-show="modalOpen"
+             x-transition:enter="ease-in-out duration-500"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in-out duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             aria-hidden="true"
+             data-slot="@OverlayDataSlot"
+             class="@OverlayClass">
+        </div>
+
+        <div x-cloak
+             x-show="modalOpen"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             x-trap.inert="modalOpen"
+             x-on:click.outside="handleClickOutside"
+             role="@Role"
+             aria-modal="true"
+             aria-label="@AriaLabel"
+             aria-labelledby="@AriaLabelledBy"
+             data-slot="@ContentDataSlot"
+             @attributes="@ContentAttributes"
+             class="@ContentClass">
+            @ChildContent
+        </div>
+    </template>
+</div>
