@@ -8702,6 +8702,114 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     }));
   }
+  function registerRzFileInput(Alpine2) {
+    Alpine2.data("rzFileInput", () => ({
+      files: [],
+      hasFiles: false,
+      isDragging: false,
+      draggingState: "false",
+      init() {
+        this.syncFromInput();
+      },
+      trigger() {
+        if (this.$refs.input) {
+          this.$refs.input.click();
+        }
+      },
+      handleFileChange() {
+        this.syncFromInput();
+      },
+      handleDragOver() {
+        this.isDragging = true;
+        this.draggingState = "true";
+      },
+      handleDragLeave() {
+        this.isDragging = false;
+        this.draggingState = "false";
+      },
+      handleDrop(event2) {
+        this.handleDragLeave();
+        const input = this.$refs.input;
+        const dropped = event2?.dataTransfer?.files;
+        if (!input || !dropped || dropped.length === 0) {
+          return;
+        }
+        this.applyDroppedFiles(input, dropped);
+        this.syncFromInput();
+      },
+      removeFileByIndex(event2) {
+        const input = this.$refs.input;
+        if (!input?.files) {
+          return;
+        }
+        const indexRaw = event2?.currentTarget?.dataset?.index;
+        const index = Number.parseInt(indexRaw ?? "-1", 10);
+        if (Number.isNaN(index) || index < 0) {
+          return;
+        }
+        const transfer = new DataTransfer();
+        Array.from(input.files).forEach((file, fileIndex) => {
+          if (fileIndex !== index) {
+            transfer.items.add(file);
+          }
+        });
+        input.files = transfer.files;
+        this.syncFromInput();
+      },
+      applyDroppedFiles(input, droppedFiles) {
+        const transfer = new DataTransfer();
+        const canAppend = input.multiple;
+        if (canAppend && input.files) {
+          Array.from(input.files).forEach((file) => transfer.items.add(file));
+          Array.from(droppedFiles).forEach((file) => transfer.items.add(file));
+        } else if (droppedFiles.length > 0) {
+          transfer.items.add(droppedFiles[0]);
+        }
+        input.files = transfer.files;
+      },
+      syncFromInput() {
+        const input = this.$refs.input;
+        this.revokePreviews();
+        if (!input?.files) {
+          this.files = [];
+          this.hasFiles = false;
+          return;
+        }
+        this.files = Array.from(input.files).map((file) => {
+          const imageFile = file.type.startsWith("image/");
+          const previewUrl = imageFile ? URL.createObjectURL(file) : null;
+          return {
+            name: file.name,
+            size: file.size,
+            formattedSize: this.formatFileSize(file.size),
+            isImage: imageFile,
+            previewUrl
+          };
+        });
+        this.hasFiles = this.files.length > 0;
+      },
+      formatFileSize(size2) {
+        if (!Number.isFinite(size2) || size2 <= 0) {
+          return "0 B";
+        }
+        const units = ["B", "KB", "MB", "GB", "TB"];
+        const power = Math.min(Math.floor(Math.log(size2) / Math.log(1024)), units.length - 1);
+        const formatted = size2 / 1024 ** power;
+        const rounded = formatted >= 10 || power === 0 ? Math.round(formatted) : formatted.toFixed(1);
+        return `${rounded} ${units[power]}`;
+      },
+      revokePreviews() {
+        this.files.forEach((file) => {
+          if (file.previewUrl) {
+            URL.revokeObjectURL(file.previewUrl);
+          }
+        });
+      },
+      destroy() {
+        this.revokePreviews();
+      }
+    }));
+  }
   function registerRzEmpty(Alpine2) {
     Alpine2.data("rzEmpty", () => {
     });
@@ -8795,6 +8903,229 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           const input = parent.querySelector("input, textarea");
           input?.focus();
         }
+      }
+    }));
+  }
+  function registerRzInputOTP(Alpine2) {
+    Alpine2.data("rzInputOTP", () => ({
+      value: "",
+      length: 0,
+      activeIndex: 0,
+      isFocused: false,
+      isInvalid: false,
+      otpType: "numeric",
+      slots: [],
+      /**
+       * Initializes OTP behavior and hydrates visual slots.
+       */
+      init() {
+        if (this.$el.dataset.rzOtpInitialized === "true") {
+          this.syncFromInput();
+          return;
+        }
+        this.$el.dataset.rzOtpInitialized = "true";
+        this.length = Number(this.$el.dataset.length || "0");
+        this.otpType = this.$el.dataset.otpType || "numeric";
+        this.isInvalid = this.$el.dataset.invalid === "true";
+        this.syncFromInput();
+      },
+      /**
+       * Handles input typing updates.
+       */
+      onInput() {
+        this.syncFromInput();
+      },
+      /**
+       * Handles paste behavior for OTP values.
+       * @param {ClipboardEvent} event
+       */
+      onPaste(event2) {
+        event2.preventDefault();
+        const text = event2.clipboardData ? event2.clipboardData.getData("text") : "";
+        const filtered = this.sanitizeValue(text);
+        this.value = filtered;
+        this.activeIndex = Math.min(filtered.length, this.length - 1);
+        this.applyValueToInput();
+        this.refreshSlots();
+      },
+      /**
+       * Handles keyboard navigation and deletion.
+       * @param {KeyboardEvent} event
+       */
+      onKeyDown(event2) {
+        if (event2.key === "ArrowLeft") {
+          event2.preventDefault();
+          this.moveLeft();
+          return;
+        }
+        if (event2.key === "ArrowRight") {
+          event2.preventDefault();
+          this.moveRight();
+          return;
+        }
+        if (event2.key === "Home") {
+          event2.preventDefault();
+          this.moveHome();
+          return;
+        }
+        if (event2.key === "End") {
+          event2.preventDefault();
+          this.moveEnd();
+          return;
+        }
+        if (event2.key === "Backspace") {
+          this.handleBackspace();
+        }
+      },
+      /**
+       * Sets focus state to true.
+       */
+      onFocus() {
+        this.isFocused = true;
+        this.setActiveFromCaret();
+        this.refreshSlots();
+      },
+      /**
+       * Sets focus state to false.
+       */
+      onBlur() {
+        this.isFocused = false;
+        this.refreshSlots();
+      },
+      /**
+       * Prevents slot mousedown default so input keeps control.
+       * @param {MouseEvent} event
+       */
+      preventMouseDown(event2) {
+        event2.preventDefault();
+      },
+      /**
+       * Focuses the native input and updates active slot from clicked index.
+       * @param {MouseEvent} event
+       */
+      focusSlot(event2) {
+        const target = event2.currentTarget;
+        const index = Number(target.dataset.index || "0");
+        this.activeIndex = this.normalizeIndex(index);
+        this.focusInput();
+        this.setCaretToActiveIndex();
+        this.refreshSlots();
+      },
+      moveLeft() {
+        this.activeIndex = this.normalizeIndex(this.activeIndex - 1);
+        this.setCaretToActiveIndex();
+        this.refreshSlots();
+      },
+      moveRight() {
+        this.activeIndex = this.normalizeIndex(this.activeIndex + 1);
+        this.setCaretToActiveIndex();
+        this.refreshSlots();
+      },
+      moveHome() {
+        this.activeIndex = 0;
+        this.setCaretToActiveIndex();
+        this.refreshSlots();
+      },
+      moveEnd() {
+        this.activeIndex = Math.max(this.value.length, this.length - 1);
+        this.activeIndex = this.normalizeIndex(this.activeIndex);
+        this.setCaretToActiveIndex();
+        this.refreshSlots();
+      },
+      handleBackspace() {
+        const input = this.$refs.input;
+        if (!input) return;
+        const start2 = input.selectionStart || 0;
+        const end = input.selectionEnd || 0;
+        if (start2 !== end) return;
+        if (start2 <= 0) return;
+        this.activeIndex = this.normalizeIndex(start2 - 1);
+        this.refreshSlots();
+      },
+      syncFromInput() {
+        const input = this.$refs.input;
+        if (!input) return;
+        this.value = this.sanitizeValue(input.value || "");
+        if (this.value !== input.value) {
+          input.value = this.value;
+        }
+        this.setActiveFromCaret();
+        this.refreshSlots();
+      },
+      sanitizeValue(raw2) {
+        if (!raw2) return "";
+        const pattern = this.otpType === "alphanumeric" ? /[^a-zA-Z0-9]/g : /[^0-9]/g;
+        return raw2.replace(pattern, "").slice(0, this.length);
+      },
+      applyValueToInput() {
+        const input = this.$refs.input;
+        if (!input) return;
+        input.value = this.value;
+        this.setCaretToActiveIndex();
+      },
+      setActiveFromCaret() {
+        const input = this.$refs.input;
+        if (!input) return;
+        const caret = Number(input.selectionStart || 0);
+        this.activeIndex = this.normalizeIndex(caret);
+      },
+      setCaretToActiveIndex() {
+        const input = this.$refs.input;
+        if (!input) return;
+        const index = this.normalizeIndex(this.activeIndex);
+        input.setSelectionRange(index, index);
+      },
+      focusInput() {
+        const input = this.$refs.input;
+        if (!input) return;
+        input.focus();
+      },
+      refreshSlots() {
+        this.buildSlotsState();
+        this.updateSlotDom();
+      },
+      buildSlotsState() {
+        const next = [];
+        let i2 = 0;
+        while (i2 < this.length) {
+          const char = this.value.charAt(i2) || "";
+          const isActive = i2 === this.activeIndex;
+          const hasFakeCaret = this.isFocused && isActive && char === "";
+          next.push({ char, isActive, hasFakeCaret });
+          i2 += 1;
+        }
+        this.slots = next;
+      },
+      updateSlotDom() {
+        const slotElements = this.$el.querySelectorAll('[data-input-otp-slot="true"]');
+        slotElements.forEach((slotElement) => {
+          const index = Number(slotElement.dataset.index || "0");
+          const state = this.slots[index] || { char: "", isActive: false, hasFakeCaret: false };
+          slotElement.dataset.active = state.isActive ? "true" : "false";
+          if (this.isInvalid) {
+            slotElement.setAttribute("aria-invalid", "true");
+          } else {
+            slotElement.removeAttribute("aria-invalid");
+          }
+          const charElement = slotElement.querySelector('[data-input-otp-char="true"]');
+          if (charElement) {
+            charElement.textContent = state.char;
+          }
+          const caretWrapper = slotElement.querySelector('[data-input-otp-caret="true"]');
+          if (caretWrapper) {
+            if (state.hasFakeCaret) {
+              caretWrapper.classList.remove("hidden");
+            } else {
+              caretWrapper.classList.add("hidden");
+            }
+          }
+        });
+      },
+      normalizeIndex(index) {
+        if (this.length <= 0) return 0;
+        if (index < 0) return 0;
+        if (index > this.length - 1) return this.length - 1;
+        return index;
       }
     }));
   }
@@ -11373,10 +11704,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     registerRzDarkModeToggle(Alpine2);
     registerRzEmbeddedPreview(Alpine2);
     registerRzEventViewer(Alpine2);
+    registerRzFileInput(Alpine2);
     registerRzEmpty(Alpine2);
     registerRzHeading(Alpine2);
     registerRzIndicator(Alpine2);
     registerRzInputGroupAddon(Alpine2);
+    registerRzInputOTP(Alpine2);
     registerRzMarkdown(Alpine2, rizzyRequire);
     registerRzMenubar(Alpine2);
     registerRzNavigationMenu(Alpine2);
