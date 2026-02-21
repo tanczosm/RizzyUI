@@ -9,9 +9,12 @@
              data-input-otp-slot="true"
              data-index="@Index"
              data-active="false"
+             data-focused="false"
+             data-selected="false"
              x-init="registerSlot"
              x-on:mousedown="preventMouseDown"
              x-on:click="focusSlot"
+             x-on:dblclick="selectFilledSlots"
              aria-invalid="@ParentInputOTP?.GetInvalidValue().ToString().ToLowerInvariant()">
     <span class="@SlotClasses.GetCharacter()" data-slot="@InputOTPSlot.SlotNames.NameOf(SlotTypes.Character)" data-input-otp-char="true"></span>
     <div class="pointer-events-none absolute inset-0 flex items-center justify-center hidden" data-slot="@InputOTPSlot.SlotNames.NameOf(SlotTypes.CaretWrapper)" data-input-otp-caret="true">

@@ -267,8 +267,9 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
                 <RzParagraph>
                     The <code>rzInputOTP</code> Alpine state exposes <code>value</code>, <code>length</code>, <code>activeIndex</code>, <code>isFocused</code>, and
-                    <code>slots[]</code> (with <code>char</code>, <code>isActive</code>, and <code>hasFakeCaret</code> for each slot). It handles click-to-focus,
-                    keyboard navigation (Arrow keys, Home, End), backspace behavior, and paste normalization.
+                    <code>slots[]</code> (with <code>char</code>, <code>isActive</code>, <code>isSelected</code>, and <code>hasFakeCaret</code> for each slot). It handles click-to-focus,
+                    keyboard navigation (Arrow keys, Home, End), backspace behavior, and paste normalization. Double-clicking a slot selects all currently
+                    filled slots, then Backspace clears all slots and typing a valid character replaces selection with a fresh first-slot value.
                 </RzParagraph>
             </section>
         </MainContent>

@@ -8,6 +8,7 @@ export default function (Alpine) {
         otpType: 'numeric',
         slots: [],
         slotElements: [],
+        selectedIndexes: [],
 
         /**
          * Initializes OTP behavior and hydrates visual slots.
@@ -20,6 +21,7 @@ export default function (Alpine) {
 
             this.$el.dataset.rzOtpInitialized = 'true';
             this.slotElements = [];
+            this.selectedIndexes = [];
             this.length = Number(this.$el.dataset.length || '0');
             this.otpType = this.$el.dataset.otpType || 'numeric';
             this.isInvalid = this.$el.dataset.invalid === 'true';
@@ -28,8 +30,10 @@ export default function (Alpine) {
 
         /**
          * Handles input typing updates.
+         * @param {InputEvent} event
          */
         onInput(event) {
+            this.clearSelection();
             this.syncFromInput(event?.target);
         },
 
@@ -41,6 +45,7 @@ export default function (Alpine) {
             event.preventDefault();
             const text = event.clipboardData ? event.clipboardData.getData('text') : '';
             const filtered = this.sanitizeValue(text);
+            this.clearSelection();
             this.value = filtered;
             this.activeIndex = this.normalizeIndex(filtered.length);
             this.applyValueToInput();
@@ -52,26 +57,42 @@ export default function (Alpine) {
          * @param {KeyboardEvent} event
          */
         onKeyDown(event) {
+            if (this.hasSelection() && (event.key === 'Backspace' || event.key === 'Delete')) {
+                event.preventDefault();
+                this.clearAllSlots();
+                return;
+            }
+
+            if (this.hasSelection() && this.isAcceptableInputChar(event.key)) {
+                event.preventDefault();
+                this.replaceSelectionWithKey(event.key);
+                return;
+            }
+
             if (event.key === 'ArrowLeft') {
                 event.preventDefault();
+                this.clearSelection();
                 this.moveLeft();
                 return;
             }
 
             if (event.key === 'ArrowRight') {
                 event.preventDefault();
+                this.clearSelection();
                 this.moveRight();
                 return;
             }
 
             if (event.key === 'Home') {
                 event.preventDefault();
+                this.clearSelection();
                 this.moveHome();
                 return;
             }
 
             if (event.key === 'End') {
                 event.preventDefault();
+                this.clearSelection();
                 this.moveEnd();
                 return;
             }
@@ -95,6 +116,7 @@ export default function (Alpine) {
          */
         onBlur() {
             this.isFocused = false;
+            this.clearSelection();
             this.refreshSlots();
         },
 
@@ -113,9 +135,37 @@ export default function (Alpine) {
         focusSlot(event) {
             const target = event.currentTarget;
             const index = Number(target.dataset.index || '0');
+            this.clearSelection();
             this.activeIndex = this.normalizeIndex(index);
             this.focusInput();
             this.setCaretToActiveIndex();
+            this.refreshSlots();
+        },
+
+        /**
+         * Selects all currently filled slots from a double click gesture.
+         */
+        selectFilledSlots() {
+            const filledIndexes = this.slots
+                .map((slot, index) => ({ slot, index }))
+                .filter(({ slot }) => slot.char !== '')
+                .map(({ index }) => index);
+
+            if (filledIndexes.length === 0) {
+                this.clearSelection();
+                this.refreshSlots();
+                return;
+            }
+
+            this.selectedIndexes = filledIndexes;
+            this.isFocused = true;
+            this.focusInput();
+
+            const input = this.$refs.input;
+            if (input) {
+                input.setSelectionRange(0, this.value.length);
+            }
+
             this.refreshSlots();
         },
 
@@ -132,24 +182,28 @@ export default function (Alpine) {
 
         moveLeft() {
             this.activeIndex = this.normalizeIndex(this.activeIndex - 1);
+            this.focusInput();
             this.setCaretToActiveIndex();
             this.refreshSlots();
         },
 
         moveRight() {
             this.activeIndex = this.normalizeIndex(this.activeIndex + 1);
+            this.focusInput();
             this.setCaretToActiveIndex();
             this.refreshSlots();
         },
 
         moveHome() {
             this.activeIndex = 0;
+            this.focusInput();
             this.setCaretToActiveIndex();
             this.refreshSlots();
         },
 
         moveEnd() {
             this.activeIndex = this.normalizeIndex(this.value.length);
+            this.focusInput();
             this.setCaretToActiveIndex();
             this.refreshSlots();
         },
@@ -221,6 +275,43 @@ export default function (Alpine) {
             input.focus();
         },
 
+        hasSelection() {
+            return this.selectedIndexes.length > 0;
+        },
+
+        clearSelection() {
+            this.selectedIndexes = [];
+        },
+
+        clearAllSlots() {
+            this.clearSelection();
+            this.value = '';
+            this.activeIndex = 0;
+            this.applyValueToInput();
+            this.refreshSlots();
+        },
+
+        replaceSelectionWithKey(key) {
+            const nextChar = this.sanitizeValue(key).charAt(0);
+            if (!nextChar) return;
+
+            this.value = nextChar;
+            this.clearSelection();
+            this.activeIndex = this.normalizeIndex(1);
+            this.applyValueToInput();
+            this.refreshSlots();
+        },
+
+        isAcceptableInputChar(key) {
+            if (!key || key.length !== 1) return false;
+
+            if (this.otpType === 'alphanumeric') {
+                return /^[a-zA-Z0-9]$/.test(key);
+            }
+
+            return /^[0-9]$/.test(key);
+        },
+
         refreshSlots() {
             this.buildSlotsState();
             this.updateSlotDom();
@@ -231,9 +322,10 @@ export default function (Alpine) {
             let i = 0;
             while (i < this.length) {
                 const char = this.value.charAt(i) || '';
-                const isActive = i === this.activeIndex;
-                const hasFakeCaret = this.isFocused && isActive && char === '';
-                next.push({ char, isActive, hasFakeCaret });
+                const isSelected = this.selectedIndexes.includes(i);
+                const isActive = this.isFocused && !this.hasSelection() && i === this.activeIndex;
+                const hasFakeCaret = this.isFocused && !this.hasSelection() && isActive && char === '';
+                next.push({ char, isActive, hasFakeCaret, isSelected });
                 i += 1;
             }
             this.slots = next;
@@ -247,9 +339,12 @@ export default function (Alpine) {
 
             slotElements.forEach((slotElement) => {
                 const index = Number(slotElement.dataset.index || '0');
-                const state = this.slots[index] || { char: '', isActive: false, hasFakeCaret: false };
+                const state = this.slots[index] || { char: '', isActive: false, hasFakeCaret: false, isSelected: false };
 
                 slotElement.dataset.active = state.isActive ? 'true' : 'false';
+                slotElement.dataset.focused = this.isFocused ? 'true' : 'false';
+                slotElement.dataset.selected = state.isSelected ? 'true' : 'false';
+
                 if (this.isInvalid) {
                     slotElement.setAttribute('aria-invalid', 'true');
                 } else {

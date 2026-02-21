@@ -12,7 +12,7 @@ public partial class InputOTPSlot : RzComponent<InputOTPSlot.Slots>
     /// Defines default styling for <see cref="InputOTPSlot"/>.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
-        @base: "data-[active=true]:border-ring data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive dark:bg-input/30 border-input relative flex h-9 w-9 items-center justify-center border-y border-r text-sm shadow-xs transition-all outline-none first:rounded-l-md first:border-l last:rounded-r-md data-[active=true]:z-10 data-[active=true]:ring-[3px]",
+        @base: "aria-invalid:border-destructive dark:bg-input/30 border-input relative flex h-9 w-9 items-center justify-center border-y border-r text-sm shadow-xs transition-all outline-none first:rounded-l-md first:border-l last:rounded-r-md data-[focused=true]:data-[active=true]:border-ring data-[focused=true]:data-[active=true]:ring-ring/50 data-[focused=true]:data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[focused=true]:data-[active=true]:aria-invalid:ring-destructive/40 data-[focused=true]:data-[active=true]:aria-invalid:border-destructive data-[focused=true]:data-[active=true]:z-10 data-[focused=true]:data-[active=true]:ring-[3px] data-[focused=true]:data-[selected=true]:border-ring data-[focused=true]:data-[selected=true]:ring-ring/50 data-[focused=true]:data-[selected=true]:z-10 data-[focused=true]:data-[selected=true]:ring-[3px]",
         slots: new()
         {
             [s => s.Character] = "text-foreground",
