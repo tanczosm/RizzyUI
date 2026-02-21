@@ -9696,7 +9696,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       isFocused: false,
       isInvalid: false,
       otpType: "numeric",
+      textTransform: "none",
       slots: [],
+      slotElements: [],
+      selectedIndexes: [],
       /**
        * Initializes OTP behavior and hydrates visual slots.
        */
@@ -9706,16 +9709,43 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           return;
         }
         this.$el.dataset.rzOtpInitialized = "true";
+        this.slotElements = [];
+        this.selectedIndexes = [];
         this.length = Number(this.$el.dataset.length || "0");
         this.otpType = this.$el.dataset.otpType || "numeric";
+        this.textTransform = this.$el.dataset.textTransform || "none";
         this.isInvalid = this.$el.dataset.invalid === "true";
         this.syncFromInput();
       },
       /**
-       * Handles input typing updates.
+       * Returns the current OTP value.
+       * @returns {string}
        */
-      onInput() {
-        this.syncFromInput();
+      getValue() {
+        return this.value;
+      },
+      /**
+       * Sets the current OTP value.
+       * @param {string} newValue
+       */
+      setValue(newValue) {
+        const nextValue = this.sanitizeValue(newValue || "");
+        const previousValue = this.value;
+        this.clearSelection();
+        this.value = nextValue;
+        this.activeIndex = this.getMaxFocusableIndex();
+        this.applyValueToInput();
+        this.refreshSlots();
+        this.dispatchInputEvent(previousValue);
+        this.dispatchChangeEvent(previousValue);
+      },
+      /**
+       * Handles input typing updates.
+       * @param {InputEvent} event
+       */
+      onInput(event2) {
+        this.clearSelection();
+        this.syncFromInput(event2?.target);
       },
       /**
        * Handles paste behavior for OTP values.
@@ -9725,33 +9755,56 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         event2.preventDefault();
         const text = event2.clipboardData ? event2.clipboardData.getData("text") : "";
         const filtered = this.sanitizeValue(text);
+        const previousValue = this.value;
+        this.clearSelection();
         this.value = filtered;
-        this.activeIndex = Math.min(filtered.length, this.length - 1);
+        this.activeIndex = this.getMaxFocusableIndex();
         this.applyValueToInput();
         this.refreshSlots();
+        this.dispatchInputEvent(previousValue);
+        this.dispatchChangeEvent(previousValue);
       },
       /**
        * Handles keyboard navigation and deletion.
        * @param {KeyboardEvent} event
        */
       onKeyDown(event2) {
+        if (this.hasSelection() && (event2.key === "Backspace" || event2.key === "Delete")) {
+          event2.preventDefault();
+          this.clearAllSlots();
+          return;
+        }
+        if (this.hasSelection() && this.selectedIndexes.length > 1 && this.isAcceptableInputChar(event2.key)) {
+          event2.preventDefault();
+          this.replaceSelectionWithKey(event2.key);
+          return;
+        }
+        if (this.isAcceptableInputChar(event2.key)) {
+          event2.preventDefault();
+          this.replaceActiveSlotWithKey(event2.key);
+          return;
+        }
         if (event2.key === "ArrowLeft") {
           event2.preventDefault();
+          this.clearSelection();
           this.moveLeft();
           return;
         }
         if (event2.key === "ArrowRight") {
           event2.preventDefault();
+          this.clearSelection();
           this.moveRight();
           return;
         }
         if (event2.key === "Home") {
           event2.preventDefault();
+          this.clearSelection();
           this.moveHome();
           return;
         }
         if (event2.key === "End") {
           event2.preventDefault();
+          this.clearSelection();
           this.moveEnd();
           return;
         }
@@ -9772,6 +9825,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
        */
       onBlur() {
         this.isFocused = false;
+        this.clearSelection();
         this.refreshSlots();
       },
       /**
@@ -9788,29 +9842,67 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       focusSlot(event2) {
         const target = event2.currentTarget;
         const index = Number(target.dataset.index || "0");
+        if (!this.canFocusIndex(index)) {
+          return;
+        }
+        this.clearSelection();
         this.activeIndex = this.normalizeIndex(index);
         this.focusInput();
         this.setCaretToActiveIndex();
         this.refreshSlots();
       },
+      /**
+       * Selects all currently filled slots from a double click gesture.
+       */
+      selectFilledSlots() {
+        const filledIndexes = this.slots.map((slot, index) => ({ slot, index })).filter(({ slot }) => slot.char !== "").map(({ index }) => index);
+        if (filledIndexes.length === 0) {
+          this.clearSelection();
+          this.refreshSlots();
+          return;
+        }
+        this.selectedIndexes = filledIndexes;
+        this.isFocused = true;
+        this.focusInput();
+        const input = this.$refs.input;
+        if (input) {
+          input.setSelectionRange(0, this.value.length);
+        }
+        this.refreshSlots();
+      },
+      registerSlot() {
+        if (!this.$el || this.$el.dataset.inputOtpSlot !== "true") return;
+        if (!this.slotElements.includes(this.$el)) {
+          this.slotElements.push(this.$el);
+          this.slotElements.sort((left, right) => Number(left.dataset.index || "0") - Number(right.dataset.index || "0"));
+        }
+        this.refreshSlots();
+      },
       moveLeft() {
         this.activeIndex = this.normalizeIndex(this.activeIndex - 1);
+        this.focusInput();
         this.setCaretToActiveIndex();
         this.refreshSlots();
       },
       moveRight() {
-        this.activeIndex = this.normalizeIndex(this.activeIndex + 1);
+        const nextIndex = this.normalizeIndex(this.activeIndex + 1);
+        if (!this.canFocusIndex(nextIndex)) {
+          return;
+        }
+        this.activeIndex = nextIndex;
+        this.focusInput();
         this.setCaretToActiveIndex();
         this.refreshSlots();
       },
       moveHome() {
         this.activeIndex = 0;
+        this.focusInput();
         this.setCaretToActiveIndex();
         this.refreshSlots();
       },
       moveEnd() {
-        this.activeIndex = Math.max(this.value.length, this.length - 1);
-        this.activeIndex = this.normalizeIndex(this.activeIndex);
+        this.activeIndex = this.getMaxFocusableIndex();
+        this.focusInput();
         this.setCaretToActiveIndex();
         this.refreshSlots();
       },
@@ -9824,20 +9916,34 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         this.activeIndex = this.normalizeIndex(start2 - 1);
         this.refreshSlots();
       },
-      syncFromInput() {
-        const input = this.$refs.input;
+      syncFromInput(sourceInput) {
+        const input = sourceInput || this.$refs.input;
         if (!input) return;
+        const previousValue = this.value;
         this.value = this.sanitizeValue(input.value || "");
         if (this.value !== input.value) {
           input.value = this.value;
         }
-        this.setActiveFromCaret();
+        this.setActiveFromCaret(this.value.length);
         this.refreshSlots();
+        this.dispatchInputEvent(previousValue);
+        this.dispatchChangeEvent(previousValue);
       },
       sanitizeValue(raw2) {
         if (!raw2) return "";
         const pattern = this.otpType === "alphanumeric" ? /[^a-zA-Z0-9]/g : /[^0-9]/g;
-        return raw2.replace(pattern, "").slice(0, this.length);
+        const cleaned = raw2.replace(pattern, "").slice(0, this.length);
+        return this.applyTextTransform(cleaned);
+      },
+      applyTextTransform(raw2) {
+        if (!raw2) return "";
+        if (this.textTransform === "to-lower") {
+          return raw2.toLowerCase();
+        }
+        if (this.textTransform === "to-upper") {
+          return raw2.toUpperCase();
+        }
+        return raw2;
       },
       applyValueToInput() {
         const input = this.$refs.input;
@@ -9845,11 +9951,20 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         input.value = this.value;
         this.setCaretToActiveIndex();
       },
-      setActiveFromCaret() {
+      setActiveFromCaret(fallbackIndex) {
         const input = this.$refs.input;
-        if (!input) return;
-        const caret = Number(input.selectionStart || 0);
-        this.activeIndex = this.normalizeIndex(caret);
+        if (!input) {
+          this.activeIndex = this.getMaxFocusableIndex(fallbackIndex ?? 0);
+          return;
+        }
+        const selectionStart = input.selectionStart;
+        const caret = selectionStart == null ? Number.isFinite(fallbackIndex) ? Number(fallbackIndex) : 0 : Number(selectionStart);
+        const normalizedCaret = this.normalizeIndex(caret);
+        if (this.canFocusIndex(normalizedCaret)) {
+          this.activeIndex = normalizedCaret;
+          return;
+        }
+        this.activeIndex = this.getMaxFocusableIndex();
       },
       setCaretToActiveIndex() {
         const input = this.$refs.input;
@@ -9862,6 +9977,97 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         if (!input) return;
         input.focus();
       },
+      hasSelection() {
+        return this.selectedIndexes.length > 0;
+      },
+      clearSelection() {
+        this.selectedIndexes = [];
+      },
+      clearAllSlots() {
+        const previousValue = this.value;
+        this.clearSelection();
+        this.value = "";
+        this.activeIndex = 0;
+        this.applyValueToInput();
+        this.refreshSlots();
+        this.dispatchInputEvent(previousValue);
+      },
+      replaceSelectionWithKey(key) {
+        const nextChar = this.sanitizeValue(key).charAt(0);
+        if (!nextChar) return;
+        const previousValue = this.value;
+        this.value = nextChar;
+        this.clearSelection();
+        this.activeIndex = this.getMaxFocusableIndex();
+        this.applyValueToInput();
+        this.refreshSlots();
+        this.dispatchInputEvent(previousValue);
+      },
+      replaceActiveSlotWithKey(key) {
+        const nextChar = this.sanitizeValue(key).charAt(0);
+        if (!nextChar) return;
+        const index = this.canFocusIndex(this.activeIndex) ? this.normalizeIndex(this.activeIndex) : this.getMaxFocusableIndex();
+        const chars = this.value.split("");
+        while (chars.length < index) {
+          chars.push("");
+        }
+        chars[index] = nextChar;
+        const previousValue = this.value;
+        this.value = this.applyTextTransform(chars.join("").slice(0, this.length));
+        this.clearSelection();
+        this.activeIndex = this.getMaxFocusableIndex(index + 1);
+        this.applyValueToInput();
+        this.refreshSlots();
+        this.dispatchInputEvent(previousValue);
+        this.dispatchChangeEvent(previousValue);
+      },
+      isAcceptableInputChar(key) {
+        if (!key || key.length !== 1) return false;
+        if (this.otpType === "alphanumeric") {
+          return /^[a-zA-Z0-9]$/.test(key);
+        }
+        return /^[0-9]$/.test(key);
+      },
+      getNextFillIndex() {
+        if (this.length <= 0) return 0;
+        return Math.min(this.value.length, this.length - 1);
+      },
+      getMaxFocusableIndex(fallbackIndex) {
+        const safeFallback = Number.isFinite(fallbackIndex) ? this.normalizeIndex(Number(fallbackIndex)) : this.getNextFillIndex();
+        return this.canFocusIndex(safeFallback) ? safeFallback : this.getNextFillIndex();
+      },
+      canFocusIndex(index) {
+        const normalizedIndex = this.normalizeIndex(index);
+        const char = this.value.charAt(normalizedIndex);
+        if (char !== "") {
+          return true;
+        }
+        return normalizedIndex === this.getNextFillIndex();
+      },
+      dispatchInputEvent(previousValue) {
+        if (this.value === previousValue) return;
+        this.$dispatch("rz:inputotp:oninput", {
+          value: this.value,
+          previousValue,
+          activeIndex: this.activeIndex,
+          isComplete: this.value.length === this.length,
+          length: this.length,
+          otpType: this.otpType,
+          textTransform: this.textTransform
+        });
+      },
+      dispatchChangeEvent(previousValue) {
+        if (this.value === previousValue) return;
+        if (this.value.length !== this.length) return;
+        this.$dispatch("rz:inputotp:onchange", {
+          value: this.value,
+          previousValue,
+          activeIndex: this.activeIndex,
+          length: this.length,
+          otpType: this.otpType,
+          textTransform: this.textTransform
+        });
+      },
       refreshSlots() {
         this.buildSlotsState();
         this.updateSlotDom();
@@ -9871,19 +10077,24 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         let i2 = 0;
         while (i2 < this.length) {
           const char = this.value.charAt(i2) || "";
-          const isActive = i2 === this.activeIndex;
-          const hasFakeCaret = this.isFocused && isActive && char === "";
-          next.push({ char, isActive, hasFakeCaret });
+          const isSelected = this.selectedIndexes.includes(i2);
+          const isActive = this.isFocused && !this.hasSelection() && i2 === this.activeIndex;
+          const hasFakeCaret = this.isFocused && !this.hasSelection() && isActive && char === "";
+          next.push({ char, isActive, hasFakeCaret, isSelected });
           i2 += 1;
         }
         this.slots = next;
       },
       updateSlotDom() {
-        const slotElements = this.$el.querySelectorAll('[data-input-otp-slot="true"]');
+        const fallbackRoot = this.$el?.closest("[data-alpine-root]") || this.$el;
+        const slotElements = this.slotElements.length > 0 ? this.slotElements : fallbackRoot.querySelectorAll('[data-input-otp-slot="true"]');
         slotElements.forEach((slotElement) => {
           const index = Number(slotElement.dataset.index || "0");
-          const state = this.slots[index] || { char: "", isActive: false, hasFakeCaret: false };
+          const state = this.slots[index] || { char: "", isActive: false, hasFakeCaret: false, isSelected: false };
           slotElement.dataset.active = state.isActive ? "true" : "false";
+          slotElement.dataset.focused = this.isFocused ? "true" : "false";
+          slotElement.dataset.selected = state.isSelected ? "true" : "false";
+          slotElement.dataset.focusable = this.canFocusIndex(index) ? "true" : "false";
           if (this.isInvalid) {
             slotElement.setAttribute("aria-invalid", "true");
           } else {
