@@ -31,15 +31,14 @@
                 Input OTP
             </RzHeading>
             <RzParagraph>
-                <code>RzInputOTP</code> is a shadcn/ui-style segmented one-time passcode input. It renders a single native input for form submission,
-                while visual slot state, keyboard navigation, and paste handling are managed by Alpine.js through <code>x-data="rzInputOTP"</code>.
+                RzInputOTP is a focused input component for entering one-time passwords (OTP) and verification codes in a clean, user-friendly format. It presents the code as a series of individual character slots, making it easier for users to read, type, and confirm each digit or letter during sign-in, account recovery, or multi-factor authentication flows. The component is designed to improve usability with clear visual states, predictable keyboard input behavior, and a layout that supports fast entry while keeping the overall experience consistent with the rest of your UI system.
             </RzParagraph>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">Basic Usage</RzHeading>
                 <RzParagraph>Use six contiguous slots for common SMS verification codes.</RzParagraph>
 
-                <RzBrowser Layout="typeof(PreviewLayout)">
+                <div class="not-prose my-8">
                     <div class="mx-auto max-w-sm p-8">
                         <RzInputOTP Length="6" Name="VerificationCode">
                             <InputOTPGroup>
@@ -52,7 +51,12 @@
                             </InputOTPGroup>
                         </RzInputOTP>
                     </div>
-                </RzBrowser>
+                </div>
+
+                <div class="not-prose mb-4 space-y-2">
+                    <RzEventViewer EventName="rz:inputotp:oninput" />
+                    <RzEventViewer EventName="rz:inputotp:onchange" />
+                </div>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
                     &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;VerificationCode&quot;&gt;
@@ -72,7 +76,7 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Grouped 3-3 Layout" class="scroll-mt-20">Grouped 3-3 Layout</RzHeading>
                 <RzParagraph>Insert <code>InputOTPSeparator</code> to create a grouped pattern like 123-456.</RzParagraph>
 
-                <RzBrowser Layout="typeof(PreviewLayout)">
+                <div class="not-prose my-8">
                     <div class="mx-auto max-w-sm p-8">
                         <RzInputOTP Length="6" Name="VerificationCode">
                             <InputOTPGroup>
@@ -88,7 +92,12 @@
                             </InputOTPGroup>
                         </RzInputOTP>
                     </div>
-                </RzBrowser>
+                </div>
+
+                <div class="not-prose mb-4 space-y-2">
+                    <RzEventViewer EventName="rz:inputotp:oninput" />
+                    <RzEventViewer EventName="rz:inputotp:onchange" />
+                </div>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
                     &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;VerificationCode&quot;&gt;
@@ -113,7 +122,7 @@
                     Use <code>Invalid</code> to force error styling, and <code>Disabled</code> to lock interaction while still rendering the current value.
                 </RzParagraph>
 
-                <RzBrowser Layout="typeof(PreviewLayout)">
+                <div class="not-prose my-8">
                     <div class="mx-auto max-w-sm p-8 space-y-6">
                         <RzInputOTP Length="6" Name="InvalidVerificationCode" Invalid="true">
                             <InputOTPGroup>
@@ -137,7 +146,12 @@
                             </InputOTPGroup>
                         </RzInputOTP>
                     </div>
-                </RzBrowser>
+                </div>
+
+                <div class="not-prose mb-4 space-y-2">
+                    <RzEventViewer EventName="rz:inputotp:oninput" />
+                    <RzEventViewer EventName="rz:inputotp:onchange" />
+                </div>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
                     &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;InvalidVerificationCode&quot; Invalid=&quot;true&quot;&gt;
@@ -170,7 +184,7 @@
                     Set <code>OtpType</code> to <code>Alphanumeric</code> and use <code>InputMode=&quot;text&quot;</code> for recovery codes containing letters and digits.
                 </RzParagraph>
 
-                <RzBrowser Layout="typeof(PreviewLayout)">
+                <div class="not-prose my-8">
                     <div class="mx-auto max-w-sm p-8">
                         <RzInputOTP Length="8" Name="RecoveryCode" OtpType="RzInputOTP.InputOtpType.Alphanumeric" InputMode="text">
                             <InputOTPGroup>
@@ -188,7 +202,12 @@
                             </InputOTPGroup>
                         </RzInputOTP>
                     </div>
-                </RzBrowser>
+                </div>
+
+                <div class="not-prose mb-4 space-y-2">
+                    <RzEventViewer EventName="rz:inputotp:oninput" />
+                    <RzEventViewer EventName="rz:inputotp:onchange" />
+                </div>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
                     &lt;RzInputOTP Length=&quot;8&quot;
