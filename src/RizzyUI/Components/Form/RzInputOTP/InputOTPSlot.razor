@@ -9,6 +9,7 @@
              data-input-otp-slot="true"
              data-index="@Index"
              data-active="false"
+             x-init="registerSlot"
              x-on:mousedown="preventMouseDown"
              x-on:click="focusSlot"
              aria-invalid="@ParentInputOTP?.GetInvalidValue().ToString().ToLowerInvariant()">

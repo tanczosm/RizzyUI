@@ -7,6 +7,7 @@ export default function (Alpine) {
         isInvalid: false,
         otpType: 'numeric',
         slots: [],
+        slotElements: [],
 
         /**
          * Initializes OTP behavior and hydrates visual slots.
@@ -18,6 +19,7 @@ export default function (Alpine) {
             }
 
             this.$el.dataset.rzOtpInitialized = 'true';
+            this.slotElements = [];
             this.length = Number(this.$el.dataset.length || '0');
             this.otpType = this.$el.dataset.otpType || 'numeric';
             this.isInvalid = this.$el.dataset.invalid === 'true';
@@ -114,6 +116,17 @@ export default function (Alpine) {
             this.activeIndex = this.normalizeIndex(index);
             this.focusInput();
             this.setCaretToActiveIndex();
+            this.refreshSlots();
+        },
+
+        registerSlot() {
+            if (!this.$el || this.$el.dataset.inputOtpSlot !== 'true') return;
+
+            if (!this.slotElements.includes(this.$el)) {
+                this.slotElements.push(this.$el);
+                this.slotElements.sort((left, right) => Number(left.dataset.index || '0') - Number(right.dataset.index || '0'));
+            }
+
             this.refreshSlots();
         },
 
@@ -227,7 +240,11 @@ export default function (Alpine) {
         },
 
         updateSlotDom() {
-            const slotElements = this.$el.querySelectorAll('[data-input-otp-slot="true"]');
+            const fallbackRoot = this.$el?.closest('[data-alpine-root]') || this.$el;
+            const slotElements = this.slotElements.length > 0
+                ? this.slotElements
+                : fallbackRoot.querySelectorAll('[data-input-otp-slot="true"]');
+
             slotElements.forEach((slotElement) => {
                 const index = Number(slotElement.dataset.index || '0');
                 const state = this.slots[index] || { char: '', isActive: false, hasFakeCaret: false };
