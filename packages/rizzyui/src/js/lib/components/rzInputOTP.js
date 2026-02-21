@@ -29,6 +29,31 @@ export default function (Alpine) {
         },
 
         /**
+         * Returns the current OTP value.
+         * @returns {string}
+         */
+        getValue() {
+            return this.value;
+        },
+
+        /**
+         * Sets the current OTP value.
+         * @param {string} newValue
+         */
+        setValue(newValue) {
+            const nextValue = this.sanitizeValue(newValue || '');
+            const previousValue = this.value;
+
+            this.clearSelection();
+            this.value = nextValue;
+            this.activeIndex = this.normalizeIndex(nextValue.length);
+            this.applyValueToInput();
+            this.refreshSlots();
+            this.dispatchInputEvent(previousValue);
+            this.dispatchChangeEvent(previousValue);
+        },
+
+        /**
          * Handles input typing updates.
          * @param {InputEvent} event
          */
@@ -45,11 +70,15 @@ export default function (Alpine) {
             event.preventDefault();
             const text = event.clipboardData ? event.clipboardData.getData('text') : '';
             const filtered = this.sanitizeValue(text);
+            const previousValue = this.value;
+
             this.clearSelection();
             this.value = filtered;
             this.activeIndex = this.normalizeIndex(filtered.length);
             this.applyValueToInput();
             this.refreshSlots();
+            this.dispatchInputEvent(previousValue);
+            this.dispatchChangeEvent(previousValue);
         },
 
         /**
@@ -63,9 +92,15 @@ export default function (Alpine) {
                 return;
             }
 
-            if (this.hasSelection() && this.isAcceptableInputChar(event.key)) {
+            if (this.hasSelection() && this.selectedIndexes.length > 1 && this.isAcceptableInputChar(event.key)) {
                 event.preventDefault();
                 this.replaceSelectionWithKey(event.key);
+                return;
+            }
+
+            if (this.isAcceptableInputChar(event.key)) {
+                event.preventDefault();
+                this.replaceActiveSlotWithKey(event.key);
                 return;
             }
 
@@ -225,6 +260,7 @@ export default function (Alpine) {
             const input = sourceInput || this.$refs.input;
             if (!input) return;
 
+            const previousValue = this.value;
             this.value = this.sanitizeValue(input.value || '');
             if (this.value !== input.value) {
                 input.value = this.value;
@@ -232,6 +268,8 @@ export default function (Alpine) {
 
             this.setActiveFromCaret(this.value.length);
             this.refreshSlots();
+            this.dispatchInputEvent(previousValue);
+            this.dispatchChangeEvent(previousValue);
         },
 
         sanitizeValue(raw) {
@@ -284,22 +322,42 @@ export default function (Alpine) {
         },
 
         clearAllSlots() {
+            const previousValue = this.value;
             this.clearSelection();
             this.value = '';
             this.activeIndex = 0;
             this.applyValueToInput();
             this.refreshSlots();
+            this.dispatchInputEvent(previousValue);
         },
 
         replaceSelectionWithKey(key) {
             const nextChar = this.sanitizeValue(key).charAt(0);
             if (!nextChar) return;
 
+            const previousValue = this.value;
             this.value = nextChar;
             this.clearSelection();
             this.activeIndex = this.normalizeIndex(1);
             this.applyValueToInput();
             this.refreshSlots();
+            this.dispatchInputEvent(previousValue);
+        },
+
+        replaceActiveSlotWithKey(key) {
+            const nextChar = this.sanitizeValue(key).charAt(0);
+            if (!nextChar) return;
+
+            const index = this.normalizeIndex(this.activeIndex);
+            const currentValue = this.value.padEnd(this.length, '');
+            const previousValue = this.value;
+            this.value = `${currentValue.slice(0, index)}${nextChar}${currentValue.slice(index + 1)}`.trimEnd();
+            this.clearSelection();
+            this.activeIndex = this.normalizeIndex(index + 1);
+            this.applyValueToInput();
+            this.refreshSlots();
+            this.dispatchInputEvent(previousValue);
+            this.dispatchChangeEvent(previousValue);
         },
 
         isAcceptableInputChar(key) {
@@ -310,6 +368,32 @@ export default function (Alpine) {
             }
 
             return /^[0-9]$/.test(key);
+        },
+
+        dispatchInputEvent(previousValue) {
+            if (this.value === previousValue) return;
+
+            this.$dispatch('rz:inputotp:oninput', {
+                value: this.value,
+                previousValue,
+                activeIndex: this.activeIndex,
+                isComplete: this.value.length === this.length,
+                length: this.length,
+                otpType: this.otpType
+            });
+        },
+
+        dispatchChangeEvent(previousValue) {
+            if (this.value === previousValue) return;
+            if (this.value.length !== this.length) return;
+
+            this.$dispatch('rz:inputotp:onchange', {
+                value: this.value,
+                previousValue,
+                activeIndex: this.activeIndex,
+                length: this.length,
+                otpType: this.otpType
+            });
         },
 
         refreshSlots() {

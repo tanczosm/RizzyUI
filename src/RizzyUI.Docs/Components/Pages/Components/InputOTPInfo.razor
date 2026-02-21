@@ -269,7 +269,9 @@
                     The <code>rzInputOTP</code> Alpine state exposes <code>value</code>, <code>length</code>, <code>activeIndex</code>, <code>isFocused</code>, and
                     <code>slots[]</code> (with <code>char</code>, <code>isActive</code>, <code>isSelected</code>, and <code>hasFakeCaret</code> for each slot). It handles click-to-focus,
                     keyboard navigation (Arrow keys, Home, End), backspace behavior, and paste normalization. Double-clicking a slot selects all currently
-                    filled slots, then Backspace clears all slots and typing a valid character replaces selection with a fresh first-slot value.
+                    filled slots, then Backspace clears all slots and typing a valid character replaces selection with a fresh first-slot value. The API also
+                    exposes <code>getValue()</code> and <code>setValue(newValue)</code>. It dispatches <code>rz:inputotp:oninput</code> for any value change and
+                    <code>rz:inputotp:onchange</code> when a value change results in all slots being filled.
                 </RzParagraph>
             </section>
         </MainContent>
