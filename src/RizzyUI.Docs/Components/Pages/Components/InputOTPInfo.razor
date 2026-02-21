@@ -1,8 +1,7 @@
 @page "/components/input-otp"
-@namespace RizzyUI.Docs.Components.Pages.Components
-
+@namespace RizzyUI.Pages
 @using RizzyUI
-@using Rizzy.Components
+@inherits RzComponent
 
 <PageTitle>Input OTP</PageTitle>
 
@@ -11,126 +10,242 @@
         <SideContent>
             <RzQuickReference />
         </SideContent>
-    <MainContent>
-    <RzHeading Level="HeadingLevel.H1">Input OTP</RzHeading>
-    <RzParagraph>
-        <code>RzInputOTP</code> is an SSR-first segmented OTP input with a native hidden input for form submission and Alpine-powered slot rendering.
-    </RzParagraph>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Docs</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/components" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Components</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Input OTP</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
 
-    <RzAlert Variant="ThemeVariant.Information" class="my-4">
-        <AlertTitle>Under the Hood</AlertTitle>
-        <AlertDescription>
-            This component uses <code>x-data="rzInputOTP"</code> for keyboard/paste interactions while keeping a single native <code>input</code> as the submitted form value.
-        </AlertDescription>
-    </RzAlert>
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Input OTP" class="scroll-mt-20">
+                Input OTP
+            </RzHeading>
+            <RzParagraph>
+                <code>RzInputOTP</code> provides a shadcn/ui-style segmented one-time-password input that preserves SSR form posting through a single native input while using Alpine.js for keyboard behavior, focus state, and slot rendering.
+            </RzParagraph>
 
-    <RzHeading Level="HeadingLevel.H2">Basic Usage</RzHeading>
-    <RzBrowser Layout="typeof(PreviewLayout)">
-        <div class="mx-auto max-w-sm p-8">
-            <RzInputOTP Length="6" Name="VerificationCode">
-                <InputOTPGroup>
-                    <InputOTPSlot Index="0" />
-                    <InputOTPSlot Index="1" />
-                    <InputOTPSlot Index="2" />
-                    <InputOTPSlot Index="3" />
-                    <InputOTPSlot Index="4" />
-                    <InputOTPSlot Index="5" />
-                </InputOTPGroup>
-            </RzInputOTP>
-        </div>
-    </RzBrowser>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">
+                    Basic Usage
+                </RzHeading>
+                <RzParagraph>
+                    Use one <code>InputOTPGroup</code> with contiguous <code>InputOTPSlot</code> indexes that match the configured <code>Length</code>.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto max-w-sm p-8">
+                        <RzInputOTP Length="6" Name="VerificationCode">
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="0" />
+                                <InputOTPSlot Index="1" />
+                                <InputOTPSlot Index="2" />
+                                <InputOTPSlot Index="3" />
+                                <InputOTPSlot Index="4" />
+                                <InputOTPSlot Index="5" />
+                            </InputOTPGroup>
+                        </RzInputOTP>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+                    &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;VerificationCode&quot;&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;0&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;1&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;2&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;3&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;4&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;5&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                    &lt;/RzInputOTP&gt;
+                </RzCodeViewer>
+            </section>
 
-    <RzHeading Level="HeadingLevel.H2">Grouped 3-3 OTP</RzHeading>
-    <RzBrowser Layout="typeof(PreviewLayout)">
-        <div class="mx-auto max-w-sm p-8">
-            <RzInputOTP Length="6" Name="VerificationCode">
-                <InputOTPGroup>
-                    <InputOTPSlot Index="0" />
-                    <InputOTPSlot Index="1" />
-                    <InputOTPSlot Index="2" />
-                </InputOTPGroup>
-                <InputOTPSeparator />
-                <InputOTPGroup>
-                    <InputOTPSlot Index="3" />
-                    <InputOTPSlot Index="4" />
-                    <InputOTPSlot Index="5" />
-                </InputOTPGroup>
-            </RzInputOTP>
-        </div>
-    </RzBrowser>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Grouped Layout" class="scroll-mt-20">
+                    Grouped 3-3 OTP
+                </RzHeading>
+                <RzParagraph>
+                    Use <code>InputOTPSeparator</code> to split OTPs into human-readable groups while keeping one submitted value.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto max-w-sm p-8">
+                        <RzInputOTP Length="6" Name="VerificationCode">
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="0" />
+                                <InputOTPSlot Index="1" />
+                                <InputOTPSlot Index="2" />
+                            </InputOTPGroup>
+                            <InputOTPSeparator />
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="3" />
+                                <InputOTPSlot Index="4" />
+                                <InputOTPSlot Index="5" />
+                            </InputOTPGroup>
+                        </RzInputOTP>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+                    &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;VerificationCode&quot;&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;0&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;1&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;2&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                        &lt;InputOTPSeparator /&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;3&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;4&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;5&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                    &lt;/RzInputOTP&gt;
+                </RzCodeViewer>
+            </section>
 
-    <RzHeading Level="HeadingLevel.H2">Invalid State</RzHeading>
-    <RzBrowser Layout="typeof(PreviewLayout)">
-        <div class="mx-auto max-w-sm p-8">
-            <RzInputOTP Length="6" Name="VerificationCode" Invalid="true">
-                <InputOTPGroup>
-                    <InputOTPSlot Index="0" />
-                    <InputOTPSlot Index="1" />
-                    <InputOTPSlot Index="2" />
-                    <InputOTPSlot Index="3" />
-                    <InputOTPSlot Index="4" />
-                    <InputOTPSlot Index="5" />
-                </InputOTPGroup>
-            </RzInputOTP>
-        </div>
-    </RzBrowser>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Invalid and Disabled" class="scroll-mt-20">
+                    Invalid and Disabled States
+                </RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto max-w-sm space-y-4 p-8">
+                        <RzInputOTP Length="6" Name="VerificationCodeInvalid" Invalid="true">
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="0" />
+                                <InputOTPSlot Index="1" />
+                                <InputOTPSlot Index="2" />
+                                <InputOTPSlot Index="3" />
+                                <InputOTPSlot Index="4" />
+                                <InputOTPSlot Index="5" />
+                            </InputOTPGroup>
+                        </RzInputOTP>
 
-    <RzHeading Level="HeadingLevel.H2">Disabled State</RzHeading>
-    <RzBrowser Layout="typeof(PreviewLayout)">
-        <div class="mx-auto max-w-sm p-8">
-            <RzInputOTP Length="6" Name="VerificationCode" Disabled="true" Value="123456">
-                <InputOTPGroup>
-                    <InputOTPSlot Index="0" />
-                    <InputOTPSlot Index="1" />
-                    <InputOTPSlot Index="2" />
-                    <InputOTPSlot Index="3" />
-                    <InputOTPSlot Index="4" />
-                    <InputOTPSlot Index="5" />
-                </InputOTPGroup>
-            </RzInputOTP>
-        </div>
-    </RzBrowser>
+                        <RzInputOTP Length="6" Name="VerificationCodeDisabled" Disabled="true" Value="123456">
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="0" />
+                                <InputOTPSlot Index="1" />
+                                <InputOTPSlot Index="2" />
+                                <InputOTPSlot Index="3" />
+                                <InputOTPSlot Index="4" />
+                                <InputOTPSlot Index="5" />
+                            </InputOTPGroup>
+                        </RzInputOTP>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+                    &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;VerificationCodeInvalid&quot; Invalid=&quot;true&quot;&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;0&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;1&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;2&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;3&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;4&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;5&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                    &lt;/RzInputOTP&gt;
 
-    <RzHeading Level="HeadingLevel.H2">Alphanumeric Mode</RzHeading>
-    <RzBrowser Layout="typeof(PreviewLayout)">
-        <div class="mx-auto max-w-sm p-8">
-            <RzInputOTP Length="8" Name="RecoveryCode" OtpType="RzInputOTP.InputOtpType.Alphanumeric" InputMode="text">
-                <InputOTPGroup>
-                    <InputOTPSlot Index="0" />
-                    <InputOTPSlot Index="1" />
-                    <InputOTPSlot Index="2" />
-                    <InputOTPSlot Index="3" />
-                </InputOTPGroup>
-                <InputOTPSeparator />
-                <InputOTPGroup>
-                    <InputOTPSlot Index="4" />
-                    <InputOTPSlot Index="5" />
-                    <InputOTPSlot Index="6" />
-                    <InputOTPSlot Index="7" />
-                </InputOTPGroup>
-            </RzInputOTP>
-        </div>
-    </RzBrowser>
+                    &lt;RzInputOTP Length=&quot;6&quot; Name=&quot;VerificationCodeDisabled&quot; Disabled=&quot;true&quot; Value=&quot;123456&quot;&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;0&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;1&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;2&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;3&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;4&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;5&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                    &lt;/RzInputOTP&gt;
+                </RzCodeViewer>
+            </section>
 
-    <RzHeading Level="HeadingLevel.H2">Parameters</RzHeading>
-    <table>
-        <thead><tr><th>Component</th><th>Parameter</th><th>Description</th></tr></thead>
-        <tbody>
-            <tr><td>RzInputOTP</td><td>Length</td><td>Total OTP character length.</td></tr>
-            <tr><td>RzInputOTP</td><td>Name</td><td>Native input name used in form posts.</td></tr>
-            <tr><td>RzInputOTP</td><td>Value</td><td>Initial server-rendered value.</td></tr>
-            <tr><td>RzInputOTP</td><td>OtpType</td><td>Numeric or Alphanumeric filtering mode.</td></tr>
-            <tr><td>RzInputOTP</td><td>Invalid</td><td>Forces invalid visual state.</td></tr>
-            <tr><td>InputOTPGroup</td><td>Class</td><td>Additional group classes.</td></tr>
-            <tr><td>InputOTPSlot</td><td>Index</td><td>Zero-based slot index.</td></tr>
-            <tr><td>InputOTPSeparator</td><td>ChildContent</td><td>Optional custom separator content.</td></tr>
-        </tbody>
-    </table>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alphanumeric Mode" class="scroll-mt-20">
+                    Alphanumeric Recovery Codes
+                </RzHeading>
+                <RzParagraph>
+                    Switch <code>OtpType</code> to <code>Alphanumeric</code> for letter/number recovery codes.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto max-w-sm p-8">
+                        <RzInputOTP Length="8" Name="RecoveryCode" OtpType="RzInputOTP.InputOtpType.Alphanumeric" InputMode="text">
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="0" />
+                                <InputOTPSlot Index="1" />
+                                <InputOTPSlot Index="2" />
+                                <InputOTPSlot Index="3" />
+                            </InputOTPGroup>
+                            <InputOTPSeparator />
+                            <InputOTPGroup>
+                                <InputOTPSlot Index="4" />
+                                <InputOTPSlot Index="5" />
+                                <InputOTPSlot Index="6" />
+                                <InputOTPSlot Index="7" />
+                            </InputOTPGroup>
+                        </RzInputOTP>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+                    &lt;RzInputOTP Length=&quot;8&quot; Name=&quot;RecoveryCode&quot; OtpType=&quot;RzInputOTP.InputOtpType.Alphanumeric&quot; InputMode=&quot;text&quot;&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;0&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;1&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;2&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;3&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                        &lt;InputOTPSeparator /&gt;
+                        &lt;InputOTPGroup&gt;
+                            &lt;InputOTPSlot Index=&quot;4&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;5&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;6&quot; /&gt;
+                            &lt;InputOTPSlot Index=&quot;7&quot; /&gt;
+                        &lt;/InputOTPGroup&gt;
+                    &lt;/RzInputOTP&gt;
+                </RzCodeViewer>
+            </section>
 
-    <RzHeading Level="HeadingLevel.H2">Alpine API</RzHeading>
-    <RzParagraph>
-        The Alpine state exposes <code>value</code>, <code>length</code>, <code>activeIndex</code>, <code>isFocused</code>, and <code>slots[]</code> where each slot has <code>char</code>, <code>isActive</code>, and <code>hasFakeCaret</code>.
-    </RzParagraph>
-    </MainContent>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Parameters" class="scroll-mt-20">
+                    Component Parameters
+                </RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="bg-zinc-100/75 text-left font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/5 px-4 py-3">Component</th>
+                                <th scope="col" class="w-1/5 px-4 py-3">Property</th>
+                                <th scope="col" class="w-2/5 px-4 py-3">Description</th>
+                                <th scope="col" class="w-1/5 px-4 py-3">Type</th>
+                                <th scope="col" class="px-4 py-3">Default</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top"><td class="px-4 py-4"><code>RzInputOTP</code></td><td class="px-4 py-4"><code>Length</code></td><td class="px-4 py-4">Total number of expected OTP characters and slots.</td><td class="px-4 py-4"><code>int</code></td><td class="px-4 py-4">Required</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>RzInputOTP</code></td><td class="px-4 py-4"><code>Name</code></td><td class="px-4 py-4">Native input name used during form submission.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>RzInputOTP</code></td><td class="px-4 py-4"><code>Value</code></td><td class="px-4 py-4">Initial server-rendered OTP value.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>RzInputOTP</code></td><td class="px-4 py-4"><code>OtpType</code></td><td class="px-4 py-4">Character filter mode (<code>Numeric</code> or <code>Alphanumeric</code>).</td><td class="px-4 py-4"><code>InputOtpType</code></td><td class="px-4 py-4"><code>Numeric</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>RzInputOTP</code></td><td class="px-4 py-4"><code>Invalid</code></td><td class="px-4 py-4">Forces invalid visual state for all slots.</td><td class="px-4 py-4"><code>bool?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>RzInputOTP</code></td><td class="px-4 py-4"><code>AriaLabel</code></td><td class="px-4 py-4">Accessible label for the underlying input.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4">Localized default</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>InputOTPSlot</code></td><td class="px-4 py-4"><code>Index</code></td><td class="px-4 py-4">Zero-based index used to map slot to character position.</td><td class="px-4 py-4"><code>int</code></td><td class="px-4 py-4">Required</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>InputOTPSeparator</code></td><td class="px-4 py-4"><code>ChildContent</code></td><td class="px-4 py-4">Optional custom separator content. Defaults to minus icon.</td><td class="px-4 py-4"><code>RenderFragment?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Keyboard Interactions" class="scroll-mt-20">
+                    Keyboard and Alpine Behavior
+                </RzHeading>
+                <RzParagraph>
+                    Alpine methods manage slot focus and text flow. Arrow keys move between slots, Home/End jump to boundaries, Backspace/Delete remove characters predictably, and paste sanitizes content based on <code>OtpType</code> before rendering.
+                </RzParagraph>
+            </section>
+        </MainContent>
     </RzArticle>
 </RzQuickReferenceContainer>

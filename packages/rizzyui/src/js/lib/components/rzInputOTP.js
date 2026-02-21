@@ -36,6 +36,7 @@ export default function (Alpine) {
          * @param {ClipboardEvent} event
          */
         onPaste(event) {
+            if (!event) return;
             event.preventDefault();
             const text = event.clipboardData ? event.clipboardData.getData('text') : '';
             const filtered = this.sanitizeValue(text);
@@ -50,6 +51,8 @@ export default function (Alpine) {
          * @param {KeyboardEvent} event
          */
         onKeyDown(event) {
+            if (!event) return;
+
             if (event.key === 'ArrowLeft') {
                 event.preventDefault();
                 this.moveLeft();
@@ -75,7 +78,20 @@ export default function (Alpine) {
             }
 
             if (event.key === 'Backspace') {
+                event.preventDefault();
                 this.handleBackspace();
+                return;
+            }
+
+            if (event.key === 'Delete') {
+                event.preventDefault();
+                this.handleDelete();
+                return;
+            }
+
+            if (this.isCharacterKey(event)) {
+                event.preventDefault();
+                this.handleCharacterInput(event.key);
             }
         },
 
@@ -101,6 +117,7 @@ export default function (Alpine) {
          * @param {MouseEvent} event
          */
         preventMouseDown(event) {
+            if (!event) return;
             event.preventDefault();
         },
 
@@ -109,7 +126,8 @@ export default function (Alpine) {
          * @param {MouseEvent} event
          */
         focusSlot(event) {
-            const target = event.currentTarget;
+            const target = event ? event.currentTarget : null;
+            if (!target) return;
             const index = Number(target.dataset.index || '0');
             this.activeIndex = this.normalizeIndex(index);
             this.focusInput();
@@ -148,11 +166,55 @@ export default function (Alpine) {
 
             const start = input.selectionStart || 0;
             const end = input.selectionEnd || 0;
-            if (start !== end) return;
+            if (start !== end) {
+                const nextValue = this.value.slice(0, start) + this.value.slice(end);
+                this.value = this.sanitizeValue(nextValue);
+                this.activeIndex = this.normalizeIndex(start);
+                this.applyValueToInput();
+                this.refreshSlots();
+                return;
+            }
+
             if (start <= 0) return;
 
+            const nextValue = this.value.slice(0, start - 1) + this.value.slice(end);
+            this.value = this.sanitizeValue(nextValue);
             this.activeIndex = this.normalizeIndex(start - 1);
+            this.applyValueToInput();
             this.refreshSlots();
+        },
+
+        handleDelete() {
+            const input = this.$refs.input;
+            if (!input) return;
+
+            const start = input.selectionStart || 0;
+            const end = input.selectionEnd || 0;
+            const hasSelection = start !== end;
+            const deleteEnd = hasSelection ? end : start + 1;
+            const nextValue = this.value.slice(0, start) + this.value.slice(deleteEnd);
+            this.value = this.sanitizeValue(nextValue);
+            this.activeIndex = this.normalizeIndex(start);
+            this.applyValueToInput();
+            this.refreshSlots();
+        },
+
+        handleCharacterInput(key) {
+            const input = this.$refs.input;
+            if (!input) return;
+
+            const start = input.selectionStart || 0;
+            const end = input.selectionEnd || 0;
+            const nextValue = this.value.slice(0, start) + key + this.value.slice(end);
+            this.value = this.sanitizeValue(nextValue);
+            this.activeIndex = this.normalizeIndex(start + 1);
+            this.applyValueToInput();
+            this.refreshSlots();
+        },
+
+        isCharacterKey(event) {
+            if (event.ctrlKey || event.metaKey || event.altKey) return false;
+            return event.key.length === 1;
         },
 
         syncFromInput() {
@@ -184,7 +246,8 @@ export default function (Alpine) {
         setActiveFromCaret() {
             const input = this.$refs.input;
             if (!input) return;
-            const caret = Number(input.selectionStart || 0);
+            const selectionStart = input.selectionStart;
+            const caret = Number(selectionStart == null ? this.value.length : selectionStart);
             this.activeIndex = this.normalizeIndex(caret);
         },
 
