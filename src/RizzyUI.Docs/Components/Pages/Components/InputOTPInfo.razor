@@ -230,6 +230,7 @@
                             <tr class="align-top"><td class="px-4 py-4"><code>Value</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Initial server-rendered value.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
                             <tr class="align-top"><td class="px-4 py-4"><code>OtpType</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Input filtering mode: <code>Numeric</code> or <code>Alphanumeric</code>.</td><td class="px-4 py-4"><code>InputOtpType</code></td><td class="px-4 py-4"><code>Numeric</code></td></tr>
                             <tr class="align-top"><td class="px-4 py-4"><code>InputMode</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Overrides the native inputmode attribute (for example <code>numeric</code> or <code>text</code>).</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>TextTransform</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Applies text transformation to OTP input values: <code>None</code>, <code>ToLower</code>, or <code>ToUpper</code>.</td><td class="px-4 py-4"><code>InputOtpTextTransform</code></td><td class="px-4 py-4"><code>None</code></td></tr>
                             <tr class="align-top"><td class="px-4 py-4"><code>Autocomplete</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Native autocomplete value used by the hidden input.</td><td class="px-4 py-4"><code>string</code></td><td class="px-4 py-4"><code>one-time-code</code></td></tr>
                             <tr class="align-top"><td class="px-4 py-4"><code>Disabled</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Disables typing and slot interactions.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>false</code></td></tr>
                             <tr class="align-top"><td class="px-4 py-4"><code>Required</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Marks the native input as required.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>false</code></td></tr>
@@ -271,7 +272,8 @@
                     keyboard navigation (Arrow keys, Home, End), backspace behavior, and paste normalization. Double-clicking a slot selects all currently
                     filled slots, then Backspace clears all slots and typing a valid character replaces selection with a fresh first-slot value. The API also
                     exposes <code>getValue()</code> and <code>setValue(newValue)</code>. It dispatches <code>rz:inputotp:oninput</code> for any value change and
-                    <code>rz:inputotp:onchange</code> when a value change results in all slots being filled.
+                    <code>rz:inputotp:onchange</code> when a value change results in all slots being filled. Slot focus is constrained so users can only
+                    focus already-filled slots or the next slot in sequence.
                 </RzParagraph>
             </section>
         </MainContent>

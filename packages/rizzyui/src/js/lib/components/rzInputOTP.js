@@ -6,6 +6,7 @@ export default function (Alpine) {
         isFocused: false,
         isInvalid: false,
         otpType: 'numeric',
+        textTransform: 'none',
         slots: [],
         slotElements: [],
         selectedIndexes: [],
@@ -24,6 +25,7 @@ export default function (Alpine) {
             this.selectedIndexes = [];
             this.length = Number(this.$el.dataset.length || '0');
             this.otpType = this.$el.dataset.otpType || 'numeric';
+            this.textTransform = this.$el.dataset.textTransform || 'none';
             this.isInvalid = this.$el.dataset.invalid === 'true';
             this.syncFromInput();
         },
@@ -46,7 +48,7 @@ export default function (Alpine) {
 
             this.clearSelection();
             this.value = nextValue;
-            this.activeIndex = this.normalizeIndex(nextValue.length);
+            this.activeIndex = this.getMaxFocusableIndex();
             this.applyValueToInput();
             this.refreshSlots();
             this.dispatchInputEvent(previousValue);
@@ -74,7 +76,7 @@ export default function (Alpine) {
 
             this.clearSelection();
             this.value = filtered;
-            this.activeIndex = this.normalizeIndex(filtered.length);
+            this.activeIndex = this.getMaxFocusableIndex();
             this.applyValueToInput();
             this.refreshSlots();
             this.dispatchInputEvent(previousValue);
@@ -170,6 +172,10 @@ export default function (Alpine) {
         focusSlot(event) {
             const target = event.currentTarget;
             const index = Number(target.dataset.index || '0');
+            if (!this.canFocusIndex(index)) {
+                return;
+            }
+
             this.clearSelection();
             this.activeIndex = this.normalizeIndex(index);
             this.focusInput();
@@ -223,7 +229,12 @@ export default function (Alpine) {
         },
 
         moveRight() {
-            this.activeIndex = this.normalizeIndex(this.activeIndex + 1);
+            const nextIndex = this.normalizeIndex(this.activeIndex + 1);
+            if (!this.canFocusIndex(nextIndex)) {
+                return;
+            }
+
+            this.activeIndex = nextIndex;
             this.focusInput();
             this.setCaretToActiveIndex();
             this.refreshSlots();
@@ -237,7 +248,7 @@ export default function (Alpine) {
         },
 
         moveEnd() {
-            this.activeIndex = this.normalizeIndex(this.value.length);
+            this.activeIndex = this.getMaxFocusableIndex();
             this.focusInput();
             this.setCaretToActiveIndex();
             this.refreshSlots();
@@ -275,7 +286,22 @@ export default function (Alpine) {
         sanitizeValue(raw) {
             if (!raw) return '';
             const pattern = this.otpType === 'alphanumeric' ? /[^a-zA-Z0-9]/g : /[^0-9]/g;
-            return raw.replace(pattern, '').slice(0, this.length);
+            const cleaned = raw.replace(pattern, '').slice(0, this.length);
+            return this.applyTextTransform(cleaned);
+        },
+
+        applyTextTransform(raw) {
+            if (!raw) return '';
+
+            if (this.textTransform === 'to-lower') {
+                return raw.toLowerCase();
+            }
+
+            if (this.textTransform === 'to-upper') {
+                return raw.toUpperCase();
+            }
+
+            return raw;
         },
 
         applyValueToInput() {
@@ -288,7 +314,7 @@ export default function (Alpine) {
         setActiveFromCaret(fallbackIndex) {
             const input = this.$refs.input;
             if (!input) {
-                this.activeIndex = this.normalizeIndex(fallbackIndex ?? 0);
+                this.activeIndex = this.getMaxFocusableIndex(fallbackIndex ?? 0);
                 return;
             }
 
@@ -297,7 +323,13 @@ export default function (Alpine) {
                 ? Number.isFinite(fallbackIndex) ? Number(fallbackIndex) : 0
                 : Number(selectionStart);
 
-            this.activeIndex = this.normalizeIndex(caret);
+            const normalizedCaret = this.normalizeIndex(caret);
+            if (this.canFocusIndex(normalizedCaret)) {
+                this.activeIndex = normalizedCaret;
+                return;
+            }
+
+            this.activeIndex = this.getMaxFocusableIndex();
         },
 
         setCaretToActiveIndex() {
@@ -338,7 +370,7 @@ export default function (Alpine) {
             const previousValue = this.value;
             this.value = nextChar;
             this.clearSelection();
-            this.activeIndex = this.normalizeIndex(1);
+            this.activeIndex = this.getMaxFocusableIndex();
             this.applyValueToInput();
             this.refreshSlots();
             this.dispatchInputEvent(previousValue);
@@ -348,12 +380,21 @@ export default function (Alpine) {
             const nextChar = this.sanitizeValue(key).charAt(0);
             if (!nextChar) return;
 
-            const index = this.normalizeIndex(this.activeIndex);
-            const currentValue = this.value.padEnd(this.length, '');
+            const index = this.canFocusIndex(this.activeIndex)
+                ? this.normalizeIndex(this.activeIndex)
+                : this.getMaxFocusableIndex();
+
+            const chars = this.value.split('');
+            while (chars.length < index) {
+                chars.push('');
+            }
+
+            chars[index] = nextChar;
+
             const previousValue = this.value;
-            this.value = `${currentValue.slice(0, index)}${nextChar}${currentValue.slice(index + 1)}`.trimEnd();
+            this.value = this.applyTextTransform(chars.join('').slice(0, this.length));
             this.clearSelection();
-            this.activeIndex = this.normalizeIndex(index + 1);
+            this.activeIndex = this.getMaxFocusableIndex(index + 1);
             this.applyValueToInput();
             this.refreshSlots();
             this.dispatchInputEvent(previousValue);
@@ -370,6 +411,26 @@ export default function (Alpine) {
             return /^[0-9]$/.test(key);
         },
 
+        getNextFillIndex() {
+            if (this.length <= 0) return 0;
+            return Math.min(this.value.length, this.length - 1);
+        },
+
+        getMaxFocusableIndex(fallbackIndex) {
+            const safeFallback = Number.isFinite(fallbackIndex) ? this.normalizeIndex(Number(fallbackIndex)) : this.getNextFillIndex();
+            return this.canFocusIndex(safeFallback) ? safeFallback : this.getNextFillIndex();
+        },
+
+        canFocusIndex(index) {
+            const normalizedIndex = this.normalizeIndex(index);
+            const char = this.value.charAt(normalizedIndex);
+            if (char !== '') {
+                return true;
+            }
+
+            return normalizedIndex === this.getNextFillIndex();
+        },
+
         dispatchInputEvent(previousValue) {
             if (this.value === previousValue) return;
 
@@ -379,7 +440,8 @@ export default function (Alpine) {
                 activeIndex: this.activeIndex,
                 isComplete: this.value.length === this.length,
                 length: this.length,
-                otpType: this.otpType
+                otpType: this.otpType,
+                textTransform: this.textTransform
             });
         },
 
@@ -392,7 +454,8 @@ export default function (Alpine) {
                 previousValue,
                 activeIndex: this.activeIndex,
                 length: this.length,
-                otpType: this.otpType
+                otpType: this.otpType,
+                textTransform: this.textTransform
             });
         },
 
@@ -428,6 +491,7 @@ export default function (Alpine) {
                 slotElement.dataset.active = state.isActive ? 'true' : 'false';
                 slotElement.dataset.focused = this.isFocused ? 'true' : 'false';
                 slotElement.dataset.selected = state.isSelected ? 'true' : 'false';
+                slotElement.dataset.focusable = this.canFocusIndex(index) ? 'true' : 'false';
 
                 if (this.isInvalid) {
                     slotElement.setAttribute('aria-invalid', 'true');

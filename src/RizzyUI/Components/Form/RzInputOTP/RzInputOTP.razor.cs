@@ -28,6 +28,28 @@ public partial class RzInputOTP : RzComponent<RzInputOTP.Slots>
         Alphanumeric
     }
 
+
+    /// <summary>
+    /// Defines text transformation options applied to OTP text input.
+    /// </summary>
+    public enum InputOtpTextTransform
+    {
+        /// <summary>
+        /// Leaves OTP text unchanged.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Transforms OTP text to lowercase.
+        /// </summary>
+        ToLower,
+
+        /// <summary>
+        /// Transforms OTP text to uppercase.
+        /// </summary>
+        ToUpper
+    }
+
     /// <summary>
     /// Defines the default styling for the <see cref="RzInputOTP"/> component.
     /// </summary>
@@ -101,6 +123,12 @@ public partial class RzInputOTP : RzComponent<RzInputOTP.Slots>
     /// </summary>
     [Parameter]
     public InputOtpType OtpType { get; set; } = InputOtpType.Numeric;
+
+    /// <summary>
+    /// Gets or sets the text transformation mode for OTP character input.
+    /// </summary>
+    [Parameter]
+    public InputOtpTextTransform TextTransform { get; set; } = InputOtpTextTransform.None;
 
     /// <summary>
     /// Gets or sets the child content for grouped OTP slots.
