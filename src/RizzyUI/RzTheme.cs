@@ -45,6 +45,9 @@ public partial class RzTheme
         // RzBadge Family
         RzBadge = RizzyUI.RzBadge.DefaultDescriptor;
 
+        // RzColorSwatch Family
+        RzColorSwatch = RizzyUI.RzColorSwatch.DefaultDescriptor;
+
         // RzBreadcrumb Family
         RzBreadcrumb = RizzyUI.RzBreadcrumb.DefaultDescriptor;
         BreadcrumbList = RizzyUI.BreadcrumbList.DefaultDescriptor;

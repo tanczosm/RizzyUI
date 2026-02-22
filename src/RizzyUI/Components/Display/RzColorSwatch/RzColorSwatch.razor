@@ -1,0 +1,23 @@
+@namespace RizzyUI
+@inherits RzComponent<RzColorSwatch.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="color-swatch"
+             role="img"
+             aria-label="@EffectiveAriaLabel"
+             aria-disabled="@(Disabled ? "true" : null)">
+    <div data-alpine-root="@Id"
+         x-data="rzColorSwatch"
+         data-initial-value="@Value"
+         data-without-transparency="@WithoutTransparency.ToString().ToLowerInvariant()"
+         data-disabled="@(Disabled ? string.Empty : null)">
+        <div class="@SlotClasses.GetSwatch()"
+             data-slot="@RzColorSwatch.SlotNames.NameOf(SlotTypes.Swatch)"
+             x-bind:style="swatchStyle"
+             x-bind:aria-label="ariaLabel"
+             aria-hidden="true"></div>
+    </div>
+</HtmlElement>

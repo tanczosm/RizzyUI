@@ -35,6 +35,8 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<RzAvatar.Slots>, RzAvatar.Slots> RzAvatar { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzBadge"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzBadge.Slots>, RzBadge.Slots> RzBadge { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzColorSwatch"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzColorSwatch.Slots>, RzColorSwatch.Slots> RzColorSwatch { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzIndicator"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzIndicator.Slots>, RzIndicator.Slots> RzIndicator { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzProgress"/> component. </summary>
