@@ -30,6 +30,7 @@ public class RzAvatarTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Contains("rounded-full", avatar.ClassList); // Default shape
         Assert.Contains("size-10", avatar.ClassList); // Default size (Medium)
         Assert.Equal("medium", avatar.GetAttribute("data-size"));
+        Assert.DoesNotContain("overflow-hidden", avatar.ClassList);
     }
 
     [Fact]
