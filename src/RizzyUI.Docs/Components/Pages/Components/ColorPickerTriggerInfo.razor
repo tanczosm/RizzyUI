@@ -1,0 +1,24 @@
+@page "/components/color-picker-trigger"
+@namespace RizzyUI.Docs.Components.Pages.Components
+
+<PageTitle>Color Picker Trigger</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle>
+        <MainContent>
+            <RzHeading Level="HeadingLevel.H1">Color Picker Trigger</RzHeading>
+            <RzParagraph>
+                <code>RzColorPickerTrigger</code> wraps arbitrary content and opens the nearest
+                <code>RzColorPickerProvider</code> on click, Enter, and Space.
+            </RzParagraph>
+
+            <RzColorPickerProvider Value="#f97316">
+                <RzColorPickerTrigger class="inline-flex items-center gap-3 rounded-md border px-3 py-2"
+                                      AriaLabel="Open accent color picker">
+                    <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
+                    <span x-text="colorPicker.value"></span>
+                </RzColorPickerTrigger>
+            </RzColorPickerProvider>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>

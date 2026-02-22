@@ -1,0 +1,24 @@
+@namespace RizzyUI
+@inherits RzComponent<RzColorPickerProvider.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="color-picker-provider">
+    <div data-alpine-root="@Id"
+         x-data="rzColorPickerProvider"
+         data-assets="@_assets"
+         data-config="@_serializedConfig"
+         data-initial-value="@Value"
+         data-nonce="@Nonce">
+        <input type="text"
+               x-ref="input"
+               tabindex="-1"
+               class="sr-only"
+               aria-hidden="true" />
+        <CascadingValue Value="_context" IsFixed="true">
+            @ChildContent
+        </CascadingValue>
+    </div>
+</HtmlElement>

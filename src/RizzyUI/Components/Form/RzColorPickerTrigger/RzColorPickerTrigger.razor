@@ -1,0 +1,17 @@
+@namespace RizzyUI
+@inherits RzComponent<RzColorPickerTrigger.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="color-picker-trigger"
+             role="button"
+             tabindex="@TabIndex"
+             aria-label="@AriaLabel"
+             aria-disabled="@(Disabled ? "true" : null)"
+             x-on:click="@OpenExpression"
+             x-on:keydown.enter.prevent="@OpenExpression"
+             x-on:keydown.space.prevent="@OpenExpression">
+    @ChildContent
+</HtmlElement>
