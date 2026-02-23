@@ -142,7 +142,8 @@
                 </RzParagraph>
                 <RzParagraph>
                     On value change, the proxy input dispatches <code>rz:colorpicker:onchange</code> so external scripts can react
-                    and update runtime Coloris configuration.
+                    and update runtime Coloris configuration. Multiple providers on the same page keep isolated
+                    <code>colorPicker.value</code> state for predictable composition.
                 </RzParagraph>
             </section>
         </MainContent>

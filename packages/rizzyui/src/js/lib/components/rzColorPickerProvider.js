@@ -68,6 +68,10 @@ export default function registerRzColorPickerProvider(Alpine, require) {
                 wrap: false,
                 themeMode: 'auto',
                 onChange: (color, inputEl) => {
+                    if (inputEl !== this.$refs.input) {
+                        return;
+                    }
+
                     this.syncStateFromInput(inputEl);
                     inputEl.dispatchEvent(new CustomEvent('rz:colorpicker:onchange', {
                         bubbles: true,
