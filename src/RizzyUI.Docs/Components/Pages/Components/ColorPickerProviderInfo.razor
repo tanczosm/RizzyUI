@@ -178,7 +178,7 @@
                                     <label class="text-sm font-medium">Primary</label>
                                     <RzColorPickerProvider Value="#386fc7" Alpha="true">
                                         <RzColorPickerTrigger AsChild="true">
-                                            <RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
+                                            <RzButton type="button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
                                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
                                                 <span x-text="colorPicker.value"></span>
                                             </RzButton>
@@ -191,7 +191,7 @@
                                     <label class="text-sm font-medium">Secondary</label>
                                     <RzColorPickerProvider Value="#10b981" Alpha="true">
                                         <RzColorPickerTrigger AsChild="true">
-                                            <RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
+                                            <RzButton type="button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
                                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
                                                 <span x-text="colorPicker.value"></span>
                                             </RzButton>
@@ -204,7 +204,7 @@
                                     <label class="text-sm font-medium">Accent</label>
                                     <RzColorPickerProvider Value="#f59e0b" Alpha="true">
                                         <RzColorPickerTrigger AsChild="true">
-                                            <RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
+                                            <RzButton type="button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
                                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
                                                 <span x-text="colorPicker.value"></span>
                                             </RzButton>
@@ -215,7 +215,7 @@
                             </div>
 
                             <div class="flex justify-end">
-                                <RzButton Type="ButtonType.Submit" Disabled="true">Save Theme</RzButton>
+                                <RzButton type="button" Disabled="true">Save Theme</RzButton>
                             </div>
                         </form>
                     </div>
@@ -224,7 +224,7 @@
 &lt;form class="space-y-4"&gt;
     &lt;RzColorPickerProvider Value="#386fc7" Alpha="true"&gt;
         &lt;RzColorPickerTrigger AsChild="true"&gt;
-            &lt;RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3"&gt;
+            &lt;RzButton type="button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3"&gt;
                 &lt;RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" /&gt;
                 &lt;span x-text="colorPicker.value"&gt;&lt;/span&gt;
             &lt;/RzButton&gt;
@@ -232,7 +232,7 @@
         &lt;input type="hidden" name="themePrimary" x-model="colorPicker.value" /&gt;
     &lt;/RzColorPickerProvider&gt;
 
-    &lt;RzButton Type="ButtonType.Submit" Disabled="true"&gt;Save Theme&lt;/RzButton&gt;
+    &lt;RzButton type="button" Disabled="true"&gt;Save Theme&lt;/RzButton&gt;
 &lt;/form&gt;
                 </RzCodeViewer>
             </section>
