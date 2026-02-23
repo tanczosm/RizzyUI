@@ -1,33 +1,150 @@
 @page "/components/color-picker-provider"
 @namespace RizzyUI.Docs.Components.Pages.Components
 
+@using Rizzy.Components
+@using RizzyUI
+
 <PageTitle>Color Picker Provider</PageTitle>
 
 <RzQuickReferenceContainer>
-    <RzArticle>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
         <MainContent>
-            <RzHeading Level="HeadingLevel.H1">Color Picker Provider</RzHeading>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink Href="/">Docs</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>Color Picker Provider</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Color Picker Provider" class="scroll-mt-20">Color Picker Provider</RzHeading>
             <RzParagraph>
-                <code>RzColorPickerProvider</code> exposes shared Alpine state as <code>colorPicker.*</code>
-                for headless composition, including the trigger primitive. The provider also repositions
-                an internal proxy input to the current trigger location before opening Coloris, so popovers
-                align correctly even when the trigger contains nested content.
+                <code>RzColorPickerProvider</code> exposes shared Alpine state as <code>colorPicker.*</code> for headless
+                composition. It keeps the provider architecture while allowing semantic trigger composition through
+                <code>RzColorPickerTrigger</code> and visual previews with <code>RzColorSwatch</code>.
             </RzParagraph>
 
-            <RzColorPickerProvider Value="#22c55e" Alpha="true" class="max-w-md space-y-3">
-                <RzColorPickerTrigger class="inline-flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    <span class="inline-flex items-center gap-2">
-                        <RzColorSwatch x-model="colorPicker.value" />
-                        <span>Select color</span>
-                    </span>
-                    <span class="text-muted-foreground">Open picker</span>
-                </RzColorPickerTrigger>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Swatch Trigger">Swatch Trigger</RzHeading>
+                <RzParagraph>
+                    The smallest headless setup: a swatch-only trigger that opens Coloris and updates the shared
+                    <code>colorPicker.value</code> state.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
+                    <div class="mx-auto flex min-h-[8rem] w-full max-w-md items-center justify-center p-6">
+                        <RzColorPickerProvider Value="#22c55e" Alpha="true">
+                            <RzColorPickerTrigger class="inline-flex rounded-md p-1">
+                                <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Large" />
+                            </RzColorPickerTrigger>
+                        </RzColorPickerProvider>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzColorPickerProvider Value="#22c55e" Alpha="true"&gt;
+    &lt;RzColorPickerTrigger class="inline-flex rounded-md p-1"&gt;
+        &lt;RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Large" /&gt;
+    &lt;/RzColorPickerTrigger&gt;
+&lt;/RzColorPickerProvider&gt;
+                </RzCodeViewer>
+            </section>
 
-                <input type="text"
-                       x-model="colorPicker.value"
-                       class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                       aria-label="Color value" />
-            </RzColorPickerProvider>
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Theme Picker Buttons">Theme Picker Buttons</RzHeading>
+                <RzParagraph>
+                    This example composes three provider instances as a mini theme picker. Each trigger is a semantic button
+                    with a leading swatch and current hex text. A hidden input in each provider is bound with
+                    <code>x-model="colorPicker.value"</code> and a <code>name</code> for standard HTML form posts.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
+                    <div class="mx-auto flex min-h-[24rem] w-full max-w-lg items-center justify-center p-6">
+                        <form class="w-full space-y-4 rounded-md border bg-card p-5 shadow-sm">
+                            <div class="space-y-1">
+                                <h3 class="text-base font-semibold">Theme Colors</h3>
+                                <p class="text-sm text-muted-foreground">Configure your application palette.</p>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div class="grid gap-2">
+                                    <label class="text-sm font-medium">Primary</label>
+                                    <RzColorPickerProvider Value="#386fc7" Alpha="true">
+                                        <RzColorPickerTrigger AsChild="true">
+                                            <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm hover:bg-accent hover:text-accent-foreground">
+                                                <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
+                                                <span x-text="colorPicker.value"></span>
+                                            </button>
+                                        </RzColorPickerTrigger>
+                                        <input type="hidden" name="themePrimary" x-model="colorPicker.value" />
+                                    </RzColorPickerProvider>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label class="text-sm font-medium">Secondary</label>
+                                    <RzColorPickerProvider Value="#10b981" Alpha="true">
+                                        <RzColorPickerTrigger AsChild="true">
+                                            <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm hover:bg-accent hover:text-accent-foreground">
+                                                <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
+                                                <span x-text="colorPicker.value"></span>
+                                            </button>
+                                        </RzColorPickerTrigger>
+                                        <input type="hidden" name="themeSecondary" x-model="colorPicker.value" />
+                                    </RzColorPickerProvider>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label class="text-sm font-medium">Accent</label>
+                                    <RzColorPickerProvider Value="#f59e0b" Alpha="true">
+                                        <RzColorPickerTrigger AsChild="true">
+                                            <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm hover:bg-accent hover:text-accent-foreground">
+                                                <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
+                                                <span x-text="colorPicker.value"></span>
+                                            </button>
+                                        </RzColorPickerTrigger>
+                                        <input type="hidden" name="themeAccent" x-model="colorPicker.value" />
+                                    </RzColorPickerProvider>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <RzButton Type="ButtonType.Submit">Save Theme</RzButton>
+                            </div>
+                        </form>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;form class="space-y-4"&gt;
+    &lt;RzColorPickerProvider Value="#386fc7" Alpha="true"&gt;
+        &lt;RzColorPickerTrigger AsChild="true"&gt;
+            &lt;button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm"&gt;
+                &lt;RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" /&gt;
+                &lt;span x-text="colorPicker.value"&gt;&lt;/span&gt;
+            &lt;/button&gt;
+        &lt;/RzColorPickerTrigger&gt;
+        &lt;input type="hidden" name="themePrimary" x-model="colorPicker.value" /&gt;
+    &lt;/RzColorPickerProvider&gt;
+
+    &lt;RzColorPickerProvider Value="#10b981" Alpha="true"&gt;...&lt;/RzColorPickerProvider&gt;
+    &lt;RzColorPickerProvider Value="#f59e0b" Alpha="true"&gt;...&lt;/RzColorPickerProvider&gt;
+&lt;/form&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Provider API">Provider API</RzHeading>
+                <RzParagraph>
+                    The provider shares CSP-safe Alpine members through <code>colorPicker.*</code>:
+                    <code>value</code>, <code>open</code>, <code>setValue(value)</code>, <code>getValue()</code>, and
+                    <code>updateConfiguration(config)</code>.
+                </RzParagraph>
+                <RzParagraph>
+                    On value change, the proxy input dispatches <code>rz:colorpicker:onchange</code> so external scripts can react
+                    and update runtime Coloris configuration.
+                </RzParagraph>
+            </section>
         </MainContent>
     </RzArticle>
 </RzQuickReferenceContainer>
