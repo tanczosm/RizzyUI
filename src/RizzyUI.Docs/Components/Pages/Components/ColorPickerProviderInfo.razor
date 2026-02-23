@@ -41,7 +41,9 @@
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
                     <div class="mx-auto flex min-h-90 w-full max-w-md items-start justify-center pt-6">
-                        <RzColorPickerProvider Value="#22c55e" Alpha="true">
+                        <RzColorPickerProvider Value="#22c55e"
+                                               Alpha="true"
+                                               Swatches="@_displaySwatches">
                             <RzColorPickerTrigger class="inline-flex rounded-md p-1">
                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Large" />
                             </RzColorPickerTrigger>
@@ -49,7 +51,9 @@
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzColorPickerProvider Value="#22c55e" Alpha="true"&gt;
+&lt;RzColorPickerProvider Value="#22c55e"
+                       Alpha="true"
+                       Swatches="@@_displaySwatches"&gt;
     &lt;RzColorPickerTrigger class="inline-flex rounded-md p-1"&gt;
         &lt;RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Large" /&gt;
     &lt;/RzColorPickerTrigger&gt;
@@ -63,7 +67,7 @@
                     Render only preset swatches while still allowing clear and close actions.
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
-                    <div class="mx-auto flex min-h-90 w-full max-w-md items-center justify-center p-6">
+                    <div class="mx-auto flex min-h-90 w-full max-w-md items-start justify-center pt-6">
                         <RzColorPickerProvider Value="@_model.AccentColor"
                                                Swatches="@_swatches"
                                                SwatchesOnly="true"
@@ -106,7 +110,7 @@
                     both before and after the text input, while still binding value through <code>x-model="colorPicker.value"</code>.
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
-                    <div class="mx-auto flex min-h-90 w-full max-w-lg items-center p-6">
+                    <div class="mx-auto flex min-h-90 w-full max-w-lg items-start justify-center pt-6">
                         <EditForm Model="_model">
                             <RzFieldSet>
                                 <Field>
@@ -350,6 +354,20 @@ builder.Services.AddRizzyUI(config =>
 </RzQuickReferenceContainer>
 
 @code {
+    private readonly string[] _displaySwatches = [
+        "#264653",
+        "#2a9d8f",
+        "#e9c46a",
+        "rgb(244,162,97)",
+        "#e76f51",
+        "#d62828",
+        "navy",
+        "#07b",
+        "#0096c7",
+        "#00b4d880",
+        "rgba(0,119,182,0.8)"
+    ];
+
     private readonly string[] _swatches = ["#ef4444", "#f97316", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7"];
 
     private readonly ColorPickerProviderExamplesModel _model = new();
