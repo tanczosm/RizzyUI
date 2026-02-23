@@ -9,23 +9,25 @@
             <RzHeading Level="HeadingLevel.H1">Color Picker Provider</RzHeading>
             <RzParagraph>
                 <code>RzColorPickerProvider</code> exposes shared Alpine state as <code>colorPicker.*</code>
-                for headless composition, including the trigger primitive.
+                for headless composition, including the trigger primitive. The provider also repositions
+                an internal proxy input to the current trigger location before opening Coloris, so popovers
+                align correctly even when the trigger contains nested content.
             </RzParagraph>
 
-            <RzColorPickerProvider Value="#22c55e" Alpha="true">
-                <RzColorPickerTrigger class="max-w-md">
-                    <RzInputGroup>
-                        <InputGroupAddon Align="InputGroupAddonAlign.InlineStart">
-                            <RzColorSwatch x-model="colorPicker.value" />
-                        </InputGroupAddon>
-                        <InputGroupInput For="@(() => _value)" x-model="colorPicker.value" />
-                    </RzInputGroup>
+            <RzColorPickerProvider Value="#22c55e" Alpha="true" class="max-w-md space-y-3">
+                <RzColorPickerTrigger class="inline-flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <span class="inline-flex items-center gap-2">
+                        <RzColorSwatch x-model="colorPicker.value" />
+                        <span>Select color</span>
+                    </span>
+                    <span class="text-muted-foreground">Open picker</span>
                 </RzColorPickerTrigger>
+
+                <input type="text"
+                       x-model="colorPicker.value"
+                       class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                       aria-label="Color value" />
             </RzColorPickerProvider>
         </MainContent>
     </RzArticle>
 </RzQuickReferenceContainer>
-
-@code {
-    private string _value = "#22c55e";
-}

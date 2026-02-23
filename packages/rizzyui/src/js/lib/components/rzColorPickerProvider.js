@@ -97,14 +97,28 @@ export default function registerRzColorPickerProvider(Alpine, require) {
             this.syncInputFromState();
         },
 
-        openPicker() {
+        openPicker(event) {
             const input = this.$refs.input;
             if (!input) {
                 return;
             }
 
+            this.positionAnchorInput(input, event);
+            this.syncInputFromState();
+
             input.focus();
             input.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        },
+
+        positionAnchorInput(input, event) {
+            const trigger = event?.currentTarget;
+            if (!trigger || typeof trigger.getBoundingClientRect !== 'function') {
+                return;
+            }
+
+            const rect = trigger.getBoundingClientRect();
+            input.style.left = `${Math.round(rect.left)}px`;
+            input.style.top = `${Math.round(rect.bottom)}px`;
         },
 
         setValue(value) {
