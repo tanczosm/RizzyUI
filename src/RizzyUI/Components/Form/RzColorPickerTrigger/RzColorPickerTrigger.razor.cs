@@ -62,7 +62,6 @@ public partial class RzColorPickerTrigger : RzAsChildComponent<RzColorPickerTrig
         var attributes = new Dictionary<string, object?>(AdditionalAttributes?.ToDictionary(kvp => kvp.Key, kvp => (object?)kvp.Value) ?? new Dictionary<string, object?>(), StringComparer.OrdinalIgnoreCase)
         {
             ["id"] = Id,
-            ["class"] = SlotClasses.GetBase(),
             ["role"] = "button",
             ["tabindex"] = Disabled ? -1 : 0,
             ["aria-label"] = AriaLabel,
