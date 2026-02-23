@@ -14,9 +14,9 @@
                            CloseButton="@CloseButton"
                            ClearButton="@ClearButton"
                            ComponentAssetKeys="@ComponentAssetKeys">
-        <RzColorPickerTrigger>
-            <RzInputGroup class="@SlotClasses.GetInputGroup()"
-                          data-slot="@RzInputColor.SlotNames.NameOf(SlotTypes.InputGroup)">
+        <RzInputGroup class="@SlotClasses.GetInputGroup()"
+                      data-slot="@RzInputColor.SlotNames.NameOf(SlotTypes.InputGroup)">
+            <RzColorPickerTrigger>
                 <InputGroupAddon Align="@(ThumbnailPosition == ColorThumbnailPosition.Start ? InputGroupAddonAlign.InlineStart : InputGroupAddonAlign.InlineEnd)"
                                  class="@SlotClasses.GetThumbnailContainer()"
                                  data-slot="@RzInputColor.SlotNames.NameOf(SlotTypes.ThumbnailContainer)">
@@ -25,15 +25,15 @@
                                    class="@SlotClasses.GetThumbnail()"
                                    data-slot="@RzInputColor.SlotNames.NameOf(SlotTypes.Thumbnail)" />
                 </InputGroupAddon>
+            </RzColorPickerTrigger>
 
-                <InputGroupInput For="@For"
-                                 class="@SlotClasses.GetInput()"
-                                 id="@InputId"
-                                 placeholder="@Placeholder"
-                                 value="@Value"
-                                 data-slot="@RzInputColor.SlotNames.NameOf(SlotTypes.Input)"
-                                 x-model="colorPicker.value" />
-            </RzInputGroup>
-        </RzColorPickerTrigger>
+            <InputGroupInput For="@For"
+                             class="@SlotClasses.GetInput()"
+                             id="@InputId"
+                             placeholder="@Placeholder"
+                             value="@Value"
+                             data-slot="@RzInputColor.SlotNames.NameOf(SlotTypes.Input)"
+                             x-model="colorPicker.value" />
+        </RzInputGroup>
     </RzColorPickerProvider>
 </HtmlElement>
