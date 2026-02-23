@@ -181,7 +181,7 @@ public partial class RzTheme
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzColorPickerProvider"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzColorPickerProvider.Slots>, RzColorPickerProvider.Slots> RzColorPickerProvider { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzColorPickerTrigger"/> component. </summary>
-    public virtual TvDescriptor<RzComponent<RzColorPickerTrigger.Slots>, RzColorPickerTrigger.Slots> RzColorPickerTrigger { get; set; }
+    public virtual TvDescriptor<RzAsChildComponent<RzColorPickerTrigger.Slots>, RzColorPickerTrigger.Slots> RzColorPickerTrigger { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzInputColor"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzInputColor.Slots>, RzInputColor.Slots> RzInputColor { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzColorSwatch"/> component. </summary>

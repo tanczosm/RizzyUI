@@ -6,19 +6,19 @@ namespace RizzyUI;
 /// <summary>
 /// Provides an accessible, headless trigger that opens an enclosing <see cref="RzColorPickerProvider"/>.
 /// </summary>
-public partial class RzColorPickerTrigger : RzComponent<RzColorPickerTrigger.Slots>
+public partial class RzColorPickerTrigger : RzAsChildComponent<RzColorPickerTrigger.Slots>
 {
     /// <summary>
     /// Defines the default styling for <see cref="RzColorPickerTrigger"/>.
     /// </summary>
-    public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
+    public static readonly TvDescriptor<RzAsChildComponent<Slots>, Slots> DefaultDescriptor = new(
         @base: "contents"
     );
 
     /// <summary>
     /// Gets or sets the content rendered inside the trigger.
     /// </summary>
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets a value indicating whether trigger interaction is disabled.
@@ -32,21 +32,18 @@ public partial class RzColorPickerTrigger : RzComponent<RzColorPickerTrigger.Slo
 
     [CascadingParameter] private RzColorPickerProvider.Context? ProviderContext { get; set; }
 
-    private int TabIndex => Disabled ? -1 : 0;
-
-    private string? OpenExpression => Disabled ? null : "colorPicker.open";
-
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Element = "div";
-        AriaLabel ??= Localizer["RzColorPickerTrigger.DefaultAriaLabel"];
+
+        if (string.IsNullOrEmpty(Element))
+            Element = "div";
 
         if (ProviderContext is null)
-        {
             throw new InvalidOperationException($"{nameof(RzColorPickerTrigger)} must be used within an {nameof(RzColorPickerProvider)}.");
-        }
+
+        AriaLabel ??= Localizer["RzColorPickerTrigger.DefaultAriaLabel"];
     }
 
     /// <inheritdoc/>
@@ -56,8 +53,31 @@ public partial class RzColorPickerTrigger : RzComponent<RzColorPickerTrigger.Slo
         AriaLabel ??= Localizer["RzColorPickerTrigger.DefaultAriaLabel"];
     }
 
+    /// <inheritdoc/>
+    protected override RenderFragment? GetAsChildContent() => ChildContent;
+
+    /// <inheritdoc/>
+    protected override Dictionary<string, object?> GetComponentAttributes()
+    {
+        var attributes = new Dictionary<string, object?>(AdditionalAttributes?.ToDictionary(kvp => kvp.Key, kvp => (object?)kvp.Value) ?? new Dictionary<string, object?>(), StringComparer.OrdinalIgnoreCase)
+        {
+            ["id"] = Id,
+            ["class"] = SlotClasses.GetBase(),
+            ["role"] = "button",
+            ["tabindex"] = Disabled ? -1 : 0,
+            ["aria-label"] = AriaLabel,
+            ["aria-disabled"] = Disabled ? "true" : null,
+            ["x-on:click"] = Disabled ? null : "colorPicker.open",
+            ["x-on:keydown.enter.prevent"] = Disabled ? null : "colorPicker.open",
+            ["x-on:keydown.space.prevent"] = Disabled ? null : "colorPicker.open",
+            ["data-slot"] = "color-picker-trigger"
+        };
+
+        return attributes;
+    }
+
     /// <inheritdoc />
-    protected override TvDescriptor<RzComponent<Slots>, Slots> GetDescriptor() => Theme.RzColorPickerTrigger;
+    protected override TvDescriptor<RzAsChildComponent<Slots>, Slots> GetDescriptor() => Theme.RzColorPickerTrigger;
 
     /// <summary>
     /// Defines the slots available for styling in <see cref="RzColorPickerTrigger"/>.
