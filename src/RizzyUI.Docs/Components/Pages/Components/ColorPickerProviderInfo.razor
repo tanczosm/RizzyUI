@@ -1,3 +1,4 @@
+@page "/components/color-picker"
 @page "/components/color-picker-provider"
 @namespace RizzyUI.Docs.Components.Pages.Components
 
@@ -5,7 +6,7 @@
 @using Rizzy.Components
 @using RizzyUI
 
-<PageTitle>Color Picker Provider</PageTitle>
+<PageTitle>Color Picker</PageTitle>
 
 <RzQuickReferenceContainer>
     <RzArticle ProseWidth="ProseWidth.UltraWide">
@@ -19,11 +20,11 @@
                     <BreadcrumbSeparator />
                     <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
                     <BreadcrumbSeparator />
-                    <BreadcrumbItem><BreadcrumbPage>Color Picker Provider</BreadcrumbPage></BreadcrumbItem>
+                    <BreadcrumbItem><BreadcrumbPage>Color Picker</BreadcrumbPage></BreadcrumbItem>
                 </BreadcrumbList>
             </RzBreadcrumb>
 
-            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Color Picker Provider" class="scroll-mt-20">Color Picker Provider</RzHeading>
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Color Picker" class="scroll-mt-20">Color Picker</RzHeading>
             <RzParagraph>
                 <code>RzColorPickerProvider</code> is an SSR-first headless provider that exposes shared Alpine state as
                 <code>colorPicker.*</code> for composable trigger/input UIs. It integrates the
@@ -39,7 +40,7 @@
                     <code>colorPicker.value</code> state.
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
-                    <div class="mx-auto flex min-h-90 w-full max-w-md items-center justify-center p-6">
+                    <div class="mx-auto flex min-h-90 w-full max-w-md items-start justify-center pt-6">
                         <RzColorPickerProvider Value="#22c55e" Alpha="true">
                             <RzColorPickerTrigger class="inline-flex rounded-md p-1">
                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Large" />
@@ -62,7 +63,7 @@
                     Render only preset swatches while still allowing clear and close actions.
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
-                    <div class="mx-auto flex min-h-[14rem] w-full max-w-md items-center justify-center p-6">
+                    <div class="mx-auto flex min-h-90 w-full max-w-md items-center justify-center p-6">
                         <RzColorPickerProvider Value="@_model.AccentColor"
                                                Swatches="@_swatches"
                                                SwatchesOnly="true"
@@ -105,7 +106,7 @@
                     both before and after the text input, while still binding value through <code>x-model="colorPicker.value"</code>.
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
-                    <div class="mx-auto w-full max-w-lg p-6">
+                    <div class="mx-auto flex min-h-90 w-full max-w-lg items-center p-6">
                         <EditForm Model="_model">
                             <RzFieldSet>
                                 <Field>
@@ -113,7 +114,7 @@
                                     <RzColorPickerProvider Value="@_model.CustomStartColor" Format="ColorFormat.Hex" Alpha="true" Swatches="@_swatches">
                                         <RzInputGroup>
                                             <RzColorPickerTrigger>
-                                                <InputGroupAddon Align="InputGroupAddonAlign.InlineStart">
+                                                <InputGroupAddon Align="InputGroupAddonAlign.InlineStart" class="pl-0">
                                                     <RzColorSwatch x-model="colorPicker.value" />
                                                 </InputGroupAddon>
                                             </RzColorPickerTrigger>
@@ -128,7 +129,7 @@
                                         <RzInputGroup>
                                             <InputGroupInput For="@(() => _model.CustomEndColor)" x-model="colorPicker.value" />
                                             <RzColorPickerTrigger>
-                                                <InputGroupAddon Align="InputGroupAddonAlign.InlineEnd">
+                                                <InputGroupAddon Align="InputGroupAddonAlign.InlineEnd" class="pr-0">
                                                     <RzColorSwatch x-model="colorPicker.value" />
                                                 </InputGroupAddon>
                                             </RzColorPickerTrigger>
@@ -146,7 +147,7 @@
         &lt;RzColorPickerProvider Value="@@_model.CustomStartColor" Format="ColorFormat.Hex" Alpha="true" Swatches="@@_swatches"&gt;
             &lt;RzInputGroup&gt;
                 &lt;RzColorPickerTrigger&gt;
-                    &lt;InputGroupAddon Align="InputGroupAddonAlign.InlineStart"&gt;
+                    &lt;InputGroupAddon Align="InputGroupAddonAlign.InlineStart" class="pl-0"&gt;
                         &lt;RzColorSwatch x-model="colorPicker.value" /&gt;
                     &lt;/InputGroupAddon&gt;
                 &lt;/RzColorPickerTrigger&gt;
@@ -165,7 +166,7 @@
                     with hidden named inputs for standard HTML post payloads.
                 </RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
-                    <div class="mx-auto flex min-h-[24rem] w-full max-w-lg items-center justify-center p-6">
+                    <div class="mx-auto flex min-h-90 w-full max-w-lg items-center justify-center p-6">
                         <form class="w-full space-y-4 rounded-md border bg-card p-5 shadow-sm">
                             <div class="space-y-1">
                                 <h3 class="text-base font-semibold">Theme Colors</h3>
@@ -177,10 +178,10 @@
                                     <label class="text-sm font-medium">Primary</label>
                                     <RzColorPickerProvider Value="#386fc7" Alpha="true">
                                         <RzColorPickerTrigger AsChild="true">
-                                            <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm hover:bg-accent hover:text-accent-foreground">
+                                            <RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
                                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
                                                 <span x-text="colorPicker.value"></span>
-                                            </button>
+                                            </RzButton>
                                         </RzColorPickerTrigger>
                                         <input type="hidden" name="themePrimary" x-model="colorPicker.value" />
                                     </RzColorPickerProvider>
@@ -190,10 +191,10 @@
                                     <label class="text-sm font-medium">Secondary</label>
                                     <RzColorPickerProvider Value="#10b981" Alpha="true">
                                         <RzColorPickerTrigger AsChild="true">
-                                            <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm hover:bg-accent hover:text-accent-foreground">
+                                            <RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
                                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
                                                 <span x-text="colorPicker.value"></span>
-                                            </button>
+                                            </RzButton>
                                         </RzColorPickerTrigger>
                                         <input type="hidden" name="themeSecondary" x-model="colorPicker.value" />
                                     </RzColorPickerProvider>
@@ -203,10 +204,10 @@
                                     <label class="text-sm font-medium">Accent</label>
                                     <RzColorPickerProvider Value="#f59e0b" Alpha="true">
                                         <RzColorPickerTrigger AsChild="true">
-                                            <button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm hover:bg-accent hover:text-accent-foreground">
+                                            <RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3">
                                                 <RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" />
                                                 <span x-text="colorPicker.value"></span>
-                                            </button>
+                                            </RzButton>
                                         </RzColorPickerTrigger>
                                         <input type="hidden" name="themeAccent" x-model="colorPicker.value" />
                                     </RzColorPickerProvider>
@@ -223,10 +224,10 @@
 &lt;form class="space-y-4"&gt;
     &lt;RzColorPickerProvider Value="#386fc7" Alpha="true"&gt;
         &lt;RzColorPickerTrigger AsChild="true"&gt;
-            &lt;button type="button" class="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm"&gt;
+            &lt;RzButton Type="ButtonType.Button" Variant="ThemeVariant.Accent" Outline class="h-9 items-center gap-2 px-3"&gt;
                 &lt;RzColorSwatch x-model="colorPicker.value" Size="ColorSwatchSize.Small" /&gt;
                 &lt;span x-text="colorPicker.value"&gt;&lt;/span&gt;
-            &lt;/button&gt;
+            &lt;/RzButton&gt;
         &lt;/RzColorPickerTrigger&gt;
         &lt;input type="hidden" name="themePrimary" x-model="colorPicker.value" /&gt;
     &lt;/RzColorPickerProvider&gt;
@@ -238,7 +239,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
-                <RzParagraph>The primary configuration options on <code>RzColorPickerProvider</code>.</RzParagraph>
+                <RzParagraph>The primary configuration options on <code>RzColorPickerProvider</code> when building custom Color Picker experiences.</RzParagraph>
                 <div class="overflow-x-auto not-prose">
                     <table class="w-full border-collapse text-sm">
                         <thead>
