@@ -1,0 +1,51 @@
+
+@namespace RizzyUI.Docs.Components.Pages.Examples.Dashboard.Components
+@using RizzyUI
+@using RizzyUI.Charts
+
+<RzCard class="container/card">
+    <CardHeader>
+        <CardTitle>Total Visitors</CardTitle>
+        <CardDescription>
+            <span class="hidden 540px/card:block">Total for the last 3 months</span>
+            <span class="540px/card:hidden">Last 3 months</span>
+        </CardDescription>
+        <CardAction>
+            <RzButtonGroup>
+                <RzButton Variant="ThemeVariant.Outline" Size="Size.Small">Last 3 months</RzButton>
+                <RzButton Variant="ThemeVariant.Outline" Size="Size.Small">Last 30 days</RzButton>
+                <RzButton Variant="ThemeVariant.Outline" Size="Size.Small">Last 7 days</RzButton>
+            </RzButtonGroup>
+        </CardAction>
+    </CardHeader>
+    <CardContent class="px-2 pt-4 sm:px-6 sm:pt-6">
+        <div class="aspect-auto h-[250px] w-full">
+            <RzChart Configure='c => c
+                .Data(d => d
+                    .Labels("Apr 01", "May 01", "Jun 01")
+                    .Datasets(ds => {
+                        ds.Line()
+                          .Label("Desktop")
+                          .Data(222, 165, 178)
+                          .Fill(true)
+                          .BackgroundColor("rgba(59, 130, 246, 0.2)")
+                          .BorderColor("var(--chart-1)")
+                          .Tension(0.4);
+                        
+                        ds.Line()
+                          .Label("Mobile")
+                          .Data(150, 220, 200)
+                          .Fill(true)
+                          .BackgroundColor("rgba(168, 85, 247, 0.2)")
+                          .BorderColor("var(--chart-2)")
+                          .Tension(0.4);
+                    })
+                )
+                .Options(o => o
+                    .Responsive(true)
+                    .MaintainAspectRatio(false)
+                    .Plugins(p => p.Legend(l => l.Display(false)))
+                )' />
+        </div>
+    </CardContent>
+</RzCard>

@@ -1,0 +1,32 @@
+
+@namespace RizzyUI.Docs.Components.Pages.Examples.Dashboard.Components
+@using RizzyUI
+@using Blazicons
+
+<Sidebar Collapsible="SidebarCollapsible.None" class="h-auto border-r">
+    <SidebarHeader class="border-b">
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton AsChild>
+                    <a href="#">
+                        <Blazicon Svg="MdiIcon.MonitorDashboard" class="size-5" />
+                        <span class="text-base font-semibold">Acme Inc.</span>
+                    </a>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        </SidebarMenu>
+    </SidebarHeader>
+    <SidebarContent>
+        <NavMain />
+        <NavDocuments />
+        <NavSecondary class="mt-auto" />
+    </SidebarContent>
+    <SidebarFooter>
+        <NavUser />
+    </SidebarFooter>
+</Sidebar>
+
+@code {
+    [Parameter]
+    public SidebarVariant Variant { get; set; } = SidebarVariant.Sidebar;
+}

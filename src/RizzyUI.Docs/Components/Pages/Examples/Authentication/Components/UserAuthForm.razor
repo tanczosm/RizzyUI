@@ -1,0 +1,57 @@
+
+@namespace RizzyUI.Docs.Components.Pages.Examples.Authentication.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using RizzyUI
+@using Blazicons
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@_model" OnValidSubmit="OnSubmit" class="grid gap-6">
+    <RzFieldGroup>
+        <Field>
+            <FieldLabel For="@(() => _model.Email)" class="sr-only">Email</FieldLabel>
+            <RzInputText For="@(() => _model.Email)" id="email" Placeholder="name@example.com" type="email" autocomplete="email" disabled="@_isLoading" />
+        </Field>
+        <Field>
+            <RzButton type="submit" Disabled="@_isLoading">
+                @if (_isLoading)
+                {
+                    <RzSpinner class="mr-2 h-4 w-4" />
+                }
+                Sign In with Email
+            </RzButton>
+        </Field>
+    </RzFieldGroup>
+</EditForm>
+
+<FieldSeparator class="my-4">Or continue with</FieldSeparator>
+
+<RzButton Variant="ThemeVariant.Outline" type="button" Disabled="@_isLoading">
+    @if (_isLoading)
+    {
+        <RzSpinner class="mr-2 h-4 w-4" />
+    }
+    else
+    {
+        <Blazicon Svg="MdiIcon.Github" class="mr-2 h-4 w-4" />
+    }
+    GitHub
+</RzButton>
+
+@code {
+    private bool _isLoading = false;
+    private InputModel _model = new();
+
+    private class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+    }
+
+    private async Task OnSubmit()
+    {
+        _isLoading = true;
+        await Task.Delay(3000);
+        _isLoading = false;
+    }
+}

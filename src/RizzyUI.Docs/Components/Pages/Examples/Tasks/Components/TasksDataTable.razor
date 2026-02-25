@@ -1,0 +1,96 @@
+
+@namespace RizzyUI.Docs.Components.Pages.Examples.Tasks.Components
+@using RizzyUI
+@using Microsoft.AspNetCore.Components.Forms
+@using Blazicons
+
+<div class="flex flex-col gap-4">
+    <div class="flex items-center justify-between">
+        <EditForm Model="this" class="flex flex-1 items-center gap-2">
+            <RzInputText For="() => Search" Placeholder="Filter tasks..." class="h-8 w-[150px] lg:w-[250px]" />
+            <RzButton Variant="ThemeVariant.Outline" Size="Size.Small" class="h-8 border-dashed">
+                <Blazicon Svg="MdiIcon.PlusCircleOutline" class="mr-2 size-4" /> Status
+            </RzButton>
+            <RzButton Variant="ThemeVariant.Outline" Size="Size.Small" class="h-8 border-dashed">
+                <Blazicon Svg="MdiIcon.PlusCircleOutline" class="mr-2 size-4" /> Priority
+            </RzButton>
+        </EditForm>
+        <div class="flex items-center gap-2">
+            <RzButton Variant="ThemeVariant.Outline" Size="Size.Small" class="ml-auto hidden h-8 lg:flex">
+                <Blazicon Svg="MdiIcon.TuneVertical" class="mr-2 size-4" /> View
+            </RzButton>
+        </div>
+    </div>
+
+    <div class="rounded-md border">
+        <RzTable Items="_tasks" TItem="TaskItem">
+            <TableHeader>
+                <TableRow>
+                    <TableHeaderCell>Task</TableHeaderCell>
+                    <TableHeaderCell>Title</TableHeaderCell>
+                    <TableHeaderCell>Status</TableHeaderCell>
+                    <TableHeaderCell>Priority</TableHeaderCell>
+                    <TableHeaderCell></TableHeaderCell>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                <RowTemplate Context="task">
+                    <TableRow>
+                        <TableCell><span class="font-medium">@task.Id</span></TableCell>
+                        <TableCell>
+                            <div class="flex gap-2 items-center">
+                                <RzBadge Variant="ThemeVariant.Outline">@task.Label</RzBadge>
+                                <span class="max-w-[500px] truncate font-medium">@task.Title</span>
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <div class="flex w-[100px] items-center gap-2">
+                                <span class="capitalize">@task.Status</span>
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <div class="flex items-center gap-2">
+                                <span class="capitalize">@task.Priority</span>
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <RzDropdownMenu Anchor="AnchorPoint.BottomEnd">
+                                <DropdownMenuTrigger AsChild>
+                                    <RzButton Variant="ThemeVariant.Ghost" Size="Size.Icon" class="size-8">
+                                        <Blazicon Svg="MdiIcon.DotsHorizontal" />
+                                    </RzButton>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent class="w-[160px]">
+                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem Variant="MenubarItemVariant.Destructive">Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </RzDropdownMenu>
+                        </TableCell>
+                    </TableRow>
+                </RowTemplate>
+            </TableBody>
+        </RzTable>
+    </div>
+</div>
+
+@code {
+    public string Search { get; set; } = "";
+
+    public class TaskItem
+    {
+        public string Id { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Status { get; set; } = "";
+        public string Label { get; set; } = "";
+        public string Priority { get; set; } = "";
+    }
+
+    private List<TaskItem> _tasks = new()
+    {
+        new TaskItem { Id = "TASK-8782", Title = "You can't compress the program without quantifying the SSD pixel!", Status = "in progress", Label = "documentation", Priority = "medium" },
+        new TaskItem { Id = "TASK-7839", Title = "We need to bypass the neural TCP card!", Status = "todo", Label = "bug", Priority = "high" }
+    };
+}

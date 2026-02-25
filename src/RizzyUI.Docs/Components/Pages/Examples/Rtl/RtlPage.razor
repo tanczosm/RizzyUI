@@ -1,0 +1,77 @@
+
+@page "/examples/rtl"
+@namespace RizzyUI.Docs.Components.Pages.Examples.Rtl
+@using RizzyUI
+@using Microsoft.AspNetCore.Components.Forms
+@using Blazicons
+
+<PageTitle>RTL Examples</PageTitle>
+
+<div dir="rtl" class="grid gap-8 p-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-background text-foreground h-[calc(100vh-4rem)]">
+    <div class="flex flex-col gap-6">
+        <RzCard>
+            <CardHeader>
+                <CardTitle>كيف سمعت عنا؟</CardTitle>
+                <CardDescription>اختر الخيار الذي يصف أفضل طريقة سمعت عنا من خلالها.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <EditForm Model="this">
+                    <RzRadioGroup For="@(() => Choice)" Orientation="Orientation.Horizontal" class="flex-wrap gap-2">
+                        <RadioGroupItem TValue="string" Value="social" class="pl-2">
+                            <span class="mr-2">التواصل الاجتماعي</span>
+                        </RadioGroupItem>
+                        <RadioGroupItem TValue="string" Value="search" class="pl-2">
+                            <span class="mr-2">البحث</span>
+                        </RadioGroupItem>
+                    </RzRadioGroup>
+                </EditForm>
+            </CardContent>
+        </RzCard>
+
+        <RzCard>
+            <CardHeader>
+                <CardTitle>إعدادات المظهر</CardTitle>
+                <CardDescription>السماح بتلوين الخلفية.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <EditForm Model="this">
+                    <RzField Orientation="FieldOrientation.Horizontal" class="justify-between items-center">
+                        <RzFieldLabel For="() => Tinting" class="font-normal">تلوين الخلفية</RzFieldLabel>
+                        <RzSwitch For="() => Tinting" />
+                    </RzField>
+                </EditForm>
+            </CardContent>
+        </RzCard>
+    </div>
+
+    <div class="flex flex-col gap-6">
+        <RzCard>
+            <CardContent class="pt-6">
+                <EditForm Model="this">
+                    <RzInputGroup>
+                        <InputGroupInput For="() => Search" Placeholder="بحث..." />
+                        <InputGroupAddon>
+                            <Blazicon Svg="MdiIcon.Magnify" />
+                        </InputGroupAddon>
+                        <InputGroupAddon Align="InputGroupAddonAlign.InlineEnd">12 نتيجة</InputGroupAddon>
+                    </RzInputGroup>
+                </EditForm>
+            </CardContent>
+        </RzCard>
+        
+        <div class="flex items-center gap-2">
+            <RzBadge>
+                <RzSpinner Size="Size.ExtraSmall" class="ml-2" /> جارٍ المزامنة
+            </RzBadge>
+            <RzBadge Variant="ThemeVariant.Secondary">
+                <RzSpinner Size="Size.ExtraSmall" class="ml-2" /> جارٍ التحديث
+            </RzBadge>
+        </div>
+    </div>
+</div>
+
+@code {
+    public string Choice { get; set; } = "social";
+    public bool Tinting { get; set; } = true;
+    public string Search { get; set; } = "";
+}
