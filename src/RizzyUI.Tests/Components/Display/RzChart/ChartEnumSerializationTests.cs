@@ -80,11 +80,7 @@ public class ChartEnumSerializationTests
             .Animation(animation => animation.Easing(AnimationEasing.EaseInOutBounce))
             .Interaction(interaction => interaction.Mode(InteractionMode.Index).Axis(Axis.XY)));
 
-        var json = JsonSerializer.Serialize(builder.Chart, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-        });
+        var json = JsonSerializer.Serialize(builder.Chart, CreateChartSerializerOptions());
 
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
@@ -94,6 +90,48 @@ public class ChartEnumSerializationTests
         Assert.Equal("index", root.GetProperty("options").GetProperty("interaction").GetProperty("mode").GetString());
         Assert.Equal("xy", root.GetProperty("options").GetProperty("interaction").GetProperty("axis").GetString());
     }
+
+
+    [Fact]
+    public void ObjectBackedPropertiesSerializeBooleansEnumsAndObjectsCorrectly()
+    {
+        var builder = new ChartBuilder();
+        builder.Data(data => data.Datasets(datasets =>
+        {
+            datasets.Bar()
+                .Data(1, 2)
+                .PointStyle(PointStyle.CrossRot)
+                .BorderSkipped(Skipped.Start);
+
+            datasets.Bar()
+                .Data(3, 4)
+                .PointStyle(true)
+                .BorderSkipped(false);
+
+            datasets.Line()
+                .Data(5, 6)
+                .Fill(fill => fill.Target("origin").Above("#00ff00"));
+        }));
+
+        var json = JsonSerializer.Serialize(builder.Chart, CreateChartSerializerOptions());
+
+        using var doc = JsonDocument.Parse(json);
+        var datasetsElement = doc.RootElement.GetProperty("data").GetProperty("datasets");
+
+        Assert.Equal("crossRot", datasetsElement[0].GetProperty("pointStyle").GetString());
+        Assert.Equal("start", datasetsElement[0].GetProperty("borderSkipped").GetString());
+        Assert.True(datasetsElement[1].GetProperty("pointStyle").GetBoolean());
+        Assert.False(datasetsElement[1].GetProperty("borderSkipped").GetBoolean());
+        Assert.Equal("origin", datasetsElement[2].GetProperty("fill").GetProperty("target").GetString());
+        Assert.Equal("#00ff00", datasetsElement[2].GetProperty("fill").GetProperty("above").GetString());
+    }
+
+    private static JsonSerializerOptions CreateChartSerializerOptions() => new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        Converters = { new ChartJsObjectValueConverter() }
+    };
     private sealed class BoxedEnumHolder
     {
         public object? Value { get; set; }
