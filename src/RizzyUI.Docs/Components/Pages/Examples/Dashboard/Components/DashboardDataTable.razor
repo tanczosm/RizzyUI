@@ -1,0 +1,48 @@
+@namespace RizzyUI.Docs.Components.Pages.Examples.Dashboard.Components
+@using RizzyUI
+
+<RzCard>
+    <CardHeader>
+        <CardTitle>Recent Activity</CardTitle>
+        <CardDescription>Latest projects and status updates.</CardDescription>
+    </CardHeader>
+    <CardContent>
+        <RzTable Items="_rows" TItem="ActivityRow">
+            <TableHeader>
+                <TableRow>
+                    <TableHeaderCell>Project</TableHeaderCell>
+                    <TableHeaderCell>Owner</TableHeaderCell>
+                    <TableHeaderCell>Status</TableHeaderCell>
+                    <TableHeaderCell>Due</TableHeaderCell>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                <RowTemplate Context="row">
+                    <TableRow>
+                        <TableCell class="font-medium">@row.Project</TableCell>
+                        <TableCell>@row.Owner</TableCell>
+                        <TableCell><RzBadge Variant="ThemeVariant.Default" Outline="true">@row.Status</RzBadge></TableCell>
+                        <TableCell>@row.DueDate</TableCell>
+                    </TableRow>
+                </RowTemplate>
+            </TableBody>
+        </RzTable>
+    </CardContent>
+</RzCard>
+
+@code {
+    private readonly List<ActivityRow> _rows =
+    [
+        new() { Project = "Website Redesign", Owner = "Sofia", Status = "In Progress", DueDate = "Jul 18" },
+        new() { Project = "Marketing Campaign", Owner = "Noah", Status = "Review", DueDate = "Jul 22" },
+        new() { Project = "Onboarding Flow", Owner = "Ava", Status = "Done", DueDate = "Jul 25" }
+    ];
+
+    private sealed class ActivityRow
+    {
+        public string Project { get; set; } = string.Empty;
+        public string Owner { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string DueDate { get; set; } = string.Empty;
+    }
+}

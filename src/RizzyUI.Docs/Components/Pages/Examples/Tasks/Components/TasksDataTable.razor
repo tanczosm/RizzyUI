@@ -1,4 +1,3 @@
-
 @namespace RizzyUI.Docs.Components.Pages.Examples.Tasks.Components
 @using RizzyUI
 @using Microsoft.AspNetCore.Components.Forms
@@ -7,16 +6,16 @@
 <div class="flex flex-col gap-4">
     <div class="flex items-center justify-between">
         <EditForm Model="this" class="flex flex-1 items-center gap-2">
-            <RzInputText For="() => Search" Placeholder="Filter tasks..." class="h-8 w-[150px] lg:w-[250px]" />
-            <RzButton Variant="ThemeVariant.Outline" Size="Size.Small" class="h-8 border-dashed">
+            <RzInputText For="@(() => Search)" Placeholder="Filter tasks..." class="h-8 w-[150px] lg:w-[250px]" />
+            <RzButton Variant="ThemeVariant.Default" Outline="true" Size="Size.Small" class="h-8 border-dashed">
                 <Blazicon Svg="MdiIcon.PlusCircleOutline" class="mr-2 size-4" /> Status
             </RzButton>
-            <RzButton Variant="ThemeVariant.Outline" Size="Size.Small" class="h-8 border-dashed">
+            <RzButton Variant="ThemeVariant.Default" Outline="true" Size="Size.Small" class="h-8 border-dashed">
                 <Blazicon Svg="MdiIcon.PlusCircleOutline" class="mr-2 size-4" /> Priority
             </RzButton>
         </EditForm>
         <div class="flex items-center gap-2">
-            <RzButton Variant="ThemeVariant.Outline" Size="Size.Small" class="ml-auto hidden h-8 lg:flex">
+            <RzButton Variant="ThemeVariant.Default" Outline="true" Size="Size.Small" class="ml-auto hidden h-8 lg:flex">
                 <Blazicon Svg="MdiIcon.TuneVertical" class="mr-2 size-4" /> View
             </RzButton>
         </div>
@@ -30,7 +29,7 @@
                     <TableHeaderCell>Title</TableHeaderCell>
                     <TableHeaderCell>Status</TableHeaderCell>
                     <TableHeaderCell>Priority</TableHeaderCell>
-                    <TableHeaderCell></TableHeaderCell>
+                    <TableHeaderCell><span class="sr-only">Actions</span></TableHeaderCell>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -39,7 +38,7 @@
                         <TableCell><span class="font-medium">@task.Id</span></TableCell>
                         <TableCell>
                             <div class="flex gap-2 items-center">
-                                <RzBadge Variant="ThemeVariant.Outline">@task.Label</RzBadge>
+                                <RzBadge Variant="ThemeVariant.Default" Outline="true">@task.Label</RzBadge>
                                 <span class="max-w-[500px] truncate font-medium">@task.Title</span>
                             </div>
                         </TableCell>
@@ -56,7 +55,7 @@
                         <TableCell>
                             <RzDropdownMenu Anchor="AnchorPoint.BottomEnd">
                                 <DropdownMenuTrigger AsChild>
-                                    <RzButton Variant="ThemeVariant.Ghost" Size="Size.Icon" class="size-8">
+                                    <RzButton Variant="ThemeVariant.Ghost" Size="Size.Small" class="size-8 p-0">
                                         <Blazicon Svg="MdiIcon.DotsHorizontal" />
                                     </RzButton>
                                 </DropdownMenuTrigger>
@@ -65,7 +64,7 @@
                                     <DropdownMenuItem>Make a copy</DropdownMenuItem>
                                     <DropdownMenuItem>Favorite</DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem Variant="MenubarItemVariant.Destructive">Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
+                                    <DropdownMenuItem class="text-destructive">Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
                                 </DropdownMenuContent>
                             </RzDropdownMenu>
                         </TableCell>

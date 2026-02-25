@@ -1,0 +1,17 @@
+@namespace RizzyUI.Docs.Components.Pages.Examples.Dashboard.Components
+@using RizzyUI
+@using Blazicons
+
+<SidebarGroup @attributes="AdditionalAttributes">
+    <SidebarGroupContent>
+        <SidebarMenu>
+            <SidebarMenuItem><SidebarMenuButton><Blazicon Svg="MdiIcon.Lifebuoy" /> <span>Support</span></SidebarMenuButton></SidebarMenuItem>
+            <SidebarMenuItem><SidebarMenuButton><Blazicon Svg="MdiIcon.SendOutline" /> <span>Feedback</span></SidebarMenuButton></SidebarMenuItem>
+        </SidebarMenu>
+    </SidebarGroupContent>
+</SidebarGroup>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

@@ -1,4 +1,3 @@
-
 @page "/examples/rtl"
 @namespace RizzyUI.Docs.Components.Pages.Examples.Rtl
 @using RizzyUI
@@ -17,10 +16,10 @@
             <CardContent>
                 <EditForm Model="this">
                     <RzRadioGroup For="@(() => Choice)" Orientation="Orientation.Horizontal" class="flex-wrap gap-2">
-                        <RadioGroupItem TValue="string" Value="social" class="pl-2">
+                        <RadioGroupItem TValue="string" Value="@("social")" class="pl-2">
                             <span class="mr-2">التواصل الاجتماعي</span>
                         </RadioGroupItem>
-                        <RadioGroupItem TValue="string" Value="search" class="pl-2">
+                        <RadioGroupItem TValue="string" Value="@("search")" class="pl-2">
                             <span class="mr-2">البحث</span>
                         </RadioGroupItem>
                     </RzRadioGroup>
@@ -35,10 +34,10 @@
             </CardHeader>
             <CardContent>
                 <EditForm Model="this">
-                    <RzField Orientation="FieldOrientation.Horizontal" class="justify-between items-center">
-                        <RzFieldLabel For="() => Tinting" class="font-normal">تلوين الخلفية</RzFieldLabel>
-                        <RzSwitch For="() => Tinting" />
-                    </RzField>
+                    <Field Orientation="FieldOrientation.Horizontal" class="justify-between items-center">
+                        <FieldLabel For="@(() => Tinting)" class="font-normal">تلوين الخلفية</FieldLabel>
+                        <RzSwitch For="@(() => Tinting)" />
+                    </Field>
                 </EditForm>
             </CardContent>
         </RzCard>
@@ -49,7 +48,7 @@
             <CardContent class="pt-6">
                 <EditForm Model="this">
                     <RzInputGroup>
-                        <InputGroupInput For="() => Search" Placeholder="بحث..." />
+                        <InputGroupInput For="@(() => Search)" Placeholder="بحث..." />
                         <InputGroupAddon>
                             <Blazicon Svg="MdiIcon.Magnify" />
                         </InputGroupAddon>
@@ -58,7 +57,7 @@
                 </EditForm>
             </CardContent>
         </RzCard>
-        
+
         <div class="flex items-center gap-2">
             <RzBadge>
                 <RzSpinner Size="Size.ExtraSmall" class="ml-2" /> جارٍ المزامنة
