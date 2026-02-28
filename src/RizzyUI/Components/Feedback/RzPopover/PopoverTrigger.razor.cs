@@ -81,6 +81,7 @@ public partial class PopoverTrigger : RzAsChildComponent<PopoverTrigger.Slots>
         /// <summary>
         /// The base slot for the component's root element.
         /// </summary>
+        [Slot("popover-trigger")]
         public string? Base { get; set; }
     }
 }
