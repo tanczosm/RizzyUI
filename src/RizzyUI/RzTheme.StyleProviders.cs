@@ -194,6 +194,8 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<RzSwitchSlots>, RzSwitchSlots> RzSwitch { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzToggle"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzToggle.Slots>, RzToggle.Slots> RzToggle { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzSlider"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzSlider.Slots>, RzSlider.Slots> RzSlider { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzNativeSelect{TValue}"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzNativeSelectSlots>, RzNativeSelectSlots> RzNativeSelect { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzFieldSet"/> component. </summary>

@@ -1,0 +1,73 @@
+@using System.Globalization
+@using RizzyUI.Extensions
+@namespace RizzyUI
+@inherits RzComponent<RzSlider.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-orientation="@Orientation.ToString().ToKebabCase()"
+             data-disabled="@Disabled.ToString().ToLowerInvariant()"
+             data-slot="slider">
+    <div data-alpine-root="@Id"
+         x-data="rzSlider"
+         data-nonce="@Nonce"
+         data-min="@Min.ToString(CultureInfo.InvariantCulture)"
+         data-max="@Max.ToString(CultureInfo.InvariantCulture)"
+         data-step="@Step.ToString(CultureInfo.InvariantCulture)"
+         data-orientation="@Orientation.ToString().ToKebabCase()"
+         data-disabled="@Disabled.ToString().ToLowerInvariant()"
+         data-inverted="@Inverted.ToString().ToLowerInvariant()"
+         data-min-steps-between-thumbs="@MinStepsBetweenThumbs.ToString(CultureInfo.InvariantCulture)"
+         data-name="@Name"
+         data-use-indexed-names="@UseIndexedNames.ToString().ToLowerInvariant()"
+         data-values="@SerializedValues"
+         data-thumb-count="@EffectiveValues.Count"
+         class="relative contents">
+        <div class="@SlotClasses.GetTrack()"
+             data-slot="@RzSlider.SlotNames.NameOf(SlotTypes.Track)"
+             data-orientation="@Orientation.ToString().ToKebabCase()"
+             x-ref="track"
+             x-on:pointerdown="handleTrackPointerDown">
+            <div class="@SlotClasses.GetRange()"
+                 data-slot="@RzSlider.SlotNames.NameOf(SlotTypes.Range)"
+                 data-orientation="@Orientation.ToString().ToKebabCase()"
+                 x-ref="range"
+                 style="@GetRangeStyle()"></div>
+        </div>
+
+        @for (var i = 0; i < EffectiveValues.Count; i++)
+        {
+            var thumbAriaLabel = GetThumbAriaLabel(i);
+            <span class="@SlotClasses.GetThumb()"
+                  data-slot="@RzSlider.SlotNames.NameOf(SlotTypes.Thumb)"
+                  data-thumb-index="@i"
+                  data-orientation="@Orientation.ToString().ToKebabCase()"
+                  role="slider"
+                  tabindex="@(Disabled ? -1 : (TabIndex ?? 0))"
+                  aria-valuemin="@Min.ToString(CultureInfo.InvariantCulture)"
+                  aria-valuemax="@Max.ToString(CultureInfo.InvariantCulture)"
+                  aria-valuenow="@EffectiveValues[i].ToString(CultureInfo.InvariantCulture)"
+                  aria-orientation="@Orientation.ToString().ToLowerInvariant()"
+                  aria-label="@thumbAriaLabel"
+                  aria-labelledby="@AriaLabelledBy"
+                  aria-describedby="@AriaDescribedBy"
+                  aria-disabled="@Disabled.ToString().ToLowerInvariant()"
+                  x-on:pointerdown="handlePointerDown"
+                  x-on:keydown="handleThumbKeyDown"
+                  style="@GetThumbStyle(i)"></span>
+
+            @if (!string.IsNullOrWhiteSpace(Name))
+            {
+                <input type="hidden"
+                       class="@SlotClasses.GetInput()"
+                       data-slot="@RzSlider.SlotNames.NameOf(SlotTypes.Input)"
+                       data-slider-input="true"
+                       data-input-index="@i"
+                       name="@BuildInputName(i)"
+                       value="@EffectiveValues[i].ToString(CultureInfo.InvariantCulture)" />
+            }
+        }
+    </div>
+</HtmlElement>
