@@ -80,6 +80,8 @@ public class RzPopoverTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Equal("contentTemplate", template.GetAttribute("x-ref"));
 
         Assert.Contains("x-show=\"open\"", cut.Markup);
+        Assert.Contains("x-bind:data-state=\"dataState\"", cut.Markup);
+        Assert.DoesNotContain("open ? 'open' : 'closed'", cut.Markup);
         Assert.DoesNotContain("x-ref=\"content\"", cut.Markup);
         Assert.DoesNotContain("aria-modal", cut.Markup);
         Assert.Contains("Popup Content", cut.Markup);

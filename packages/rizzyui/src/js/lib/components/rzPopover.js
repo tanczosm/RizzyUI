@@ -4,6 +4,7 @@ export default function(Alpine) {
     Alpine.data('rzPopover', () => ({
         open: false,
         ariaExpanded: 'false',
+        dataState: 'closed',
         contentStyle: '',
         triggerEl: null,
         contentEl: null,
@@ -16,6 +17,7 @@ export default function(Alpine) {
 
             this.$watch('open', (value) => {
                 this.ariaExpanded = value.toString();
+                this.dataState = value ? 'open' : 'closed';
 
                 if (value) {
                     this.openPopover();
