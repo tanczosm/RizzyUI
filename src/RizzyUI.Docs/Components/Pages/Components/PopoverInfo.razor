@@ -181,9 +181,9 @@
                             </tr>
                             <tr class="align-top">
                                 <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Strategy</code></td>
-                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>AnchorStrategy</code> – Positioning mode. Use <code class="rounded-md bg-zinc-100 px-1.5 py-0.5 font-mono text-sm font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">fixed</code> if your trigger is in a scrollable container.</td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400"><code>AnchorStrategy</code> – Positioning mode. Defaults to <code class="rounded-md bg-zinc-100 px-1.5 py-0.5 font-mono text-sm font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">fixed</code> to avoid document height/scrollbar jumps while the panel animates out. Switch to <code class="rounded-md bg-zinc-100 px-1.5 py-0.5 font-mono text-sm font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">absolute</code> only when you explicitly want container-based positioning behavior.</td>
                                 <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">AnchorStrategy</code></td>
-                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">AnchorStrategy.Absolute</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">AnchorStrategy.Fixed</code></td>
                             </tr>
                             <tr class="align-top">
                                 <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">EnableFlip</code></td>

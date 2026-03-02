@@ -54,6 +54,18 @@ public class RzPopoverTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Equal("10", root.GetAttribute("data-offset"));
     }
 
+
+    [Fact]
+    public void Strategy_DefaultsToFixed()
+    {
+        var cut = Render<RzPopover>(parameters => parameters
+            .AddChildContent<PopoverTrigger>(t => t.AddChildContent("Open"))
+            .AddChildContent<PopoverContent>(c => c.AddChildContent("Content"))
+        );
+
+        var root = cut.Find("[data-slot='popover']");
+        Assert.Equal("fixed", root.GetAttribute("data-strategy"));
+    }
     [Fact]
     public void PopoverTrigger_RendersButtonWithEvents()
     {

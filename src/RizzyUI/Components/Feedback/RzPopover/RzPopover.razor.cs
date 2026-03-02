@@ -54,10 +54,10 @@ public partial class RzPopover : RzComponent<RzPopover.Slots>
 
     /// <summary>
     /// Gets or sets the positioning strategy for the popover ('absolute' or 'fixed').
-    /// Defaults to <see cref="AnchorStrategy.Absolute"/>.
+    /// Defaults to <see cref="AnchorStrategy.Fixed"/>.
     /// </summary>
     [Parameter]
-    public AnchorStrategy Strategy { get; set; } = AnchorStrategy.Absolute;
+    public AnchorStrategy Strategy { get; set; } = AnchorStrategy.Fixed;
 
     /// <summary>
     /// Gets or sets whether to enable the 'flip' middleware, which flips the popover to the opposite side to keep it in view.
