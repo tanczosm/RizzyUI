@@ -12,7 +12,7 @@ export default function(Alpine) {
         _cleanupAutoUpdate: null,
 
         init() {
-            this.triggerEl = this.$refs.trigger;
+            this.triggerEl = this.resolveTriggerElement();
 
             this.$watch('open', (value) => {
                 this.ariaExpanded = value.toString();
@@ -36,6 +36,7 @@ export default function(Alpine) {
         },
 
         async openPopover() {
+            this.triggerEl = this.resolveTriggerElement();
             this.attachGlobalListeners();
             this.contentStyle = this.getInitialContentStyle();
 
@@ -54,6 +55,17 @@ export default function(Alpine) {
             this.detachGlobalListeners();
             this.contentStyle = '';
             this.contentEl = null;
+        },
+
+        resolveTriggerElement() {
+            const directChildTrigger = Array.from(this.$el.children)
+                .find((child) => child?.hasAttribute?.('data-trigger'));
+
+            if (directChildTrigger) {
+                return directChildTrigger;
+            }
+
+            return this.$el.querySelector('[data-trigger]');
         },
 
         resolveContentElement() {

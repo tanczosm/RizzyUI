@@ -65,6 +65,7 @@ public class RzPopoverTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         var btn = cut.Find("button[data-slot='popover-trigger']");
         Assert.Equal("toggle", btn.GetAttribute("x-on:click"));
         Assert.Equal("dialog", btn.GetAttribute("aria-haspopup"));
+        Assert.Equal("true", btn.GetAttribute("data-trigger"));
     }
 
     [Fact]
@@ -79,6 +80,7 @@ public class RzPopoverTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Equal("contentTemplate", template.GetAttribute("x-ref"));
 
         Assert.Contains("x-show=\"open\"", cut.Markup);
+        Assert.DoesNotContain("x-ref=\"content\"", cut.Markup);
         Assert.DoesNotContain("aria-modal", cut.Markup);
         Assert.Contains("Popup Content", cut.Markup);
     }
