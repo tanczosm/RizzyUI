@@ -55,6 +55,8 @@ public partial class RzClipboard : RzAsChildComponent<RzClipboard.Slots>
     /// </summary>
     [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = default!;
 
+    private bool IsButtonElement => string.Equals(EffectiveElement, "button", StringComparison.OrdinalIgnoreCase);
+
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
@@ -95,7 +97,11 @@ public partial class RzClipboard : RzAsChildComponent<RzClipboard.Slots>
             ["x-on:click.prevent"] = "copy",
             ["aria-label"] = AriaLabel,
             ["aria-disabled"] = Disabled ? "true" : null,
-            ["disabled"] = Disabled && EffectiveElement == "button" ? "disabled" : null
+            ["disabled"] = Disabled && IsButtonElement ? "disabled" : null,
+            ["role"] = IsButtonElement ? null : "button",
+            ["tabindex"] = IsButtonElement ? null : Disabled ? -1 : 0,
+            ["x-on:keydown.enter.prevent"] = IsButtonElement || Disabled ? null : "copy",
+            ["x-on:keydown.space.prevent"] = IsButtonElement || Disabled ? null : "copy"
         };
 
         return attributes;
