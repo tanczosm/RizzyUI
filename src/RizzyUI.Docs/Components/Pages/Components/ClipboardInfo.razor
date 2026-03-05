@@ -1,0 +1,132 @@
+@page "/components/clipboard"
+@using RizzyUI
+
+<PageTitle>Clipboard</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Docs</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/components" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Components</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Clipboard</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Clipboard" class="scroll-mt-20">Clipboard</RzHeading>
+            <RzParagraph>
+                <b>RzClipboard</b> is a composable copy-to-clipboard primitive for SSR flows. Pair
+                <code>ClipboardTrigger</code> and <code>ClipboardFeedback</code> to render smooth default and copied states without layout jank.
+            </RzParagraph>
+
+            <RzAlert Variant="ThemeVariant.Information" class="my-5">
+                <AlertTitle>Under the Hood</AlertTitle>
+                <AlertDescription>
+                    Clipboard behavior is powered by Alpine with <code>x-data="rzClipboard"</code>. It uses the async Clipboard API when available,
+                    then falls back to <code>document.execCommand('copy')</code> when enabled.
+                </AlertDescription>
+            </RzAlert>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">Basic Usage</RzHeading>
+                <RzParagraph>Icon-only trigger with success feedback text.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-8 flex items-center justify-center">
+                        <RzClipboard Value="ssh://git@github.com/rizzyui/rizzyui.git">
+                            <ClipboardTrigger>
+                                <RzButton Variant=ThemeVariant.Ghost Size=Size.Small AriaLabel="Copy repository URL">
+                                    <Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" />
+                                </RzButton>
+                            </ClipboardTrigger>
+                            <ClipboardFeedback>
+                                <span class="text-xs font-medium">Copied</span>
+                            </ClipboardFeedback>
+                        </RzClipboard>
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Button Composition" class="scroll-mt-20">Button Composition</RzHeading>
+                <RzParagraph>Use <code>AsChild</code> to merge clipboard behavior onto an existing <code>RzButton</code>.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-8 flex items-center justify-center">
+                        <RzClipboard AsChild Value="npm i rizzyui-core">
+                            <RzButton Variant="ThemeVariant.Secondary" class="w-44">
+                                <ClipboardTrigger>
+                                    <span>Copy command</span>
+                                </ClipboardTrigger>
+                                <ClipboardFeedback>
+                                    <span>Copied command</span>
+                                </ClipboardFeedback>
+                            </RzButton>
+                        </RzClipboard>
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Target Selector" class="scroll-mt-20">Target Selector</RzHeading>
+                <RzParagraph>Copy from a nearby input by setting <code>TargetSelector</code>.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-8 flex gap-3 items-center justify-center">
+                        <input id="clipboard-demo-target" value="Hello from RizzyUI" class="h-10 rounded-md border px-3 text-sm" readonly />
+                        <RzClipboard TargetSelector="#clipboard-demo-target">
+                            <ClipboardTrigger>
+                                <RzButton Variant=ThemeVariant.Secondary Outline>Copy input</RzButton>
+                            </ClipboardTrigger>
+                            <ClipboardFeedback>
+                                <span>Copied</span>
+                            </ClipboardFeedback>
+                        </RzClipboard>
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
+                <RzHeading Level="HeadingLevel.H3" class="mt-6">RzClipboard</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800"><table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th scope="col" class="w-1/5 px-4 py-3">Property</th><th scope="col" class="w-2/5 px-4 py-3">Description</th><th scope="col" class="w-1/5 px-4 py-3">Type</th><th scope="col" class="px-4 py-3">Default</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                    <tr class="align-top"><td class="px-4 py-4"><code>ChildContent</code></td><td class="px-4 py-4">Clipboard composition content.</td><td class="px-4 py-4"><code>RenderFragment</code></td><td class="px-4 py-4">Required</td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>Value</code></td><td class="px-4 py-4">Direct text value to copy.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>TargetSelector</code></td><td class="px-4 py-4">Selector used to resolve text from the DOM.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>PreferValue</code></td><td class="px-4 py-4">When true, <code>Value</code> wins when both are set.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>false</code></td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>FeedbackDuration</code></td><td class="px-4 py-4">Copied-state duration in milliseconds.</td><td class="px-4 py-4"><code>int</code></td><td class="px-4 py-4"><code>1200</code></td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>Disabled</code></td><td class="px-4 py-4">Disables copy interaction.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>false</code></td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>UseFallback</code></td><td class="px-4 py-4">Attempts <code>execCommand('copy')</code> when Clipboard API is unavailable.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>true</code></td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>AriaLabel</code></td><td class="px-4 py-4">Accessible name for the trigger host.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>"Copy to clipboard"</code></td></tr>
+                </tbody></table></div>
+
+                <RzHeading Level="HeadingLevel.H3" class="mt-6">ClipboardTrigger</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800"><table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th scope="col" class="w-1/5 px-4 py-3">Property</th><th scope="col" class="w-2/5 px-4 py-3">Description</th><th scope="col" class="w-1/5 px-4 py-3">Type</th><th scope="col" class="px-4 py-3">Default</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                    <tr class="align-top"><td class="px-4 py-4"><code>ChildContent</code></td><td class="px-4 py-4">Visible content in the idle state.</td><td class="px-4 py-4"><code>RenderFragment</code></td><td class="px-4 py-4">Required</td></tr>
+                </tbody></table></div>
+
+                <RzHeading Level="HeadingLevel.H3" class="mt-6">ClipboardFeedback</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800"><table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th scope="col" class="w-1/5 px-4 py-3">Property</th><th scope="col" class="w-2/5 px-4 py-3">Description</th><th scope="col" class="w-1/5 px-4 py-3">Type</th><th scope="col" class="px-4 py-3">Default</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                    <tr class="align-top"><td class="px-4 py-4"><code>ChildContent</code></td><td class="px-4 py-4">Visible content in the copied state.</td><td class="px-4 py-4"><code>RenderFragment</code></td><td class="px-4 py-4">Required</td></tr>
+                </tbody></table></div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API / Events" class="scroll-mt-20">Alpine API / Events</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800"><table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th scope="col" class="w-1/5 px-4 py-3">Event</th><th scope="col" class="w-1/5 px-4 py-3">Payload</th><th scope="col" class="px-4 py-3">Description</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                    <tr class="align-top"><td class="px-4 py-4"><code>rz:copy</code></td><td class="px-4 py-4"><code>{ id, text }</code></td><td class="px-4 py-4">Dispatched after successful copy.</td></tr>
+                    <tr class="align-top"><td class="px-4 py-4"><code>rz:copy-failed</code></td><td class="px-4 py-4"><code>{ id, reason, error }</code></td><td class="px-4 py-4">Dispatched when copy cannot be completed.</td></tr>
+                </tbody></table></div>
+            </section>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>
