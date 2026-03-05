@@ -47,19 +47,17 @@
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex max-w-xl flex-col gap-3 p-8">
                         <div class="flex items-center gap-3">
-                            <RzClipboard Value="Icon button clicked!" AriaLabel="Copy icon button text">
-                                <ClipboardTrigger>
-                                    <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="px-2">
-                                        <Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" />
+                            <RzClipboard Value="Icon button clicked!" AriaLabel="Copy icon button text" AsChild>
+                                <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="px-2">
+                                    <ClipboardTrigger>
+                                        <span class="inline-flex"><Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" /></span>
                                         <span class="sr-only">Copy</span>
-                                    </RzButton>
-                                </ClipboardTrigger>
-                                <ClipboardFeedback>
-                                    <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="px-2 text-success">
-                                        <Blazicon Svg="@MdiIcon.Check" aria-hidden="true" />
+                                    </ClipboardTrigger>
+                                    <ClipboardFeedback>
+                                        <span class="inline-flex text-success"><Blazicon Svg="@MdiIcon.Check" aria-hidden="true" /></span>
                                         <span class="sr-only">Copied</span>
-                                    </RzButton>
-                                </ClipboardFeedback>
+                                    </ClipboardFeedback>
+                                </RzButton>
                             </RzClipboard>
 
                             <RzClipboard Value="Hello, World!" AsChild>
@@ -85,19 +83,17 @@
                         <div class="relative rounded-lg border border-zinc-200/75 bg-zinc-50 dark:border-zinc-700/75 dark:bg-zinc-800/75">
                             <div class="flex items-center justify-between">
                                 <code class="grow p-4 text-sm text-zinc-700 dark:text-zinc-300">npm install alpinejs</code>
-                                <RzClipboard Value="npm install alpinejs" AriaLabel="Copy npm command">
-                                    <ClipboardTrigger>
-                                        <RzButton Variant=ThemeVariant.Ghost Size=Size.Small class="mx-2 px-2">
-                                            <Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" />
+                                <RzClipboard Value="npm install alpinejs" AriaLabel="Copy npm command" AsChild>
+                                    <RzButton Variant=ThemeVariant.Ghost Size=Size.Small class="mx-2 px-2">
+                                        <ClipboardTrigger>
+                                            <span class="inline-flex"><Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" /></span>
                                             <span class="sr-only">Copy code</span>
-                                        </RzButton>
-                                    </ClipboardTrigger>
-                                    <ClipboardFeedback>
-                                        <RzButton Variant=ThemeVariant.Ghost Size=Size.Small class="mx-2 px-2 text-success">
-                                            <Blazicon Svg="@MdiIcon.Check" aria-hidden="true" />
+                                        </ClipboardTrigger>
+                                        <ClipboardFeedback>
+                                            <span class="inline-flex text-success"><Blazicon Svg="@MdiIcon.Check" aria-hidden="true" /></span>
                                             <span class="sr-only">Copied code</span>
-                                        </RzButton>
-                                    </ClipboardFeedback>
+                                        </ClipboardFeedback>
+                                    </RzButton>
                                 </RzClipboard>
                             </div>
                         </div>
@@ -114,13 +110,11 @@
                         <div class="relative">
                             <input id="website-url" type="text" value="https://pinemix.com/" readonly class="w-full rounded-lg border border-zinc-200/75 bg-white px-4 py-2.5 pe-20 text-sm leading-5 text-zinc-900 dark:border-zinc-700/75 dark:bg-transparent dark:text-zinc-100" />
                             <div class="absolute inset-y-0 end-0 flex items-center justify-center px-2">
-                                <RzClipboard TargetSelector="#website-url" AriaLabel="Copy website URL">
-                                    <ClipboardTrigger>
-                                        <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small>Copy</RzButton>
-                                    </ClipboardTrigger>
-                                    <ClipboardFeedback>
-                                        <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="text-success">Copied!</RzButton>
-                                    </ClipboardFeedback>
+                                <RzClipboard TargetSelector="#website-url" AriaLabel="Copy website URL" AsChild>
+                                    <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small>
+                                        <ClipboardTrigger>Copy</ClipboardTrigger>
+                                        <ClipboardFeedback><span class="text-success">Copied!</span></ClipboardFeedback>
+                                    </RzButton>
                                 </RzClipboard>
                             </div>
                         </div>
@@ -138,19 +132,17 @@
                                 <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">API Key</div>
                                 <div class="mt-0.5 truncate font-mono text-xs text-zinc-600 dark:text-zinc-400">db_1234567890abcdefghijklmnopqrstuvwxyz</div>
                             </div>
-                            <RzClipboard Value="db_1234567890abcdefghijklmnopqrstuvwxyz" AriaLabel="Copy API key">
-                                <ClipboardTrigger>
-                                    <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="px-2">
-                                        <Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" />
+                            <RzClipboard Value="db_1234567890abcdefghijklmnopqrstuvwxyz" AriaLabel="Copy API key" AsChild>
+                                <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="px-2">
+                                    <ClipboardTrigger>
+                                        <span class="inline-flex"><Blazicon Svg="@MdiIcon.ContentCopy" aria-hidden="true" /></span>
                                         <span class="sr-only">Copy API key</span>
-                                    </RzButton>
-                                </ClipboardTrigger>
-                                <ClipboardFeedback>
-                                    <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="px-2 text-success">
-                                        <Blazicon Svg="@MdiIcon.Check" aria-hidden="true" />
+                                    </ClipboardTrigger>
+                                    <ClipboardFeedback>
+                                        <span class="inline-flex text-success"><Blazicon Svg="@MdiIcon.Check" aria-hidden="true" /></span>
                                         <span class="sr-only">Copied API key</span>
-                                    </RzButton>
-                                </ClipboardFeedback>
+                                    </ClipboardFeedback>
+                                </RzButton>
                             </RzClipboard>
                         </div>
                     </div>
