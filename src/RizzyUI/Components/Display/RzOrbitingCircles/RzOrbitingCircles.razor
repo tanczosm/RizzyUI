@@ -1,0 +1,44 @@
+@using System.Globalization
+@namespace RizzyUI
+@inherits RzComponent<RzOrbitingCircles.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="orbiting-circles"
+             aria-hidden="@AriaHidden"
+             role="@RootRole"
+             aria-label="@RootAriaLabel">
+    @if (ShowPath)
+    {
+        <svg class="@SlotClasses.GetPathSvg()"
+             data-slot="@RzOrbitingCircles.SlotNames.NameOf(SlotTypes.PathSvg)"
+             xmlns="http://www.w3.org/2000/svg"
+             version="1.1"
+             aria-hidden="true"
+             focusable="false">
+            <circle class="@SlotClasses.GetPathCircle()"
+                    data-slot="@RzOrbitingCircles.SlotNames.NameOf(SlotTypes.PathCircle)"
+                    cx="50%"
+                    cy="50%"
+                    r="@ClampedRadius"
+                    fill="none" />
+        </svg>
+    }
+
+    <div class="@SlotClasses.GetItems()"
+         data-slot="@RzOrbitingCircles.SlotNames.NameOf(SlotTypes.Items)">
+        @foreach (var item in OrbitItems)
+        {
+            <div class="@SlotClasses.GetItem()"
+                 data-slot="@RzOrbitingCircles.SlotNames.NameOf(SlotTypes.Item)"
+                 data-angle="@item.Angle.ToString("0.###", CultureInfo.InvariantCulture)"
+                 data-radius="@ClampedRadius.ToString("0.###", CultureInfo.InvariantCulture)"
+                 data-reverse="@Reverse.ToString().ToLowerInvariant()"
+                 style="@item.Style">
+                @item.Content
+            </div>
+        }
+    </div>
+</HtmlElement>

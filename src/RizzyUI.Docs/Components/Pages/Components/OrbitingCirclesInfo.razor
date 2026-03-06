@@ -1,0 +1,215 @@
+@page "/components/orbiting-circles"
+@using RizzyUI
+
+<PageTitle>Orbiting Circles</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Docs</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/components" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Components</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Orbiting Circles</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" class="scroll-mt-20">Orbiting Circles</RzHeading>
+            <RzParagraph>
+                <code>RzOrbitingCircles</code> renders supplied content as evenly spaced orbit items around a center point.
+                It is SSR-safe, uses CSS-driven animation (no Blazor interactivity), and supports layered compositions by stacking multiple instances in the same relative container.
+            </RzParagraph>
+
+            <RzAlert Variant="ThemeVariant.Information" class="my-6 not-prose">
+                <AlertTitle>Under the Hood</AlertTitle>
+                <AlertDescription>
+                    This component emits item angles and orbit variables in server-rendered markup.
+                    Motion is handled by CSS classes, and concentric bands are created by rendering multiple <code>RzOrbitingCircles</code> components together.
+                </AlertDescription>
+            </RzAlert>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">Basic Usage</RzHeading>
+                <RzParagraph>Render one orbit band with a visible path and evenly distributed items.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto flex h-[420px] w-full max-w-xl items-center justify-center p-6">
+                        <RzOrbitingCircles class="size-80" ItemSize="44" Radius="120">
+                            <span class="flex size-11 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Email" aria-hidden="true" /></span>
+                            <span class="flex size-11 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Web" aria-hidden="true" /></span>
+                            <span class="flex size-11 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Chat" aria-hidden="true" /></span>
+                            <span class="flex size-11 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Shield" aria-hidden="true" /></span>
+                            <span class="flex size-11 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Star" aria-hidden="true" /></span>
+                        </RzOrbitingCircles>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzOrbitingCircles class=&quot;size-80&quot; ItemSize=&quot;44&quot; Radius=&quot;120&quot;&gt;
+    &lt;span class=&quot;flex size-11 items-center justify-center rounded-full border bg-card&quot;&gt;&lt;Blazicon Svg=&quot;MdiIcon.Email&quot; aria-hidden=&quot;true&quot; /&gt;&lt;/span&gt;
+    &lt;span class=&quot;flex size-11 items-center justify-center rounded-full border bg-card&quot;&gt;&lt;Blazicon Svg=&quot;MdiIcon.Web&quot; aria-hidden=&quot;true&quot; /&gt;&lt;/span&gt;
+    &lt;span class=&quot;flex size-11 items-center justify-center rounded-full border bg-card&quot;&gt;&lt;Blazicon Svg=&quot;MdiIcon.Chat&quot; aria-hidden=&quot;true&quot; /&gt;&lt;/span&gt;
+&lt;/RzOrbitingCircles&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Reversed Inner Orbit" class="scroll-mt-20">Reversed Inner Orbit</RzHeading>
+                <RzParagraph>Stack two instances to create concentric orbit bands, with the inner band reversed.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto relative flex h-[420px] w-full max-w-xl items-center justify-center p-6">
+                        <RzOrbitingCircles class="size-80" ItemSize="42" Radius="130">
+                            <span class="flex size-10 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Cloud" aria-hidden="true" /></span>
+                            <span class="flex size-10 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Database" aria-hidden="true" /></span>
+                            <span class="flex size-10 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Server" aria-hidden="true" /></span>
+                            <span class="flex size-10 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Api" aria-hidden="true" /></span>
+                        </RzOrbitingCircles>
+                        <RzOrbitingCircles class="size-80" ItemSize="32" Radius="78" Reverse Speed="2">
+                            <span class="flex size-8 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.LightningBolt" aria-hidden="true" /></span>
+                            <span class="flex size-8 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Cog" aria-hidden="true" /></span>
+                            <span class="flex size-8 items-center justify-center rounded-full border bg-card"><Blazicon Svg="MdiIcon.Security" aria-hidden="true" /></span>
+                        </RzOrbitingCircles>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;div class=&quot;relative&quot;&gt;
+    &lt;RzOrbitingCircles class=&quot;size-80&quot; ItemSize=&quot;42&quot; Radius=&quot;130&quot;&gt;...&lt;/RzOrbitingCircles&gt;
+    &lt;RzOrbitingCircles class=&quot;size-80&quot; ItemSize=&quot;32&quot; Radius=&quot;78&quot; Reverse Speed=&quot;2&quot;&gt;...&lt;/RzOrbitingCircles&gt;
+&lt;/div&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Custom Radius, Speed, and Item Size" class="scroll-mt-20">Custom Radius, Speed, and Item Size</RzHeading>
+                <RzParagraph>Tune orbit radius, item size, and duration/speed multipliers.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto grid w-full max-w-4xl gap-6 p-6 md:grid-cols-2">
+                        <RzOrbitingCircles class="size-72 border rounded-md" Radius="90" Duration="16" ItemSize="36">
+                            <span class="size-9 rounded-full bg-primary/20 border"></span>
+                            <span class="size-9 rounded-full bg-primary/20 border"></span>
+                            <span class="size-9 rounded-full bg-primary/20 border"></span>
+                        </RzOrbitingCircles>
+                        <RzOrbitingCircles class="size-72 border rounded-md" Radius="130" Duration="28" Speed="1.5" ItemSize="52" StartAngle="45">
+                            <span class="size-12 rounded-full bg-accent/30 border"></span>
+                            <span class="size-12 rounded-full bg-accent/30 border"></span>
+                            <span class="size-12 rounded-full bg-accent/30 border"></span>
+                            <span class="size-12 rounded-full bg-accent/30 border"></span>
+                        </RzOrbitingCircles>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzOrbitingCircles Radius=&quot;90&quot; Duration=&quot;16&quot; ItemSize=&quot;36&quot;&gt;...&lt;/RzOrbitingCircles&gt;
+&lt;RzOrbitingCircles Radius=&quot;130&quot; Duration=&quot;28&quot; Speed=&quot;1.5&quot; ItemSize=&quot;52&quot; StartAngle=&quot;45&quot;&gt;...&lt;/RzOrbitingCircles&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Decorative vs Labeled Usage" class="scroll-mt-20">Decorative vs Labeled Usage</RzHeading>
+                <RzParagraph>The component is decorative by default. Set <code>Decorative=&quot;false&quot;</code> and <code>AriaLabel</code> when it should be announced as grouped content.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto grid w-full max-w-3xl gap-6 p-6 md:grid-cols-2">
+                        <RzOrbitingCircles class="size-64 border rounded-md" Radius="95" ItemSize="34">
+                            <span class="size-8 rounded-full bg-muted border"></span>
+                            <span class="size-8 rounded-full bg-muted border"></span>
+                            <span class="size-8 rounded-full bg-muted border"></span>
+                        </RzOrbitingCircles>
+                        <RzOrbitingCircles class="size-64 border rounded-md" Decorative="false" AriaLabel="Connected services status" Radius="95" ItemSize="34">
+                            <span class="size-8 rounded-full bg-success/30 border"></span>
+                            <span class="size-8 rounded-full bg-warning/30 border"></span>
+                            <span class="size-8 rounded-full bg-info/30 border"></span>
+                        </RzOrbitingCircles>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzOrbitingCircles /&gt;
+&lt;RzOrbitingCircles Decorative=&quot;false&quot; AriaLabel=&quot;Connected services status&quot;&gt;...&lt;/RzOrbitingCircles&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Integration Example" class="scroll-mt-20">Integration Example</RzHeading>
+                <RzParagraph>Use orbiting items around a central card or avatar in surrounding layout.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto relative flex h-[420px] w-full max-w-xl items-center justify-center p-6">
+                        <div class="z-10 flex size-32 items-center justify-center rounded-xl border bg-card text-sm font-semibold">Center Card</div>
+                        <RzOrbitingCircles class="size-80" Radius="145" ItemSize="36" ShowPath="false">
+                            <span class="size-9 rounded-full border bg-card"></span>
+                            <span class="size-9 rounded-full border bg-card"></span>
+                            <span class="size-9 rounded-full border bg-card"></span>
+                            <span class="size-9 rounded-full border bg-card"></span>
+                        </RzOrbitingCircles>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;div class=&quot;relative&quot;&gt;
+    &lt;div class=&quot;z-10&quot;&gt;Center Card&lt;/div&gt;
+    &lt;RzOrbitingCircles ShowPath=&quot;false&quot; Radius=&quot;145&quot; ItemSize=&quot;36&quot;&gt;...&lt;/RzOrbitingCircles&gt;
+&lt;/div&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Edge Case" class="scroll-mt-20">Edge Case</RzHeading>
+                <RzParagraph>With no path and sparse content, the component still renders predictable wrappers and animation variables.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto flex h-[320px] w-full max-w-xl items-center justify-center p-6">
+                        <RzOrbitingCircles class="size-64" ShowPath="false" Radius="70" ItemSize="28">
+                            <span class="size-7 rounded-full bg-primary/20 border"></span>
+                            <span class="size-7 rounded-full bg-primary/20 border"></span>
+                        </RzOrbitingCircles>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzOrbitingCircles ShowPath=&quot;false&quot; Radius=&quot;70&quot; ItemSize=&quot;28&quot;&gt;
+    &lt;span class=&quot;size-7 rounded-full bg-primary/20 border&quot;&gt;&lt;/span&gt;
+    &lt;span class=&quot;size-7 rounded-full bg-primary/20 border&quot;&gt;&lt;/span&gt;
+&lt;/RzOrbitingCircles&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/5 px-4 py-3">Property</th>
+                                <th scope="col" class="w-2/5 px-4 py-3">Description</th>
+                                <th scope="col" class="w-1/5 px-4 py-3">Type</th>
+                                <th scope="col" class="px-4 py-3">Default</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top"><td class="px-4 py-4"><code>ChildContent</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Orbit item content. Each top-level node is wrapped and positioned around the orbit.</td><td class="px-4 py-4"><code>RenderFragment?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>Reverse</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Reverses orbit animation direction for all items.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>false</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>Duration</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Base animation duration in seconds before speed adjustment.</td><td class="px-4 py-4"><code>double</code></td><td class="px-4 py-4"><code>20</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>Speed</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Speed multiplier used as <code>Duration / Speed</code>; clamped to a positive value.</td><td class="px-4 py-4"><code>double</code></td><td class="px-4 py-4"><code>1</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>Radius</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Orbit radius in CSS pixels; negative values clamp to <code>0</code>.</td><td class="px-4 py-4"><code>double</code></td><td class="px-4 py-4"><code>160</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>ShowPath</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Toggles rendering of the decorative orbit path SVG.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>true</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>ItemSize</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Width and height of each orbit wrapper in CSS pixels; clamped to at least <code>1</code>.</td><td class="px-4 py-4"><code>double</code></td><td class="px-4 py-4"><code>30</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>Decorative</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">When true, the root is hidden from assistive tech with <code>aria-hidden</code>.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>true</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>AriaLabel</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Accessible group label used only when <code>Decorative</code> is false.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>AdditionalAttributes</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Additional HTML attributes for the root element.</td><td class="px-4 py-4"><code>IReadOnlyDictionary&lt;string, object&gt;?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
+                <RzParagraph>
+                    Not applicable. <code>RzOrbitingCircles</code> is CSS and SSR driven, so no Alpine module or client-side data contract is required.
+                </RzParagraph>
+            </section>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>

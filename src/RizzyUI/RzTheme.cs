@@ -300,6 +300,9 @@ public partial class RzTheme
         // RzProgress Family
         RzProgress = RizzyUI.RzProgress.DefaultDescriptor;
 
+        // RzOrbitingCircles Family
+        RzOrbitingCircles = RizzyUI.RzOrbitingCircles.DefaultDescriptor;
+
         // RzQuickReference Family
         RzQuickReference = RizzyUI.RzQuickReference.DefaultDescriptor;
         RzQuickReferenceContainer = RizzyUI.RzQuickReferenceContainer.DefaultDescriptor;
