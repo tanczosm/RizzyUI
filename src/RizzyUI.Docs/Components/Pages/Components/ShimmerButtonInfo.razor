@@ -1,0 +1,180 @@
+@page "/components/shimmer-button"
+@namespace RizzyUI.Docs.Components.Pages.Components
+
+@using Blazicons
+@using Rizzy.Components
+@using RizzyUI
+
+<PageTitle>Shimmer Button</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink Href="/">Docs</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>Shimmer Button</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Shimmer Button" class="scroll-mt-20">Shimmer Button</RzHeading>
+            <RzParagraph>
+                <code>RzShimmerButton</code> is a CSS-only decorative button primitive for emphasized calls to action. It accepts arbitrary child content,
+                requires no Alpine or Blazor interactivity, and remains compatible with ordinary button, form, and HTMX attributes.
+            </RzParagraph>
+
+            <RzAlert Variant="ThemeVariant.Information" class="my-6 not-prose">
+                <AlertTitle>Under the Hood</AlertTitle>
+                <AlertDescription>
+                    The shimmer effect is produced by layered decorative markup and CSS custom properties; there is no JavaScript animation runtime.
+                </AlertDescription>
+            </RzAlert>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage">Basic Usage</RzHeading>
+                <RzParagraph>The default shimmer button keeps semantic theme colors while adding a decorative moving beam behind the content.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
+                    <div class="mx-auto flex min-h-[12rem] items-center justify-center p-6">
+                        <RzShimmerButton>Shimmer Button</RzShimmerButton>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzShimmerButton&gt;Shimmer Button&lt;/RzShimmerButton&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Appearance Customization">Appearance Customization</RzHeading>
+                <RzParagraph>
+                    Use <code>ShimmerColor</code>, <code>ShimmerDuration</code>, <code>BorderRadius</code>, <code>ShimmerSize</code>, and optional <code>Background</code>
+                    to tune the effect. When <code>Background</code> is omitted, theme colors are used by default.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
+                    <div class="mx-auto grid min-h-[16rem] w-full max-w-3xl place-items-center gap-4 p-6 sm:grid-cols-2">
+                        <RzShimmerButton ShimmerColor="#67e8f9" ShimmerDuration="2s" BorderRadius="0.75rem" ShimmerSize="0.08em">
+                            Fast Cyan
+                        </RzShimmerButton>
+                        <RzShimmerButton ShimmerColor="#f9a8d4" ShimmerDuration="4s" BorderRadius="999px" Background="linear-gradient(135deg,#111827,#374151)">
+                            Soft Pink
+                        </RzShimmerButton>
+                        <RzShimmerButton ShimmerColor="#fde047" ShimmerDuration="2.5s" BorderRadius="0.5rem" ShimmerSize="0.04em" class="sm:col-span-2">
+                            Compact Beam
+                        </RzShimmerButton>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzShimmerButton ShimmerColor="#67e8f9" ShimmerDuration="2s" BorderRadius="0.75rem" ShimmerSize="0.08em"&gt;
+    Fast Cyan
+&lt;/RzShimmerButton&gt;
+
+&lt;RzShimmerButton ShimmerColor="#f9a8d4"
+                 ShimmerDuration="4s"
+                 BorderRadius="999px"
+                 Background="linear-gradient(135deg,#111827,#374151)"&gt;
+    Soft Pink
+&lt;/RzShimmerButton&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Integration Example">Integration Example</RzHeading>
+                <RzParagraph>
+                    <code>RzShimmerButton</code> behaves like a native button, so form submission and HTMX attributes work as expected.
+                </RzParagraph>
+                <RzAlert Variant="ThemeVariant.Warning" class="mb-4 not-prose">
+                    <AlertDescription>
+                        The endpoint in this sample is illustrative. Point <code>hx-post</code> to your app's real route when integrating.
+                    </AlertDescription>
+                </RzAlert>
+                <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
+                    <form class="mx-auto flex min-h-[12rem] w-full max-w-lg flex-col justify-center gap-4 p-6"
+                          hx-post="/demo/shimmer/submit"
+                          hx-target="#shimmer-result"
+                          hx-swap="innerHTML">
+                        <input type="email" name="email" placeholder="name@example.com" class="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" />
+                        <div class="flex items-center justify-between gap-3">
+                            <span id="shimmer-result" class="text-sm text-muted-foreground">Ready to submit</span>
+                            <RzShimmerButton Type="ButtonType.Submit">Send</RzShimmerButton>
+                        </div>
+                    </form>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;form hx-post="/demo/shimmer/submit" hx-target="#shimmer-result" hx-swap="innerHTML"&gt;
+    &lt;input type="email" name="email" placeholder="name@example.com" class="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" /&gt;
+    &lt;RzShimmerButton Type="ButtonType.Submit"&gt;Send&lt;/RzShimmerButton&gt;
+&lt;/form&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Advanced and Edge Cases">Advanced and Edge Cases</RzHeading>
+                <RzParagraph>
+                    Icon-only usage should provide <code>AriaLabel</code>. Disabled shimmer buttons keep the layered visual treatment while remaining inert.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)" class="mb-5">
+                    <div class="mx-auto flex min-h-[12rem] items-center justify-center gap-4 p-6">
+                        <RzShimmerButton AriaLabel="Open notifications" class="size-11 px-0">
+                            <Blazicon Svg="@MdiIcon.BellOutline" aria-hidden="true" />
+                        </RzShimmerButton>
+                        <RzShimmerButton Disabled="true">Disabled Action</RzShimmerButton>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzShimmerButton AriaLabel="Open notifications" class="size-11 px-0"&gt;
+    &lt;Blazicon Svg="@MdiIcon.BellOutline" aria-hidden="true" /&gt;
+&lt;/RzShimmerButton&gt;
+
+&lt;RzShimmerButton Disabled="true"&gt;Disabled Action&lt;/RzShimmerButton&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Parameters">Parameters</RzHeading>
+                <div class="overflow-x-auto not-prose">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-2 pr-4 text-left">Parameter</th>
+                                <th class="py-2 pr-4 text-left">Type</th>
+                                <th class="py-2 pr-4 text-left">Default</th>
+                                <th class="py-2 text-left">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>ChildContent</code></td><td class="py-2 pr-4"><code>RenderFragment?</code></td><td class="py-2 pr-4"><code>null</code></td><td class="py-2">Content rendered in the shimmer button.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>ShimmerColor</code></td><td class="py-2 pr-4"><code>string?</code></td><td class="py-2 pr-4"><code>"#ffffff"</code></td><td class="py-2">Color value used by the rotating shimmer beam.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>ShimmerSize</code></td><td class="py-2 pr-4"><code>string?</code></td><td class="py-2 pr-4"><code>"0.05em"</code></td><td class="py-2">Inset cut size for the decorative backdrop layer.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>BorderRadius</code></td><td class="py-2 pr-4"><code>string?</code></td><td class="py-2 pr-4"><code>"100px"</code></td><td class="py-2">Radius applied to root and backdrop layers.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>ShimmerDuration</code></td><td class="py-2 pr-4"><code>string?</code></td><td class="py-2 pr-4"><code>"3s"</code></td><td class="py-2">Animation speed for shimmer movement and spin.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>Background</code></td><td class="py-2 pr-4"><code>string?</code></td><td class="py-2 pr-4"><code>null</code></td><td class="py-2">Optional explicit CSS background override.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>Type</code></td><td class="py-2 pr-4"><code>ButtonType</code></td><td class="py-2 pr-4"><code>Button</code></td><td class="py-2">Native HTML button type.</td></tr>
+                            <tr class="border-b"><td class="py-2 pr-4"><code>Disabled</code></td><td class="py-2 pr-4"><code>bool</code></td><td class="py-2 pr-4"><code>false</code></td><td class="py-2">Disables interaction and applies disabled visual state.</td></tr>
+                            <tr><td class="py-2 pr-4"><code>AriaLabel</code></td><td class="py-2 pr-4"><code>string?</code></td><td class="py-2 pr-4"><code>null</code></td><td class="py-2">Optional accessible name for icon-only content.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API">Alpine API</RzHeading>
+                <RzParagraph>
+                    <code>RzShimmerButton</code> has no Alpine API because it is a CSS-only component.
+                </RzParagraph>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Attribute Pass-through">Attribute Pass-through</RzHeading>
+                <RzParagraph>
+                    Standard button attributes plus <code>aria-*</code>, <code>data-*</code>, and <code>hx-*</code> attributes pass through the root via
+                    <code>AdditionalAttributes</code>.
+                </RzParagraph>
+            </section>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>

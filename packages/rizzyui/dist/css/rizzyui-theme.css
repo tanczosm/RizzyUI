@@ -1020,3 +1020,27 @@ pre:has(> code) {
         background-color: var(--color-background);
     }
 }
+@theme inline {
+    --animate-shimmer-slide: shimmer-slide var(--rz-shimmer-button-speed) ease-in-out infinite alternate;
+    --animate-spin-around: spin-around calc(var(--rz-shimmer-button-speed) * 2) linear infinite;
+}
+
+@keyframes shimmer-slide {
+    0% {
+        transform: translate3d(-32%, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(32%, 0, 0);
+    }
+}
+
+@keyframes spin-around {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

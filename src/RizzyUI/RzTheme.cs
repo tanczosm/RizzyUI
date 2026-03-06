@@ -74,6 +74,7 @@ public partial class RzTheme
 
         // RzButton Family
         RzButton = RizzyUI.RzButton.DefaultDescriptor;
+        RzShimmerButton = RizzyUI.RzShimmerButton.DefaultDescriptor;
 
         // RzClipboard Family
         RzClipboard = RizzyUI.RzClipboard.DefaultDescriptor;
