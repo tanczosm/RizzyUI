@@ -53,6 +53,9 @@ public partial class RzTheme
 
         // RzBreadcrumb Family
         RzBreadcrumb = RizzyUI.RzBreadcrumb.DefaultDescriptor;
+
+        // RzBorderBeam
+        RzBorderBeam = RizzyUI.RzBorderBeam.DefaultDescriptor;
         BreadcrumbList = RizzyUI.BreadcrumbList.DefaultDescriptor;
         BreadcrumbItem = RizzyUI.BreadcrumbItem.DefaultDescriptor;
         BreadcrumbLink = RizzyUI.BreadcrumbLink.DefaultDescriptor;

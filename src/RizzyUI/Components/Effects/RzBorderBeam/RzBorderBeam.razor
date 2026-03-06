@@ -1,0 +1,17 @@
+@namespace RizzyUI
+@inherits RzComponent<RzBorderBeam.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="border-beam"
+             aria-hidden="true">
+    <div class="@SlotClasses.GetTrack()"
+         data-slot="@RzBorderBeam.SlotNames.NameOf(SlotTypes.Track)"
+         style="@TrackStyle">
+        <div class="@BeamClasses"
+             data-slot="@RzBorderBeam.SlotNames.NameOf(SlotTypes.Beam)"
+             style="@BeamStyle"></div>
+    </div>
+</HtmlElement>
