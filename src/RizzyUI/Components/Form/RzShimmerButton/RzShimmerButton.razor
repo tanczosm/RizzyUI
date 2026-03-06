@@ -1,0 +1,37 @@
+@namespace RizzyUI
+@inherits RzComponent<RzShimmerButton.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@RootAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="shimmer-button"
+             type="@EffectiveType"
+             disabled="@Disabled"
+             aria-label="@EffectiveAriaLabel"
+             style="@RootStyle">
+    <div class="@SlotClasses.GetSparkContainer()"
+         data-slot="@RzShimmerButton.SlotNames.NameOf(SlotTypes.SparkContainer)"
+         aria-hidden="true">
+        <div class="@SlotClasses.GetSparkTrack()"
+             data-slot="@RzShimmerButton.SlotNames.NameOf(SlotTypes.SparkTrack)"
+             aria-hidden="true">
+            <div class="@SlotClasses.GetSparkBeam()"
+                 data-slot="@RzShimmerButton.SlotNames.NameOf(SlotTypes.SparkBeam)"
+                 aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <span class="@SlotClasses.GetContent()"
+          data-slot="@RzShimmerButton.SlotNames.NameOf(SlotTypes.Content)">
+        @ChildContent
+    </span>
+
+    <div class="@SlotClasses.GetHighlight()"
+         data-slot="@RzShimmerButton.SlotNames.NameOf(SlotTypes.Highlight)"
+         aria-hidden="true"></div>
+
+    <div class="@SlotClasses.GetBackdrop()"
+         data-slot="@RzShimmerButton.SlotNames.NameOf(SlotTypes.Backdrop)"
+         aria-hidden="true"></div>
+</HtmlElement>
