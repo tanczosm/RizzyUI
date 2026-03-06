@@ -176,6 +176,8 @@ public partial class RzTheme
     public virtual TvDescriptor<RzAsChildComponent<RzBackToTop.Slots>, RzBackToTop.Slots> RzBackToTop { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzButton"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzButton.Slots>, RzButton.Slots> RzButton { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzRainbowButton"/> component. </summary>
+    public virtual TvDescriptor<RzAsChildComponent<RzRainbowButton.Slots>, RzRainbowButton.Slots> RzRainbowButton { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzButtonGroup"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzButtonGroup.Slots>, RzButtonGroup.Slots> RzButtonGroup { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.ButtonGroupSeparator"/> component. </summary>
