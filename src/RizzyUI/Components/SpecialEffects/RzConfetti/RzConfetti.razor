@@ -6,7 +6,8 @@
              id="@Id"
              @attributes="@AdditionalAttributes"
              class="@SlotClasses.GetBase()"
-             data-slot="confetti">
+             data-slot="confetti"
+             data-confetti-host="@EffectiveHostId">
     <div data-alpine-root="@Id"
          x-data="rzConfetti"
          data-assets="@_assets"

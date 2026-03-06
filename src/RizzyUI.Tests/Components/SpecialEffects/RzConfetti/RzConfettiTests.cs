@@ -16,6 +16,7 @@ public class RzConfettiTests : BunitAlbaContext, IClassFixture<WebAppFixture>
 
         var root = cut.Find("[data-slot='confetti']");
         Assert.Equal("celebrate-host", root.Id);
+        Assert.Equal("celebrate-host", root.GetAttribute("data-confetti-host"));
     }
 
     [Fact]

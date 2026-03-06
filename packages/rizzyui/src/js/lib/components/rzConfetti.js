@@ -16,6 +16,16 @@ function hasReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function asElement(node) {
+    if (!node) return null;
+    return node.nodeType === 1 ? node : node.parentElement;
+}
+
+function findTrigger(target) {
+    const el = asElement(target);
+    return el ? el.closest('[data-confetti-trigger="true"]') : null;
+}
+
 function resolveHost(trigger) {
     const explicitTarget = trigger.dataset.confettiTarget;
     if (explicitTarget && hostRegistry.has(explicitTarget)) {
@@ -39,7 +49,7 @@ function attachDelegatedListeners() {
     listenersAttached = true;
 
     document.addEventListener('click', (event) => {
-        const trigger = event.target.closest('[data-confetti-trigger="true"]');
+        const trigger = findTrigger(event.target);
         if (!trigger || trigger.dataset.confettiTriggerEvent !== 'click' || trigger.hasAttribute('disabled') || trigger.getAttribute('aria-disabled') === 'true') {
             return;
         }
@@ -50,7 +60,7 @@ function attachDelegatedListeners() {
     });
 
     document.addEventListener('focusin', (event) => {
-        const trigger = event.target.closest('[data-confetti-trigger="true"]');
+        const trigger = findTrigger(event.target);
         if (!trigger || trigger.dataset.confettiTriggerEvent !== 'focus' || trigger.hasAttribute('disabled') || trigger.getAttribute('aria-disabled') === 'true') {
             return;
         }
@@ -61,7 +71,7 @@ function attachDelegatedListeners() {
     });
 
     document.addEventListener('mouseover', (event) => {
-        const trigger = event.target.closest('[data-confetti-trigger="true"]');
+        const trigger = findTrigger(event.target);
         if (!trigger || trigger.dataset.confettiTriggerEvent !== 'mouse-enter' || trigger.hasAttribute('disabled') || trigger.getAttribute('aria-disabled') === 'true') {
             return;
         }
