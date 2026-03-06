@@ -55,31 +55,29 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Cannon" class="scroll-mt-20">Basic Cannon</RzHeading>
-                <RzParagraph>Click the button to fire a centered burst from the trigger element.</RzParagraph>
+                <RzParagraph>Click the button to fire a centered burst that renders across the viewport (not clipped to the demo card).</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger AsChild="true"><RzButton>Confetti 🎉</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-basic-viewport" ManualStart="true" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-basic-viewport" AsChild="true"><RzButton>Confetti 🎉</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzConfetti ManualStart=&quot;true&quot;&gt;
-    &lt;ConfettiTrigger AsChild=&quot;true&quot;&gt;
-        &lt;RzButton&gt;Confetti 🎉&lt;/RzButton&gt;
-    &lt;/ConfettiTrigger&gt;
-&lt;/RzConfetti&gt;
+&lt;RzConfetti Id=&quot;confetti-basic-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-basic-viewport&quot; AsChild=&quot;true&quot;&gt;
+    &lt;RzButton&gt;Confetti 🎉&lt;/RzButton&gt;
+&lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Random Direction" class="scroll-mt-20">Random Direction</RzHeading>
-                <RzParagraph>Each click emits a burst with a randomized launch angle.</RzParagraph>
+                <RzParagraph>Each click emits a burst with a randomized launch angle across the viewport.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger Pattern="ConfettiPattern.RandomDirection" AsChild="true"><RzButton>Random Confetti 🎉</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-random-viewport" ManualStart="true" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-random-viewport" Pattern="ConfettiPattern.RandomDirection" AsChild="true"><RzButton>Random Confetti 🎉</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;ConfettiTrigger Pattern=&quot;ConfettiPattern.RandomDirection&quot; AsChild=&quot;true&quot;&gt;
+&lt;RzConfetti Id=&quot;confetti-random-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-random-viewport&quot; Pattern=&quot;ConfettiPattern.RandomDirection&quot; AsChild=&quot;true&quot;&gt;
     &lt;RzButton&gt;Random Confetti 🎉&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
@@ -87,14 +85,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Fireworks" class="scroll-mt-20">Fireworks</RzHeading>
-                <RzParagraph>Runs a timed two-origin sequence that feels like fireworks.</RzParagraph>
+                <RzParagraph>Runs a timed two-origin sequence that fills the viewport like fireworks.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger Pattern="ConfettiPattern.Fireworks" AsChild="true"><RzButton>Trigger Fireworks</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-fireworks-viewport" ManualStart="true" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-fireworks-viewport" Pattern="ConfettiPattern.Fireworks" AsChild="true"><RzButton>Trigger Fireworks</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;ConfettiTrigger Pattern=&quot;ConfettiPattern.Fireworks&quot; AsChild=&quot;true&quot;&gt;
+&lt;RzConfetti Id=&quot;confetti-fireworks-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-fireworks-viewport&quot; Pattern=&quot;ConfettiPattern.Fireworks&quot; AsChild=&quot;true&quot;&gt;
     &lt;RzButton&gt;Trigger Fireworks&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
@@ -102,14 +100,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Stars" class="scroll-mt-20">Stars</RzHeading>
-                <RzParagraph>Launches layered star and circle particles with warm colors.</RzParagraph>
+                <RzParagraph>Launches layered star and circle particles with warm colors across the viewport.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" Pattern="ConfettiPattern.Stars" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger Pattern="ConfettiPattern.Stars" AsChild="true"><RzButton>Trigger Stars</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-stars-viewport" ManualStart="true" Pattern="ConfettiPattern.Stars" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-stars-viewport" Pattern="ConfettiPattern.Stars" AsChild="true"><RzButton>Trigger Stars</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;ConfettiTrigger Pattern=&quot;ConfettiPattern.Stars&quot; AsChild=&quot;true&quot;&gt;
+&lt;RzConfetti Id=&quot;confetti-stars-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-stars-viewport&quot; Pattern=&quot;ConfettiPattern.Stars&quot; AsChild=&quot;true&quot;&gt;
     &lt;RzButton&gt;Trigger Stars&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
@@ -117,14 +115,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Side Cannons" class="scroll-mt-20">Side Cannons</RzHeading>
-                <RzParagraph>Emits mirrored side-cannon streams from the left and right edges.</RzParagraph>
+                <RzParagraph>Emits mirrored side-cannon streams from the viewport edges.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger Pattern="ConfettiPattern.SideCannons" AsChild="true"><RzButton>Trigger Side Cannons</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-side-viewport" ManualStart="true" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-side-viewport" Pattern="ConfettiPattern.SideCannons" AsChild="true"><RzButton>Trigger Side Cannons</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;ConfettiTrigger Pattern=&quot;ConfettiPattern.SideCannons&quot; AsChild=&quot;true&quot;&gt;
+&lt;RzConfetti Id=&quot;confetti-side-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-side-viewport&quot; Pattern=&quot;ConfettiPattern.SideCannons&quot; AsChild=&quot;true&quot;&gt;
     &lt;RzButton&gt;Trigger Side Cannons&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
@@ -132,14 +130,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Custom Shapes" class="scroll-mt-20">Custom Shapes</RzHeading>
-                <RzParagraph>Uses path-based shapes for a varied celebratory pattern.</RzParagraph>
+                <RzParagraph>Uses path-based shapes for a varied celebratory pattern across the viewport.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger Pattern="ConfettiPattern.CustomShapes" AsChild="true"><RzButton>Trigger Shapes</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-shapes-viewport" ManualStart="true" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-shapes-viewport" Pattern="ConfettiPattern.CustomShapes" AsChild="true"><RzButton>Trigger Shapes</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;ConfettiTrigger Pattern=&quot;ConfettiPattern.CustomShapes&quot; AsChild=&quot;true&quot;&gt;
+&lt;RzConfetti Id=&quot;confetti-shapes-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-shapes-viewport&quot; Pattern=&quot;ConfettiPattern.CustomShapes&quot; AsChild=&quot;true&quot;&gt;
     &lt;RzButton&gt;Trigger Shapes&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
@@ -147,14 +145,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Emoji" class="scroll-mt-20">Emoji</RzHeading>
-                <RzParagraph>Fires emoji-based particles with secondary circle bursts.</RzParagraph>
+                <RzParagraph>Fires emoji-based particles with secondary circle bursts across the viewport.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
-                        <ConfettiTrigger Pattern="ConfettiPattern.Emoji" AsChild="true"><RzButton>Trigger Emoji</RzButton></ConfettiTrigger>
-                    </RzConfetti>
+                    <RzConfetti Id="confetti-emoji-viewport" ManualStart="true" class="fixed inset-0 z-40 overflow-visible" />
+                    <ConfettiTrigger TargetId="confetti-emoji-viewport" Pattern="ConfettiPattern.Emoji" AsChild="true"><RzButton>Trigger Emoji</RzButton></ConfettiTrigger>
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;ConfettiTrigger Pattern=&quot;ConfettiPattern.Emoji&quot; AsChild=&quot;true&quot;&gt;
+&lt;RzConfetti Id=&quot;confetti-emoji-viewport&quot; ManualStart=&quot;true&quot; class=&quot;fixed inset-0 overflow-visible&quot; /&gt;
+&lt;ConfettiTrigger TargetId=&quot;confetti-emoji-viewport&quot; Pattern=&quot;ConfettiPattern.Emoji&quot; AsChild=&quot;true&quot;&gt;
     &lt;RzButton&gt;Trigger Emoji&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>

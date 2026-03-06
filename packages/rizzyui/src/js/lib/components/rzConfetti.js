@@ -1,6 +1,7 @@
 import confetti from 'canvas-confetti';
 
 const hostRegistry = new Map();
+const hostElementRegistry = new WeakMap();
 let listenersAttached = false;
 
 function parseJson(value, fallback) {
@@ -34,6 +35,11 @@ function resolveHost(trigger) {
 
     const nearest = trigger.closest('[data-confetti-host]');
     if (!nearest) return null;
+
+    if (hostElementRegistry.has(nearest)) {
+        return hostElementRegistry.get(nearest);
+    }
+
     return hostRegistry.get(nearest.dataset.confettiHost) || null;
 }
 
@@ -237,6 +243,13 @@ export default function registerRzConfetti(Alpine) {
             }
 
             hostRegistry.set(this.hostId, this);
+            hostElementRegistry.set(this.$el, this);
+
+            const hostRoot = this.$el.closest('[data-slot="confetti"]');
+            if (hostRoot) {
+                hostElementRegistry.set(hostRoot, this);
+            }
+
             attachDelegatedListeners();
 
             const manualStart = this.$el.dataset.confettiManualStart === 'true';
@@ -331,7 +344,10 @@ export default function registerRzConfetti(Alpine) {
         destroy() {
             this.reset();
             if (this.hostId) {
-                hostRegistry.delete(this.hostId);
+                const currentHost = hostRegistry.get(this.hostId);
+                if (currentHost === this) {
+                    hostRegistry.delete(this.hostId);
+                }
             }
             this.instance = null;
         },
