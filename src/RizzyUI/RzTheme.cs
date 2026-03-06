@@ -356,6 +356,9 @@ public partial class RzTheme
         // RzSkeleton Family
         RzSkeleton = RizzyUI.RzSkeleton.DefaultDescriptor;
 
+        // RzShineBorder Family
+        RzShineBorder = RizzyUI.RzShineBorder.DefaultDescriptor;
+
         // RzSteps Family
         RzSteps = RizzyUI.RzSteps.DefaultDescriptor;
 
