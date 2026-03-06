@@ -21,23 +21,23 @@
 
             <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Confetti" class="scroll-mt-20">Confetti</RzHeading>
             <RzParagraph>
-                <code>RzConfetti</code> provides a canvas-backed celebration host and <code>ConfettiTrigger</code> supplies typed trigger wiring. This implementation is SSR-first and uses Alpine for client behavior.
+                <code>RzConfetti</code> provides a canvas-backed celebration host, and <code>ConfettiTrigger</code> emits trigger contracts that run particle effects through Alpine without requiring Blazor interactivity.
             </RzParagraph>
 
             <RzAlert Variant="ThemeVariant.Information" class="not-prose my-6">
                 <AlertTitle>Under the Hood</AlertTitle>
                 <AlertDescription>
-                    Hosts are registered by <code>data-confetti-host</code>, and delegated listeners route trigger events by nearest host or <code>TargetId</code>.
+                    Each host registers itself by <code>data-confetti-host</code>. Delegated listeners resolve trigger events to a host by nearest ancestor or explicit <code>TargetId</code> and run the selected pattern.
                 </AlertDescription>
             </RzAlert>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Confetti Demo" class="scroll-mt-20">Confetti Demo</RzHeading>
-                <RzParagraph>Equivalent to MagicUI <code>confetti-demo.tsx</code>: decorative text with a hover trigger.</RzParagraph>
+                <RzParagraph>Hover the trigger to fire a burst over decorative hero text.</RzParagraph>
                 <div class="not-prose relative my-6 rounded-lg border bg-card p-8">
-                    <RzConfetti ManualStart="true" class="min-h-[22rem] rounded-md border bg-background p-8">
+                    <RzConfetti ManualStart="true" class="min-h-[24rem] rounded-md border bg-background p-8">
                         <div class="pointer-events-none bg-linear-to-b from-black to-gray-300/80 bg-clip-text text-center text-7xl font-semibold text-transparent dark:from-white dark:to-slate-900/10">Confetti</div>
-                        <div class="mt-8 flex justify-center">
+                        <div class="mt-10 flex justify-center">
                             <ConfettiTrigger Trigger="ConfettiTriggerEvent.MouseEnter" Pattern="ConfettiPattern.Burst">
                                 Hover for Confetti
                             </ConfettiTrigger>
@@ -55,7 +55,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Cannon" class="scroll-mt-20">Basic Cannon</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-basic-cannon.tsx</code>.</RzParagraph>
+                <RzParagraph>Click the button to fire a centered burst from the trigger element.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger AsChild="true"><RzButton>Confetti 🎉</RzButton></ConfettiTrigger>
@@ -63,14 +63,16 @@
                 </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzConfetti ManualStart=&quot;true&quot;&gt;
-    &lt;ConfettiTrigger AsChild=&quot;true&quot;&gt;&lt;RzButton&gt;Confetti 🎉&lt;/RzButton&gt;&lt;/ConfettiTrigger&gt;
+    &lt;ConfettiTrigger AsChild=&quot;true&quot;&gt;
+        &lt;RzButton&gt;Confetti 🎉&lt;/RzButton&gt;
+    &lt;/ConfettiTrigger&gt;
 &lt;/RzConfetti&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Random Direction" class="scroll-mt-20">Random Direction</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-random-direction.tsx</code>.</RzParagraph>
+                <RzParagraph>Each click emits a burst with a randomized launch angle.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger Pattern="ConfettiPattern.RandomDirection" AsChild="true"><RzButton>Random Confetti 🎉</RzButton></ConfettiTrigger>
@@ -85,7 +87,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Fireworks" class="scroll-mt-20">Fireworks</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-fireworks.tsx</code>.</RzParagraph>
+                <RzParagraph>Runs a timed two-origin sequence that feels like fireworks.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger Pattern="ConfettiPattern.Fireworks" AsChild="true"><RzButton>Trigger Fireworks</RzButton></ConfettiTrigger>
@@ -100,7 +102,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Stars" class="scroll-mt-20">Stars</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-stars.tsx</code>.</RzParagraph>
+                <RzParagraph>Launches layered star and circle particles with warm colors.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" Pattern="ConfettiPattern.Stars" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger Pattern="ConfettiPattern.Stars" AsChild="true"><RzButton>Trigger Stars</RzButton></ConfettiTrigger>
@@ -115,7 +117,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Side Cannons" class="scroll-mt-20">Side Cannons</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-side-cannons.tsx</code>.</RzParagraph>
+                <RzParagraph>Emits mirrored side-cannon streams from the left and right edges.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger Pattern="ConfettiPattern.SideCannons" AsChild="true"><RzButton>Trigger Side Cannons</RzButton></ConfettiTrigger>
@@ -130,7 +132,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Custom Shapes" class="scroll-mt-20">Custom Shapes</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-custom-shapes.tsx</code> using the built-in <code>CustomShapes</code> pattern.</RzParagraph>
+                <RzParagraph>Uses path-based shapes for a varied celebratory pattern.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger Pattern="ConfettiPattern.CustomShapes" AsChild="true"><RzButton>Trigger Shapes</RzButton></ConfettiTrigger>
@@ -145,7 +147,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Emoji" class="scroll-mt-20">Emoji</RzHeading>
-                <RzParagraph>Equivalent to <code>confetti-emoji.tsx</code> using the built-in <code>Emoji</code> pattern.</RzParagraph>
+                <RzParagraph>Fires emoji-based particles with secondary circle bursts.</RzParagraph>
                 <div class="not-prose my-6 rounded-lg border bg-card p-8">
                     <RzConfetti ManualStart="true" class="min-h-40 rounded-md border bg-background p-6">
                         <ConfettiTrigger Pattern="ConfettiPattern.Emoji" AsChild="true"><RzButton>Trigger Emoji</RzButton></ConfettiTrigger>
@@ -156,6 +158,61 @@
     &lt;RzButton&gt;Trigger Emoji&lt;/RzButton&gt;
 &lt;/ConfettiTrigger&gt;
                 </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
+
+                <RzHeading Level="HeadingLevel.H3" class="mt-6">RzConfetti</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th class="px-4 py-3">Property</th><th class="px-4 py-3">Description</th><th class="px-4 py-3">Type</th><th class="px-4 py-3">Default</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                        <tr><td class="px-4 py-3"><code>ChildContent</code></td><td class="px-4 py-3">Visible content rendered above the confetti canvas.</td><td class="px-4 py-3"><code>RenderFragment?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Options</code></td><td class="px-4 py-3">Default fire request merged with trigger-level overrides.</td><td class="px-4 py-3"><code>ConfettiRequest?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>GlobalOptions</code></td><td class="px-4 py-3">Canvas instance creation options.</td><td class="px-4 py-3"><code>ConfettiGlobalOptions?</code></td><td class="px-4 py-3"><code>{ Resize=true, UseWorker=true }</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>ManualStart</code></td><td class="px-4 py-3">When true, host waits for triggers instead of auto-firing on init.</td><td class="px-4 py-3"><code>bool</code></td><td class="px-4 py-3"><code>false</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Pattern</code></td><td class="px-4 py-3">Default pattern used for auto-fire and unresolved trigger pattern.</td><td class="px-4 py-3"><code>ConfettiPattern</code></td><td class="px-4 py-3"><code>Burst</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>RespectReducedMotion</code></td><td class="px-4 py-3">Suppresses effects when reduced motion is preferred.</td><td class="px-4 py-3"><code>bool</code></td><td class="px-4 py-3"><code>true</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>HostId</code></td><td class="px-4 py-3">Optional logical host key for external targeting.</td><td class="px-4 py-3"><code>string?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                    </tbody></table>
+                </div>
+
+                <RzHeading Level="HeadingLevel.H3" class="mt-6">ConfettiTrigger</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th class="px-4 py-3">Property</th><th class="px-4 py-3">Description</th><th class="px-4 py-3">Type</th><th class="px-4 py-3">Default</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                        <tr><td class="px-4 py-3"><code>ChildContent</code></td><td class="px-4 py-3">Visible trigger content.</td><td class="px-4 py-3"><code>RenderFragment?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>TargetId</code></td><td class="px-4 py-3">Explicit host target. If omitted, nearest host is used.</td><td class="px-4 py-3"><code>string?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Pattern</code></td><td class="px-4 py-3">Pattern override for the trigger event.</td><td class="px-4 py-3"><code>ConfettiPattern?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Options</code></td><td class="px-4 py-3">Request options merged with host defaults.</td><td class="px-4 py-3"><code>ConfettiRequest?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Trigger</code></td><td class="px-4 py-3">Event used to activate this trigger.</td><td class="px-4 py-3"><code>ConfettiTriggerEvent</code></td><td class="px-4 py-3"><code>Click</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Disabled</code></td><td class="px-4 py-3">Prevents trigger activation and emits disabled semantics.</td><td class="px-4 py-3"><code>bool</code></td><td class="px-4 py-3"><code>false</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>AsChild</code></td><td class="px-4 py-3">Merges trigger attributes onto a child element.</td><td class="px-4 py-3"><code>bool</code></td><td class="px-4 py-3"><code>false</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>AriaLabel</code></td><td class="px-4 py-3">Optional accessible label for icon-only trigger content.</td><td class="px-4 py-3"><code>string?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
+                    </tbody></table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Supporting Types" class="scroll-mt-20">Supporting Types</RzHeading>
+                <RzParagraph><code>ConfettiRequest</code> and <code>ConfettiGlobalOptions</code> contain serializable options sent through <code>data-*</code> attributes, and <code>ConfettiPattern</code>/<code>ConfettiTriggerEvent</code> define behavior selection.</RzParagraph>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
+                <RzParagraph>The host uses Alpine component <code>rzConfetti</code>.</RzParagraph>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th class="px-4 py-3">Method</th><th class="px-4 py-3">Description</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                        <tr><td class="px-4 py-3"><code>fire(request)</code></td><td class="px-4 py-3">Fires one request after host/request merge and reduced-motion checks.</td></tr>
+                        <tr><td class="px-4 py-3"><code>runPattern(pattern, request)</code></td><td class="px-4 py-3">Runs a named pattern including fireworks, side-cannons, stars, custom-shapes, and emoji.</td></tr>
+                        <tr><td class="px-4 py-3"><code>reset()</code></td><td class="px-4 py-3">Clears active timers/frames and resets the confetti instance.</td></tr>
+                    </tbody></table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Interoperability Notes" class="scroll-mt-20">Interoperability Notes</RzHeading>
+                <RzParagraph>
+                    Triggers without <code>TargetId</code> resolve to the nearest ancestor host. Use a stable explicit ID for decoupled layouts where trigger and host are not nested together.
+                </RzParagraph>
             </section>
         </MainContent>
     </RzArticle>
