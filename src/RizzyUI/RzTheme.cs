@@ -300,6 +300,9 @@ public partial class RzTheme
         // RzProgress Family
         RzProgress = RizzyUI.RzProgress.DefaultDescriptor;
 
+        // RzProgressiveBlur Family
+        RzProgressiveBlur = RizzyUI.RzProgressiveBlur.DefaultDescriptor;
+
         // RzQuickReference Family
         RzQuickReference = RizzyUI.RzQuickReference.DefaultDescriptor;
         RzQuickReferenceContainer = RizzyUI.RzQuickReferenceContainer.DefaultDescriptor;

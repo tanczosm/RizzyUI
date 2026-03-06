@@ -1,0 +1,233 @@
+@page "/components/progressive-blur"
+@using RizzyUI
+
+<PageTitle>Progressive Blur</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Docs</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/components" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Components</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Progressive Blur</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Progressive Blur" class="scroll-mt-20">Progressive Blur</RzHeading>
+            <RzParagraph>
+                <code>RzProgressiveBlur</code> is a decorative, SSR-first overlay that adds a progressive blur cue to scrollable or clipped regions.
+                It is a single presentational primitive with no Blazor runtime interactivity and is typically placed in a <code>relative</code> parent above the scrolling content.
+            </RzParagraph>
+
+            <RzAlert Variant="ThemeVariant.Information" class="my-5">
+                <AlertTitle>Under the Hood</AlertTitle>
+                <AlertDescription>
+                    The effect is rendered server-side as stacked blur layers that use CSS <code>mask-image</code> plus <code>backdrop-filter</code>.
+                    No JavaScript animation is required, and final visual fidelity depends on browser support for backdrop filtering.
+                </AlertDescription>
+            </RzAlert>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">Basic Usage</RzHeading>
+                <RzParagraph>Use the default bottom placement to hint that more content can be scrolled into view.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto w-full max-w-xl p-6">
+                        <div class="relative h-72 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 20; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-3 text-sm">Scrollable row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur Position="ProgressiveBlurPosition.Bottom" Height="40%" />
+                        </div>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;div class=&quot;relative h-72 overflow-y-auto rounded-lg border bg-background&quot;&gt;
+    &lt;div class=&quot;space-y-2 p-4&quot;&gt;
+        ...
+    &lt;/div&gt;
+    &lt;RzProgressiveBlur Position=&quot;ProgressiveBlurPosition.Bottom&quot; Height=&quot;40%&quot; /&gt;
+&lt;/div&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Top Position" class="scroll-mt-20">Top Position</RzHeading>
+                <RzParagraph>Set <code>Position</code> to <code>Top</code> when content is expected above the visible viewport.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto w-full max-w-xl p-6">
+                        <div class="relative h-72 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 20; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-3 text-sm">Scrollable row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur Position="ProgressiveBlurPosition.Top" Height="30%" />
+                        </div>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzProgressiveBlur Position=&quot;ProgressiveBlurPosition.Top&quot; Height=&quot;30%&quot; /&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Both Edges" class="scroll-mt-20">Both Edges</RzHeading>
+                <RzParagraph>Use <code>Both</code> to span the full container height with a symmetric mask; in this mode the overlay height is forced to full height.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto w-full max-w-xl p-6">
+                        <div class="relative h-72 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 20; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-3 text-sm">Scrollable row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur Position="ProgressiveBlurPosition.Both" Height="20%" />
+                        </div>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzProgressiveBlur Position=&quot;ProgressiveBlurPosition.Both&quot; Height=&quot;20%&quot; /&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Custom Blur Levels" class="scroll-mt-20">Custom Blur Levels</RzHeading>
+                <RzParagraph>Customize the blur progression for softer or stronger edge blending.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto grid w-full max-w-4xl gap-4 p-6 md:grid-cols-2">
+                        <div class="relative h-64 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 16; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-2 text-sm">Default blur row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur Height="35%" />
+                        </div>
+                        <div class="relative h-64 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 16; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-2 text-sm">Aggressive blur row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur Height="35%" BlurLevels="new double[] { 1, 3, 6, 12, 24, 48 }" />
+                        </div>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzProgressiveBlur Height=&quot;35%&quot; /&gt;
+&lt;RzProgressiveBlur Height=&quot;35%&quot; BlurLevels=&quot;new double[] { 1, 3, 6, 12, 24, 48 }&quot; /&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Card Integration" class="scroll-mt-20">Integration with Cards / Hero Panels</RzHeading>
+                <RzParagraph>The overlay works with image-backed cards and clipped hero-style panels as long as the host is positioned.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto w-full max-w-3xl p-6">
+                        <div class="relative h-72 overflow-hidden rounded-xl border bg-[linear-gradient(135deg,hsl(var(--primary)/0.25),hsl(var(--secondary)/0.2))]">
+                            <div class="h-full overflow-y-auto p-6">
+                                <div class="space-y-4">
+                                    @for (var i = 1; i <= 14; i++)
+                                    {
+                                        <div class="rounded-md bg-background/75 p-3 backdrop-blur-sm">Hero panel content block @i</div>
+                                    }
+                                </div>
+                            </div>
+                            <RzProgressiveBlur Position="ProgressiveBlurPosition.Bottom" Height="45%" />
+                        </div>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;div class=&quot;relative h-72 overflow-hidden rounded-xl border&quot;&gt;
+    &lt;div class=&quot;h-full overflow-y-auto p-6&quot;&gt;...&lt;/div&gt;
+    &lt;RzProgressiveBlur Position=&quot;ProgressiveBlurPosition.Bottom&quot; Height=&quot;45%&quot; /&gt;
+&lt;/div&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Minimal Blur Array" class="scroll-mt-20">Edge Case: Minimal Blur Array</RzHeading>
+                <RzParagraph>Short blur arrays are supported and degrade gracefully for one or two layers.</RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto grid w-full max-w-3xl gap-4 p-6 md:grid-cols-2">
+                        <div class="relative h-56 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 12; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-2 text-sm">Single layer row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur BlurLevels="new double[] { 12 }" Height="40%" />
+                        </div>
+                        <div class="relative h-56 overflow-y-auto rounded-lg border bg-background">
+                            <div class="space-y-2 p-4">
+                                @for (var i = 1; i <= 12; i++)
+                                {
+                                    <div class="rounded-md border bg-card p-2 text-sm">Two layer row @i</div>
+                                }
+                            </div>
+                            <RzProgressiveBlur BlurLevels="new double[] { 4, 20 }" Height="40%" />
+                        </div>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzProgressiveBlur BlurLevels=&quot;new double[] { 12 }&quot; Height=&quot;40%&quot; /&gt;
+&lt;RzProgressiveBlur BlurLevels=&quot;new double[] { 4, 20 }&quot; Height=&quot;40%&quot; /&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/5 px-4 py-3">Property</th>
+                                <th scope="col" class="w-2/5 px-4 py-3">Description</th>
+                                <th scope="col" class="w-1/5 px-4 py-3">Type</th>
+                                <th scope="col" class="px-4 py-3">Default</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top"><td class="px-4 py-4"><code>Position</code></td><td class="px-4 py-4">Placement of the overlay: top, bottom, or both edges.</td><td class="px-4 py-4"><code>ProgressiveBlurPosition</code></td><td class="px-4 py-4"><code>Bottom</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>Height</code></td><td class="px-4 py-4">CSS height for top and bottom placements.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>"30%"</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>BlurLevels</code></td><td class="px-4 py-4">Ordered blur levels in pixels, clamped to non-negative values.</td><td class="px-4 py-4"><code>IReadOnlyList&lt;double&gt;?</code></td><td class="px-4 py-4"><code>[0.5, 1, 2, 4, 8, 16, 32, 64]</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>ZIndex</code></td><td class="px-4 py-4">Optional explicit stacking order for overlay composition.</td><td class="px-4 py-4"><code>int?</code></td><td class="px-4 py-4"><code>10</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>InsetStart</code></td><td class="px-4 py-4">Optional <code>inset-inline-start</code> override.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>InsetEnd</code></td><td class="px-4 py-4">Optional <code>inset-inline-end</code> override.</td><td class="px-4 py-4"><code>string?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>AriaHidden</code></td><td class="px-4 py-4">Marks the overlay as decorative for assistive technology.</td><td class="px-4 py-4"><code>bool</code></td><td class="px-4 py-4"><code>true</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code>AdditionalAttributes</code></td><td class="px-4 py-4">Pass-through attributes for id, classes, and other root element attributes.</td><td class="px-4 py-4"><code>IReadOnlyDictionary&lt;string, object&gt;?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Notes" class="scroll-mt-20">Notes</RzHeading>
+                <RzParagraph>
+                    <code>RzProgressiveBlur</code> is purely decorative and has no events or client runtime API.
+                    Use it in a positioned host container and prefer configuring <code>Position</code>, <code>Height</code>, and <code>ZIndex</code> before overriding placement classes.
+                </RzParagraph>
+            </section>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>
