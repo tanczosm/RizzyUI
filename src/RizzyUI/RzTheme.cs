@@ -385,6 +385,7 @@ public partial class RzTheme
         TabsContent = RizzyUI.TabsContent.DefaultDescriptor;
 
         // Typography Family
+        RzAnimatedGradientText = RizzyUI.RzAnimatedGradientText.DefaultDescriptor;
         RzHeading = RizzyUI.RzHeading.DefaultDescriptor;
         RzKbd = RizzyUI.RzKbd.DefaultDescriptor;
         RzKbdGroup = RizzyUI.RzKbdGroup.DefaultDescriptor;
