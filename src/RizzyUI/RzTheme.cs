@@ -236,6 +236,9 @@ public partial class RzTheme
         // RzIndicator Family
         RzIndicator = RizzyUI.RzIndicator.DefaultDescriptor;
 
+        // RzNumberTicker
+        RzNumberTicker = RizzyUI.RzNumberTicker.DefaultDescriptor;
+
         // RzInput Family
         RzInput = RizzyUI.FormInputStyles.DefaultDescriptor;
         RzInputText = RizzyUI.RzInputText.DefaultDescriptor;

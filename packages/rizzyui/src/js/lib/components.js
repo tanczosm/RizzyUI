@@ -34,6 +34,7 @@ import registerRzInputOTP from './components/rzInputOTP.js';
 import registerRzMarkdown from './components/rzMarkdown.js';
 import registerRzMenubar from './components/rzMenubar.js';
 import registerRzNavigationMenu from './components/rzNavigationMenu.js';
+import registerRzNumberTicker from './components/rzNumberTicker.js';
 import registerRzPopover from './components/rzPopover.js';
 import registerRzPrependInput from './components/rzPrependInput.js';
 import registerRzProgress from './components/rzProgress.js';
@@ -188,6 +189,7 @@ function registerComponents(Alpine) {
     registerRzMarkdown(Alpine, rizzyRequire);
     registerRzMenubar(Alpine);
     registerRzNavigationMenu(Alpine, $data);
+    registerRzNumberTicker(Alpine);
     registerRzPopover(Alpine);
     registerRzPrependInput(Alpine);
     registerRzProgress(Alpine);
