@@ -42,7 +42,7 @@
             </RzAlert>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Example 1: Buttons" class="scroll-mt-20">Example 1: Buttons</RzHeading>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Buttons" class="scroll-mt-20">Buttons</RzHeading>
                 <RzParagraph>Equivalent patterns for icon-only and text buttons with center-aligned, equally sized feedback content.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto flex max-w-xl flex-col gap-3 p-8">
@@ -101,7 +101,7 @@
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Example 2: Code Block" class="scroll-mt-20">Example 2: Code Block</RzHeading>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Code Block" class="scroll-mt-20">Code Block</RzHeading>
                 <RzParagraph>Attach copy behavior to a compact command block action.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto max-w-xl p-8">
@@ -146,13 +146,13 @@
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Example 3: Input" class="scroll-mt-20">Example 3: Input</RzHeading>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Input" class="scroll-mt-20">Input</RzHeading>
                 <RzParagraph>Use <code>TargetSelector</code> to copy from an input value.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto max-w-xl p-8">
                         <label for="website-url" class="mb-2 block text-sm font-semibold text-zinc-900 dark:text-zinc-100">Website URL</label>
                         <div class="relative">
-                            <input id="website-url" type="text" value="https://pinemix.com/" readonly class="w-full rounded-lg border border-zinc-200/75 bg-white px-4 py-2.5 pe-20 text-sm leading-5 text-zinc-900 dark:border-zinc-700/75 dark:bg-transparent dark:text-zinc-100" />
+                            <input id="website-url" type="text" value="https://rizzyui.jalex.io/" readonly class="w-full rounded-lg border border-zinc-200/75 bg-white px-4 py-2.5 pe-20 text-sm leading-5 text-zinc-900 dark:border-zinc-700/75 dark:bg-transparent dark:text-zinc-100" />
                             <div class="absolute inset-y-0 end-0 flex items-center justify-center px-2">
                                 <RzClipboard TargetSelector="#website-url" AriaLabel="Copy website URL" AsChild>
                                     <RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class="w-20 justify-center">
@@ -165,7 +165,7 @@
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;input id=&quot;website-url&quot; value=&quot;https://pinemix.com/&quot; readonly /&gt;
+&lt;input id=&quot;website-url&quot; value=&quot;https://rizzyui.jalex.io/&quot; readonly /&gt;
 &lt;RzClipboard TargetSelector=&quot;#website-url&quot; AriaLabel=&quot;Copy website URL&quot; AsChild&gt;
     &lt;RzButton Variant=ThemeVariant.Secondary Outline Size=Size.Small class=&quot;w-20 justify-center&quot;&gt;
         &lt;ClipboardTrigger&gt;&lt;span class=&quot;inline-flex w-12 justify-center&quot;&gt;Copy&lt;/span&gt;&lt;/ClipboardTrigger&gt;
@@ -176,7 +176,7 @@
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Example 4: API Key" class="scroll-mt-20">Example 4: API Key</RzHeading>
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="API Key" class="scroll-mt-20">API Key</RzHeading>
                 <RzParagraph>Copy sensitive-looking tokens from compact list rows.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto max-w-xl p-8">
