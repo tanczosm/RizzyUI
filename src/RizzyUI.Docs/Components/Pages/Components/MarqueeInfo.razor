@@ -1,0 +1,217 @@
+@page "/components/marquee"
+@using RizzyUI
+
+<PageTitle>Marquee</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Docs</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink Href="/components" hx-boost="true" hx-select="#content" hx-target="#content" hx-swap="outerHTML">Components</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Marquee</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Marquee" class="scroll-mt-20">Marquee</RzHeading>
+            <RzParagraph>
+                RzMarquee is a CSS-only, SSR-safe infinite scroller for arbitrary Razor content. It uses server-rendered repeated segments for continuous motion, introduces no Blazor runtime interactivity, and keeps fades, card styling, and 3D transforms as consumer composition concerns outside the primitive.
+            </RzParagraph>
+
+            <RzAlert Variant="ThemeVariant.Information" class="not-prose my-6">
+                <AlertTitle>Under the Hood</AlertTitle>
+                <AlertDescription>
+                    RzMarquee emits repeated segment wrappers on the server. Only the first segment remains interactive, while duplicate segments are rendered with <code>aria-hidden="true"</code> and <code>inert</code>. Motion is driven by build-time marquee keyframes and CSS variables, not Alpine.
+                </AlertDescription>
+            </RzAlert>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">Basic Usage</RzHeading>
+                <RzParagraph>
+                    Use RzMarquee as a minimal horizontal conveyor for any child content.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <RzMarquee Repeat="4" Duration="24s" class="mx-auto w-full max-w-4xl border rounded-lg">
+                        <RzBadge Variant="ThemeVariant.Secondary">Updates</RzBadge>
+                        <RzBadge Variant="ThemeVariant.Primary">Release v3.5</RzBadge>
+                        <RzBadge Variant="ThemeVariant.Accent">Server Rendered</RzBadge>
+                        <RzBadge Variant="ThemeVariant.Success">Stable</RzBadge>
+                    </RzMarquee>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzMarquee Repeat=&quot;4&quot; Duration=&quot;24s&quot; class=&quot;mx-auto w-full max-w-4xl border rounded-lg&quot;&gt;
+    &lt;RzBadge Variant=&quot;ThemeVariant.Secondary&quot;&gt;Updates&lt;/RzBadge&gt;
+    &lt;RzBadge Variant=&quot;ThemeVariant.Primary&quot;&gt;Release v3.5&lt;/RzBadge&gt;
+    &lt;RzBadge Variant=&quot;ThemeVariant.Accent&quot;&gt;Server Rendered&lt;/RzBadge&gt;
+    &lt;RzBadge Variant=&quot;ThemeVariant.Success&quot;&gt;Stable&lt;/RzBadge&gt;
+&lt;/RzMarquee&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Reverse Rows" class="scroll-mt-20">Reverse Rows</RzHeading>
+                <RzParagraph>
+                    Stack multiple marquees with opposing direction for a richer conveyor layout.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto w-full max-w-4xl space-y-4">
+                        <RzMarquee PauseOnHover Duration="20s" class="border rounded-lg">
+                            <RzCard class="w-56 shrink-0"><CardContent class="p-3 text-sm">Fast SSR component rendering.</CardContent></RzCard>
+                            <RzCard class="w-56 shrink-0"><CardContent class="p-3 text-sm">Theme-driven slot classes.</CardContent></RzCard>
+                            <RzCard class="w-56 shrink-0"><CardContent class="p-3 text-sm">Composable docs examples.</CardContent></RzCard>
+                        </RzMarquee>
+                        <RzMarquee PauseOnHover Reverse Duration="20s" class="border rounded-lg">
+                            <RzCard class="w-56 shrink-0"><CardContent class="p-3 text-sm">Pause on hover and focus.</CardContent></RzCard>
+                            <RzCard class="w-56 shrink-0"><CardContent class="p-3 text-sm">No Alpine dependencies.</CardContent></RzCard>
+                            <RzCard class="w-56 shrink-0"><CardContent class="p-3 text-sm">Stable static markup.</CardContent></RzCard>
+                        </RzMarquee>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzMarquee PauseOnHover Duration=&quot;20s&quot; class=&quot;border rounded-lg&quot;&gt;
+    &lt;RzCard class=&quot;w-56 shrink-0&quot;&gt;&lt;CardContent class=&quot;p-3 text-sm&quot;&gt;Fast SSR component rendering.&lt;/CardContent&gt;&lt;/RzCard&gt;
+    &lt;RzCard class=&quot;w-56 shrink-0&quot;&gt;&lt;CardContent class=&quot;p-3 text-sm&quot;&gt;Theme-driven slot classes.&lt;/CardContent&gt;&lt;/RzCard&gt;
+    &lt;RzCard class=&quot;w-56 shrink-0&quot;&gt;&lt;CardContent class=&quot;p-3 text-sm&quot;&gt;Composable docs examples.&lt;/CardContent&gt;&lt;/RzCard&gt;
+&lt;/RzMarquee&gt;
+&lt;RzMarquee PauseOnHover Reverse Duration=&quot;20s&quot; class=&quot;border rounded-lg&quot;&gt;
+    &lt;RzCard class=&quot;w-56 shrink-0&quot;&gt;&lt;CardContent class=&quot;p-3 text-sm&quot;&gt;Pause on hover and focus.&lt;/CardContent&gt;&lt;/RzCard&gt;
+    &lt;RzCard class=&quot;w-56 shrink-0&quot;&gt;&lt;CardContent class=&quot;p-3 text-sm&quot;&gt;No Alpine dependencies.&lt;/CardContent&gt;&lt;/RzCard&gt;
+    &lt;RzCard class=&quot;w-56 shrink-0&quot;&gt;&lt;CardContent class=&quot;p-3 text-sm&quot;&gt;Stable static markup.&lt;/CardContent&gt;&lt;/RzCard&gt;
+&lt;/RzMarquee&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Vertical Marquee" class="scroll-mt-20">Vertical Marquee</RzHeading>
+                <RzParagraph>
+                    Vertical orientation works best inside a bounded-height container.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="mx-auto h-72 w-full max-w-xl overflow-hidden rounded-lg border">
+                        <RzMarquee Orientation="MarqueeOrientation.Vertical" PauseOnHover Duration="18s" class="h-full">
+                            <RzBadge Variant="ThemeVariant.Secondary">North Region</RzBadge>
+                            <RzBadge Variant="ThemeVariant.Primary">South Region</RzBadge>
+                            <RzBadge Variant="ThemeVariant.Accent">East Region</RzBadge>
+                            <RzBadge Variant="ThemeVariant.Success">West Region</RzBadge>
+                        </RzMarquee>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;div class=&quot;h-72 overflow-hidden rounded-lg border&quot;&gt;
+    &lt;RzMarquee Orientation=&quot;MarqueeOrientation.Vertical&quot; PauseOnHover Duration=&quot;18s&quot; class=&quot;h-full&quot;&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Secondary&quot;&gt;North Region&lt;/RzBadge&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Primary&quot;&gt;South Region&lt;/RzBadge&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Accent&quot;&gt;East Region&lt;/RzBadge&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Success&quot;&gt;West Region&lt;/RzBadge&gt;
+    &lt;/RzMarquee&gt;
+&lt;/div&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="HTMX-Updated Announcements" class="scroll-mt-20">HTMX-Updated Announcements</RzHeading>
+                <RzParagraph>
+                    RzMarquee does not own HTMX behavior, but works naturally inside HTMX-refreshed SSR regions.
+                </RzParagraph>
+                <RzAlert Variant="ThemeVariant.Warning" class="not-prose my-4">
+                    <AlertTitle>Demo note</AlertTitle>
+                    <AlertDescription>
+                        This documentation preview is static. In production, point <code>hx-get</code> to a server endpoint that returns refreshed marquee content.
+                    </AlertDescription>
+                </RzAlert>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div id="announcement-region" class="mx-auto w-full max-w-4xl">
+                        <RzMarquee hx-get="/announcements/marquee" hx-trigger="every 30s" hx-target="#announcement-region" hx-swap="outerHTML" class="border rounded-lg">
+                            <RzBadge Variant="ThemeVariant.Information">Maintenance window: Sunday 02:00 UTC</RzBadge>
+                            <RzBadge Variant="ThemeVariant.Warning">Status page refresh every 30s</RzBadge>
+                            <RzBadge Variant="ThemeVariant.Success">All systems operational</RzBadge>
+                        </RzMarquee>
+                    </div>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-6">
+&lt;div id=&quot;announcement-region&quot;&gt;
+    &lt;RzMarquee hx-get=&quot;/announcements/marquee&quot;
+               hx-trigger=&quot;every 30s&quot;
+               hx-target=&quot;#announcement-region&quot;
+               hx-swap=&quot;outerHTML&quot;&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Information&quot;&gt;Maintenance window: Sunday 02:00 UTC&lt;/RzBadge&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Warning&quot;&gt;Status page refresh every 30s&lt;/RzBadge&gt;
+        &lt;RzBadge Variant=&quot;ThemeVariant.Success&quot;&gt;All systems operational&lt;/RzBadge&gt;
+    &lt;/RzMarquee&gt;
+&lt;/div&gt;
+                </RzCodeViewer>
+                <RzCodeViewer Language="@CodeLanguage.CSharp" class="mb-10">
+app.MapGet("/announcements/marquee", () =&gt;
+{
+    return Results.Extensions.Component&lt;AnnouncementsMarqueePartial&gt;();
+});
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Interactive Child Content and Accessibility" class="scroll-mt-20">Interactive Child Content and Accessibility</RzHeading>
+                <RzParagraph>
+                    Interactive children remain keyboard-accessible in the first segment, while cloned segments are inert and hidden from assistive technologies.
+                </RzParagraph>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <RzMarquee PauseOnHover Duration="22s" class="mx-auto w-full max-w-4xl border rounded-lg">
+                        <RzButton Variant="ThemeVariant.Secondary" As="a" Href="/docs">Read Docs</RzButton>
+                        <RzButton Variant="ThemeVariant.Primary" As="a" Href="/release-notes">Release Notes</RzButton>
+                        <RzButton Variant="ThemeVariant.Accent" As="a" Href="/status">System Status</RzButton>
+                    </RzMarquee>
+                </RzBrowser>
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
+&lt;RzMarquee PauseOnHover Duration=&quot;22s&quot; class=&quot;mx-auto w-full max-w-4xl border rounded-lg&quot;&gt;
+    &lt;RzButton Variant=&quot;ThemeVariant.Secondary&quot; As=&quot;a&quot; Href=&quot;/docs&quot;&gt;Read Docs&lt;/RzButton&gt;
+    &lt;RzButton Variant=&quot;ThemeVariant.Primary&quot; As=&quot;a&quot; Href=&quot;/release-notes&quot;&gt;Release Notes&lt;/RzButton&gt;
+    &lt;RzButton Variant=&quot;ThemeVariant.Accent&quot; As=&quot;a&quot; Href=&quot;/status&quot;&gt;System Status&lt;/RzButton&gt;
+&lt;/RzMarquee&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/5 px-4 py-3">Property</th>
+                                <th scope="col" class="w-2/5 px-4 py-3">Description</th>
+                                <th scope="col" class="w-1/5 px-4 py-3">Type</th>
+                                <th scope="col" class="px-4 py-3">Default</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Orientation</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Selects horizontal or vertical motion.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">MarqueeOrientation</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">MarqueeOrientation.Horizontal</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Reverse</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Reverses animation direction.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">false</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">PauseOnHover</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Pauses marquee animation on hover and focus-within.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">false</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Repeat</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Number of rendered segments. Values lower than 2 are clamped when content exists.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">int</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">4</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Duration</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">CSS duration for one full segment cycle.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">&quot;40s&quot;</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Gap</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">CSS gap between child items and repeated segments.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">&quot;1rem&quot;</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">ChildContent</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">The logical segment content repeated by the marquee.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">RenderFragment?</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">null</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Interoperability" class="scroll-mt-20">Interoperability</RzHeading>
+                <RzParagraph>
+                    RzMarquee does not expose an Alpine API. It emits no <code>x-data</code>, no <code>data-alpine-root</code>, and has no client asset key dependencies. Pass-through HTMX attributes are supported on the root element via unmatched attributes. The root emits <code>data-orientation</code>, <code>data-reverse</code>, and <code>data-pauses-on-hover</code>. In reduced-motion environments, animations are paused by utility classes.
+                </RzParagraph>
+            </section>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>

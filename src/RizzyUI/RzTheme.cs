@@ -51,6 +51,9 @@ public partial class RzTheme
         // RzChart Family
         RzChart = RizzyUI.RzChart.DefaultDescriptor;
 
+        // RzMarquee Family
+        RzMarquee = RizzyUI.RzMarquee.DefaultDescriptor;
+
         // RzBreadcrumb Family
         RzBreadcrumb = RizzyUI.RzBreadcrumb.DefaultDescriptor;
         BreadcrumbList = RizzyUI.BreadcrumbList.DefaultDescriptor;
