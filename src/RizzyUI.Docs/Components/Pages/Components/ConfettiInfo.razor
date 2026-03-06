@@ -42,13 +42,11 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic click" class="scroll-mt-20">Basic click example</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="p-6">
-                        <RzConfetti>
-                            <RzButton>Celebrate</RzButton>
-                        </RzConfetti>
-                    </div>
-                </RzBrowser>
+                <div class="not-prose mb-6 rounded-lg border bg-muted/50 p-8">
+                    <RzConfetti>
+                        <RzButton>Celebrate</RzButton>
+                    </RzConfetti>
+                </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzConfetti&gt;
     &lt;RzButton&gt;Celebrate&lt;/RzButton&gt;
@@ -58,6 +56,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Load trigger" class="scroll-mt-20">Load trigger example</RzHeading>
+                <div class="not-prose mb-6 rounded-lg border bg-muted/50 p-8">
+                    <RzConfetti Trigger="ConfettiTrigger.Load" Preset="ConfettiPreset.Victory" BurstCount="3">
+                        <RzCard class="max-w-md p-6">
+                            <CardTitle>Payment complete</CardTitle>
+                            <CardDescription>Your receipt has been emailed.</CardDescription>
+                        </RzCard>
+                    </RzConfetti>
+                </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzConfetti Trigger="ConfettiTrigger.Load" Preset="ConfettiPreset.Victory" BurstCount="3"&gt;
     &lt;RzCard class="p-6"&gt;
@@ -70,6 +76,14 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Custom event" class="scroll-mt-20">Custom browser event example</RzHeading>
+                <div class="not-prose mb-6 rounded-lg border bg-muted/50 p-8">
+                    <RzConfetti Trigger="ConfettiTrigger.CustomEvent" EventName="order:success" Preset="ConfettiPreset.DualCannons">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <RzButton type="button" onclick="window.dispatchEvent(new CustomEvent('order:success'))">Dispatch order:success</RzButton>
+                            <RzParagraph class="m-0 text-sm text-muted-foreground">Trigger the custom browser event to fire confetti.</RzParagraph>
+                        </div>
+                    </RzConfetti>
+                </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzConfetti Trigger="ConfettiTrigger.CustomEvent" EventName="order:success" Preset="ConfettiPreset.DualCannons"&gt;
     &lt;RzButton type="button"&gt;Wait for order event&lt;/RzButton&gt;
@@ -83,6 +97,14 @@ window.dispatchEvent(new CustomEvent('order:success'));
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Scoped canvas" class="scroll-mt-20">Scoped card-level confetti</RzHeading>
+                <div class="not-prose mb-6 rounded-lg border bg-muted/50 p-8">
+                    <RzConfetti Mode="ConfettiMode.Scoped" Trigger="ConfettiTrigger.Hover" Preset="ConfettiPreset.Subtle">
+                        <RzCard class="max-w-md p-6">
+                            <CardTitle>Hover this card</CardTitle>
+                            <CardDescription>Confetti stays inside this region.</CardDescription>
+                        </RzCard>
+                    </RzConfetti>
+                </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzConfetti Mode="ConfettiMode.Scoped" Trigger="ConfettiTrigger.Hover" Preset="ConfettiPreset.Subtle"&gt;
     &lt;RzCard class="p-6"&gt;
@@ -98,6 +120,14 @@ window.dispatchEvent(new CustomEvent('order:success'));
                 <RzParagraph>
                     Available presets: <code>DefaultBurst</code>, <code>CannonLeft</code>, <code>CannonRight</code>, <code>DualCannons</code>, <code>Victory</code>, <code>Subtle</code>, and <code>Stars</code>.
                 </RzParagraph>
+                <div class="not-prose mb-6 rounded-lg border bg-muted/50 p-8">
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <RzConfetti Preset="ConfettiPreset.CannonLeft"><RzButton>Cannon Left</RzButton></RzConfetti>
+                        <RzConfetti Preset="ConfettiPreset.CannonRight"><RzButton>Cannon Right</RzButton></RzConfetti>
+                        <RzConfetti Preset="ConfettiPreset.DualCannons" BurstCount="2"><RzButton>Dual Cannons</RzButton></RzConfetti>
+                        <RzConfetti Preset="ConfettiPreset.Victory" BurstCount="4" BurstIntervalMs="120"><RzButton>Victory</RzButton></RzConfetti>
+                    </div>
+                </div>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzConfetti Preset="ConfettiPreset.CannonLeft" /&gt;
 &lt;RzConfetti Preset="ConfettiPreset.CannonRight" /&gt;
