@@ -142,6 +142,54 @@ function runStars(instance, request, timers) {
     timers.push(window.setTimeout(shoot, 200));
 }
 
+function runCustomShapes(instance, request, timers) {
+    const scalar = request.scalar ?? 2;
+    const triangle = confetti.shapeFromPath?.({ path: 'M0 10 L5 0 L10 10z' });
+    const square = confetti.shapeFromPath?.({ path: 'M0 0 L10 0 L10 10 L0 10 Z' });
+    const coin = confetti.shapeFromPath?.({ path: 'M5 0 A5 5 0 1 0 5 10 A5 5 0 1 0 5 0 Z' });
+    const tree = confetti.shapeFromPath?.({ path: 'M5 0 L10 10 L0 10 Z' });
+    const pathShapes = [triangle, square, coin, tree].filter(Boolean);
+
+    if (!pathShapes.length) {
+        runStars(instance, request, timers);
+        return;
+    }
+
+    const defaults = mergeRequest({ spread: 360, ticks: 60, gravity: 0, decay: 0.96, startVelocity: 20, scalar, shapes: pathShapes }, request);
+
+    const shoot = () => {
+        instance({ ...defaults, particleCount: 30 });
+        instance({ ...defaults, particleCount: 5 });
+        instance({ ...defaults, particleCount: 15, scalar: scalar / 2, shapes: ['circle'] });
+    };
+
+    timers.push(window.setTimeout(shoot, 0));
+    timers.push(window.setTimeout(shoot, 100));
+    timers.push(window.setTimeout(shoot, 200));
+}
+
+function runEmoji(instance, request, timers) {
+    const scalar = request.scalar ?? 2;
+    const unicorn = confetti.shapeFromText?.({ text: '🦄', scalar });
+
+    if (!unicorn) {
+        runStars(instance, request, timers);
+        return;
+    }
+
+    const defaults = mergeRequest({ spread: 360, ticks: 60, gravity: 0, decay: 0.96, startVelocity: 20, shapes: [unicorn], scalar }, request);
+
+    const shoot = () => {
+        instance({ ...defaults, particleCount: 30 });
+        instance({ ...defaults, particleCount: 5 });
+        instance({ ...defaults, particleCount: 15, scalar: scalar / 2, shapes: ['circle'] });
+    };
+
+    timers.push(window.setTimeout(shoot, 0));
+    timers.push(window.setTimeout(shoot, 100));
+    timers.push(window.setTimeout(shoot, 200));
+}
+
 export default function registerRzConfetti(Alpine) {
     Alpine.data('rzConfetti', () => ({
         instance: null,
@@ -221,6 +269,16 @@ export default function registerRzConfetti(Alpine) {
 
             if (pattern === 'stars') {
                 runStars(this.instance, payload, this.timers);
+                return;
+            }
+
+            if (pattern === 'custom-shapes') {
+                runCustomShapes(this.instance, payload, this.timers);
+                return;
+            }
+
+            if (pattern === 'emoji') {
+                runEmoji(this.instance, payload, this.timers);
                 return;
             }
 

@@ -24,13 +24,13 @@
                 data-slot="@RzConfetti.SlotNames.NameOf(SlotTypes.Canvas)"
                 aria-hidden="true"
                 tabindex="-1"></canvas>
-
-        @if (ChildContent is not null)
-        {
-            <div class="@SlotClasses.GetContent()"
-                 data-slot="@RzConfetti.SlotNames.NameOf(SlotTypes.Content)">
-                @ChildContent
-            </div>
-        }
     </div>
+
+    @if (ChildContent is not null)
+    {
+        <div class="@SlotClasses.GetContent()"
+             data-slot="@RzConfetti.SlotNames.NameOf(SlotTypes.Content)">
+            @ChildContent
+        </div>
+    }
 </HtmlElement>

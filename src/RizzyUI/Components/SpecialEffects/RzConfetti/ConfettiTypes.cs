@@ -83,7 +83,11 @@ public enum ConfettiPattern
     /// <summary>Continuous side-cannon streams from both viewport edges.</summary>
     SideCannons,
     /// <summary>Layered star and circle celebratory burst.</summary>
-    Stars
+    Stars,
+    /// <summary>Path-based custom shape burst.</summary>
+    CustomShapes,
+    /// <summary>Emoji-focused burst pattern.</summary>
+    Emoji
 }
 
 /// <summary>
