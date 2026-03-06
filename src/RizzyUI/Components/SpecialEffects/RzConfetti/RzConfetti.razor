@@ -1,0 +1,36 @@
+@namespace RizzyUI
+@inherits RzComponent<RzConfetti.Slots>
+@using RizzyUI.Extensions
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="confetti">
+    <div data-alpine-root="@Id"
+         x-data="rzConfetti"
+         data-assets="@_assets"
+         data-nonce="@Nonce"
+         data-confetti-host="@EffectiveHostId"
+         data-confetti-options="@SerializedOptions"
+         data-confetti-global-options="@SerializedGlobalOptions"
+         data-confetti-pattern="@Pattern.ToString().ToKebabCase()"
+         data-confetti-manual-start="@ManualStart.ToString().ToLowerInvariant()"
+         data-confetti-respect-reduced-motion="@RespectReducedMotion.ToString().ToLowerInvariant()"
+         class="@SlotClasses.GetViewport()"
+         data-slot="@RzConfetti.SlotNames.NameOf(SlotTypes.Viewport)">
+        <canvas x-ref="canvas"
+                class="@SlotClasses.GetCanvas()"
+                data-slot="@RzConfetti.SlotNames.NameOf(SlotTypes.Canvas)"
+                aria-hidden="true"
+                tabindex="-1"></canvas>
+
+        @if (ChildContent is not null)
+        {
+            <div class="@SlotClasses.GetContent()"
+                 data-slot="@RzConfetti.SlotNames.NameOf(SlotTypes.Content)">
+                @ChildContent
+            </div>
+        }
+    </div>
+</HtmlElement>

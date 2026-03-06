@@ -93,6 +93,7 @@
     "shadcn-prose": "^1.0.8",
     "simple-notify": "^1.0.6",
     "tailwindcss": "^4.2.1",
-    "tailwindcss-inset": "^1.0.0"
+    "tailwindcss-inset": "^1.0.0",
+    "canvas-confetti": "^1.9.3"
   }
 }
