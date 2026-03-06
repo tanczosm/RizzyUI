@@ -1,0 +1,27 @@
+@namespace RizzyUI
+@inherits RzComponent<RzBlurFade.Slots>
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="blur-fade">
+    <div data-alpine-root="@Id"
+         x-data="rzBlurFade"
+         data-assets="@_assets"
+         data-nonce="@Nonce"
+         data-direction="@DirectionValue"
+         data-offset="@OffsetValue"
+         data-duration="@DurationValue"
+         data-delay="@DelayValue"
+         data-blur="@BlurValue"
+         data-in-view="@InView.ToString().ToLowerInvariant()"
+         data-in-view-margin="@InViewMarginValue"
+         x-bind:style="presentationStyle"
+         x-bind:data-state="state"
+         x-bind:data-ready="ready"
+         class="@SlotClasses.GetViewport()"
+         data-slot="@RzBlurFade.SlotNames.NameOf(SlotTypes.Viewport)">
+        @ChildContent
+    </div>
+</HtmlElement>

@@ -83,6 +83,9 @@ public partial class RzTheme
         // RzBackToTop
         RzBackToTop = RizzyUI.RzBackToTop.DefaultDescriptor;
 
+        // RzBlurFade
+        RzBlurFade = RizzyUI.RzBlurFade.DefaultDescriptor;
+
         // RzButtonGroup Family
         RzButtonGroup = RizzyUI.RzButtonGroup.DefaultDescriptor;
         ButtonGroupSeparator = RizzyUI.ButtonGroupSeparator.DefaultDescriptor;
