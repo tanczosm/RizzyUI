@@ -46,26 +46,6 @@
             </section>
 
             <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="AsChild" class="scroll-mt-20">AsChild Usage</RzHeading>
-                <RzParagraph>Use <code>AsChild</code> to project the behavior onto a custom host element.</RzParagraph>
-                <div class="not-prose relative min-h-[150vh] rounded-md border border-zinc-200 bg-zinc-50 p-8 dark:border-zinc-800 dark:bg-zinc-950">
-                    <p class="text-sm text-zinc-600 dark:text-zinc-300">Scroll down to reveal the custom host.</p>
-                    <RzBackToTop AsChild Threshold="250">
-                        <button class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-input bg-background text-foreground shadow-md hover:bg-accent hover:text-accent-foreground" aria-label="Back to top">
-                            <Blazicon Svg="Lucide.ArrowUp" aria-hidden="true" class="size-5" />
-                        </button>
-                    </RzBackToTop>
-                </div>
-                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzBackToTop AsChild Threshold=&quot;250&quot;&gt;
-    &lt;button class=&quot;inline-flex h-12 w-12 items-center justify-center rounded-full border border-input bg-background text-foreground shadow-md hover:bg-accent hover:text-accent-foreground&quot; aria-label=&quot;Back to top&quot;&gt;
-        &lt;Blazicon Svg=&quot;Lucide.ArrowUp&quot; aria-hidden=&quot;true&quot; class=&quot;size-5&quot; /&gt;
-    &lt;/button&gt;
-&lt;/RzBackToTop&gt;
-                </RzCodeViewer>
-            </section>
-
-            <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
                 <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800"><table class="w-full text-sm"><thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300"><tr><th scope="col" class="w-1/5 px-4 py-3">Property</th><th scope="col" class="w-2/5 px-4 py-3">Description</th><th scope="col" class="w-1/5 px-4 py-3">Type</th><th scope="col" class="px-4 py-3">Default</th></tr></thead><tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
                     <tr class="align-top"><td class="px-4 py-4"><code>ChildContent</code></td><td class="px-4 py-4">Optional content. If omitted, the component renders an arrow icon.</td><td class="px-4 py-4"><code>RenderFragment?</code></td><td class="px-4 py-4"><code>null</code></td></tr>
