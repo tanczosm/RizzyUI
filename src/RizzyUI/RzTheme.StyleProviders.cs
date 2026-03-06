@@ -374,6 +374,10 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<BreadcrumbPage.Slots>, BreadcrumbPage.Slots> BreadcrumbPage { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.BreadcrumbSeparator"/> component. </summary>
     public virtual TvDescriptor<RzComponent<BreadcrumbSeparator.Slots>, BreadcrumbSeparator.Slots> BreadcrumbSeparator { get; set; }
+
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzBorderBeam"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzBorderBeam.Slots>, RzBorderBeam.Slots> RzBorderBeam { get; set; }
+
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.PaginationEllipsis"/> component. </summary>
     public virtual TvDescriptor<RzComponent<PaginationEllipsis.Slots>, PaginationEllipsis.Slots> PaginationEllipsis { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.PaginationItem"/> component. </summary>
