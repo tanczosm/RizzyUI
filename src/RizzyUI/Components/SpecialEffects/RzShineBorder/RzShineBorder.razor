@@ -6,5 +6,15 @@
              @attributes="@AdditionalAttributes"
              class="@SlotClasses.GetBase()"
              data-slot="shine-border"
-             aria-hidden="true"
-             style="@ComputedStyle" />
+             aria-hidden="true">
+    <div data-alpine-root="@Id"
+         x-data="rzShineBorder"
+         data-assets="@_assets"
+         data-nonce="@Nonce"
+         data-border-width="@BorderWidth"
+         data-duration="@Duration"
+         data-shine-color="@ShineColor"
+         data-shine-colors="@_serializedShineColors"
+         x-bind:style="computedStyle"
+         class="size-full rounded-[inherit]"></div>
+</HtmlElement>

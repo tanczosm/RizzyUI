@@ -1,6 +1,6 @@
-using System.Globalization;
-using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using TailwindVariants.NET;
 
 namespace RizzyUI;
@@ -57,58 +57,48 @@ public partial class RzShineBorder : RzComponent<RzShineBorder.Slots>
     public bool RespectReducedMotion { get; set; } = true;
 
     /// <summary>
-    /// Gets the computed inline style for the shine border effect.
+    /// Gets or sets the logical asset keys required by this component.
     /// </summary>
-    protected string ComputedStyle { get; private set; } = string.Empty;
+    [Parameter]
+    public string[] ComponentAssetKeys { get; set; } = [];
+
+    [Inject]
+    private IOptions<RizzyUIConfig> RizzyUIConfig { get; set; } = default!;
+
+    private string _assets = "[]";
+    private string _serializedShineColors = "[]";
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        UpdateAlpinePayload();
+    }
 
     /// <inheritdoc />
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        ComputedStyle = BuildStyle();
+        UpdateAlpinePayload();
     }
 
     /// <inheritdoc />
     protected override TvDescriptor<RzComponent<Slots>, Slots> GetDescriptor() => Theme.RzShineBorder;
 
-    private string BuildStyle()
+    private void UpdateAlpinePayload()
     {
-        var normalizedBorderWidth = Math.Max(0, BorderWidth);
-        var normalizedDuration = Duration <= 0 ? 14 : Duration;
+        var assetUrls = ComponentAssetKeys
+            .Select(key => RizzyUIConfig.Value.AssetUrls.TryGetValue(key, out var url) ? url : null)
+            .Where(url => !string.IsNullOrWhiteSpace(url))
+            .ToList();
 
-        var multiColors = ShineColors?.Where(color => !string.IsNullOrWhiteSpace(color)).ToArray();
-        var gradientColors = multiColors is { Length: > 0 }
-            ? string.Join(",", multiColors)
-            : !string.IsNullOrWhiteSpace(ShineColor)
-                ? ShineColor!
-                : "#000000";
+        _assets = JsonSerializer.Serialize(assetUrls);
 
-        var builder = new StringBuilder();
-        builder.Append($"--border-width:{normalizedBorderWidth.ToString(CultureInfo.InvariantCulture)}px;");
-        builder.Append($"--duration:{normalizedDuration.ToString(CultureInfo.InvariantCulture)}s;");
-        builder.Append($"background-image:radial-gradient(transparent,transparent,{gradientColors},transparent,transparent);");
-        builder.Append("background-size:300% 300%;");
-        builder.Append("mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);");
-        builder.Append("-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);");
-        builder.Append("-webkit-mask-composite:xor;");
-        builder.Append("mask-composite:exclude;");
-        builder.Append("padding:var(--border-width);");
+        var nonEmptyColors = ShineColors?
+            .Where(color => !string.IsNullOrWhiteSpace(color))
+            .ToArray() ?? [];
 
-        var userStyle = AdditionalAttributes?.TryGetValue("style", out var styleValue) == true
-            ? styleValue?.ToString()
-            : null;
-
-        if (!string.IsNullOrWhiteSpace(userStyle))
-        {
-            if (!userStyle!.TrimEnd().EndsWith(';'))
-            {
-                builder.Append(';');
-            }
-
-            builder.Append(userStyle);
-        }
-
-        return builder.ToString();
+        _serializedShineColors = JsonSerializer.Serialize(nonEmptyColors);
     }
 
     /// <summary>

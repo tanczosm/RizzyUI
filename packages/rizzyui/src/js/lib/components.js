@@ -41,6 +41,7 @@ import registerRzQuickReferenceContainer from './components/rzQuickReferenceCont
 import registerRzScrollArea from './components/rzScrollArea.js';
 import registerRzSlider from './components/rzSlider.js';
 import registerRzSheet from './components/rzSheet.js';
+import registerRzShineBorder from './components/rzShineBorder.js';
 import registerRzTabs from './components/rzTabs.js';
 import registerRzToggle from './components/rzToggle.js';
 import registerRzTooltip from './components/rzTooltip.js';
@@ -195,6 +196,7 @@ function registerComponents(Alpine) {
     registerRzScrollArea(Alpine);
     registerRzSlider(Alpine);
     registerRzSheet(Alpine);
+    registerRzShineBorder(Alpine);
     registerRzTabs(Alpine);
     registerRzToggle(Alpine);
     registerRzTooltip(Alpine);
