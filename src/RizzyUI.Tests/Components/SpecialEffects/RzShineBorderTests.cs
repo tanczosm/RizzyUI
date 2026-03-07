@@ -135,7 +135,10 @@ public class RzShineBorderTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         var cut = Render<RzShineBorder>(p => p.AddUnmatched("style", "outline:1px solid red"));
 
         var root = cut.Find("[data-slot='shine-border']");
-        Assert.Equal("outline:1px solid red", root.GetAttribute("style"));
+        var style = root.GetAttribute("style");
+        Assert.NotNull(style);
+        Assert.Contains("--duration:14s", style);
+        Assert.Contains("outline:1px solid red", style);
     }
 
     [Fact]

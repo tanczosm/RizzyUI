@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
@@ -68,6 +69,11 @@ public partial class RzShineBorder : RzComponent<RzShineBorder.Slots>
     private string _assets = "[]";
     private string _serializedShineColors = "[]";
 
+    /// <summary>
+    /// Gets the root style declarations required for root-level animation variables.
+    /// </summary>
+    public string RootStyle { get; private set; } = string.Empty;
+
     /// <inheritdoc />
     protected override void OnInitialized()
     {
@@ -99,6 +105,17 @@ public partial class RzShineBorder : RzComponent<RzShineBorder.Slots>
             .ToArray() ?? [];
 
         _serializedShineColors = JsonSerializer.Serialize(nonEmptyColors);
+
+        var normalizedDuration = Duration > 0 ? Duration : 14;
+        var rootStyle = $"--duration:{normalizedDuration.ToString(CultureInfo.InvariantCulture)}s";
+
+        var userStyle = AdditionalAttributes?.TryGetValue("style", out var styleValue) == true
+            ? styleValue?.ToString()
+            : null;
+
+        RootStyle = string.IsNullOrWhiteSpace(userStyle)
+            ? rootStyle
+            : $"{rootStyle};{userStyle}";
     }
 
     /// <summary>
