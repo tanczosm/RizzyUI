@@ -16,10 +16,9 @@ export default function registerRzNumberTicker(Alpine) {
         observer: null,
         rafId: null,
         delayTimer: null,
-        velocity: 0,
-        lastTimestamp: 0,
-        stiffness: 0.016,
-        damping: 0.84,
+        animationStartTimestamp: 0,
+        animationStartValue: 0,
+        animationDurationMs: 1200,
 
         init() {
             this.configure();
@@ -52,6 +51,9 @@ export default function registerRzNumberTicker(Alpine) {
 
             this.currentValue = this.direction === 'down' ? this.targetValue : this.startValue;
             this.destinationValue = this.direction === 'down' ? this.startValue : this.targetValue;
+
+            const distance = Math.abs(this.destinationValue - this.currentValue);
+            this.animationDurationMs = this.resolveDuration(distance);
         },
 
         observe() {
@@ -92,8 +94,9 @@ export default function registerRzNumberTicker(Alpine) {
             this.cleanupAnimation();
 
             this.currentValue = this.direction === 'down' ? this.targetValue : this.startValue;
-            this.velocity = 0;
-            this.lastTimestamp = 0;
+            this.animationStartValue = this.currentValue;
+            this.animationStartTimestamp = 0;
+            this.setDisplay(this.currentValue);
 
             this.delayTimer = window.setTimeout(() => {
                 this.delayTimer = null;
@@ -102,21 +105,19 @@ export default function registerRzNumberTicker(Alpine) {
         },
 
         tick(timestamp) {
-            if (this.lastTimestamp === 0) {
-                this.lastTimestamp = timestamp;
+            if (this.animationStartTimestamp === 0) {
+                this.animationStartTimestamp = timestamp;
             }
 
-            const deltaMs = Math.max(1, timestamp - this.lastTimestamp);
-            this.lastTimestamp = timestamp;
+            const elapsed = Math.max(0, timestamp - this.animationStartTimestamp);
+            const progress = Math.min(1, elapsed / this.animationDurationMs);
+            const easedProgress = this.easeOutCubic(progress);
 
-            const displacement = this.destinationValue - this.currentValue;
-            const springForce = displacement * this.stiffness;
-            this.velocity = (this.velocity + springForce * deltaMs) * this.damping;
-            this.currentValue += this.velocity;
-
+            const nextValue = this.interpolate(this.animationStartValue, this.destinationValue, easedProgress);
+            this.currentValue = this.clampToDirection(nextValue);
             this.setDisplay(this.currentValue);
 
-            if (Math.abs(displacement) < 0.0001 && Math.abs(this.velocity) < 0.0001) {
+            if (progress >= 1) {
                 this.complete();
                 return;
             }
@@ -185,10 +186,40 @@ export default function registerRzNumberTicker(Alpine) {
         },
 
         canSafelyAnimate() {
-            return Number.isSafeInteger(Math.trunc(this.startValue))
-                && Number.isSafeInteger(Math.trunc(this.targetValue))
-                && Number.isFinite(this.startValue)
-                && Number.isFinite(this.targetValue);
+            const inSafeRange = (value) => Number.isFinite(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
+            return inSafeRange(this.startValue) && inSafeRange(this.targetValue);
+        },
+
+        resolveDuration(distance) {
+            if (distance < 10) {
+                return 700;
+            }
+
+            if (distance < 100) {
+                return 900;
+            }
+
+            if (distance < 1_000) {
+                return 1200;
+            }
+
+            return 1500;
+        },
+
+        interpolate(from, to, progress) {
+            return from + ((to - from) * progress);
+        },
+
+        clampToDirection(value) {
+            if (this.direction === 'down') {
+                return Math.max(this.destinationValue, value);
+            }
+
+            return Math.min(this.destinationValue, value);
+        },
+
+        easeOutCubic(progress) {
+            return 1 - Math.pow(1 - progress, 3);
         },
 
         parseNumber(value, fallback) {
