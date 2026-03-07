@@ -1,0 +1,22 @@
+@namespace RizzyUI
+@inherits RzComponent<RzProgressiveBlur.Slots>
+@using RizzyUI.Extensions
+
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="progressive-blur"
+             data-position="@Position.ToString().ToKebabCase()"
+             style="@RootStyle"
+             aria-hidden="@AriaHidden.ToString().ToLowerInvariant()">
+    @foreach (var layer in BuildLayers())
+    {
+        <div class="@SlotClasses.GetLayer()"
+             data-slot="@RzProgressiveBlur.SlotNames.NameOf(SlotTypes.Layer)"
+             data-layer-kind="@layer.Kind"
+             data-layer-index="@layer.Index"
+             style="@layer.Style">
+        </div>
+    }
+</HtmlElement>
