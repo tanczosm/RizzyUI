@@ -394,6 +394,7 @@ public partial class RzTheme
 
         // Typography Family
         RzHeading = RizzyUI.RzHeading.DefaultDescriptor;
+        RzHighlighter = RizzyUI.RzHighlighter.DefaultDescriptor;
         RzKbd = RizzyUI.RzKbd.DefaultDescriptor;
         RzKbdGroup = RizzyUI.RzKbdGroup.DefaultDescriptor;
         RzAuroraText = RizzyUI.RzAuroraText.DefaultDescriptor;
