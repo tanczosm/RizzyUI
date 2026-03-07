@@ -17,5 +17,6 @@
          data-shine-color="@ShineColor"
          data-shine-colors="@_serializedShineColors"
          x-bind:style="computedStyle"
-         class="size-full rounded-[inherit]"></div>
+         class="@SlotClasses.GetOverlay()"
+         data-slot="@RzShineBorder.SlotNames.NameOf(SlotTypes.Overlay)"></div>
 </HtmlElement>

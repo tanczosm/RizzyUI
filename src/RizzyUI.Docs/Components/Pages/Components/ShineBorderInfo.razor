@@ -41,10 +41,12 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic Usage" class="scroll-mt-20">Basic Usage</RzHeading>
                 <RzParagraph TextColor="SemanticColor.Foreground">Place the border as an overlay child inside a relative, overflow-hidden container.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto my-5 min-h-60 max-w-sm overflow-hidden rounded-xl border bg-card p-6 relative">
-                        <RzShineBorder />
-                        <RzHeading Level="HeadingLevel.H3" class="mb-2">Project Summary</RzHeading>
-                        <RzParagraph class="mb-0 text-sm">Decorative shine border over a static card container.</RzParagraph>
+                    <div class="min-h-60">
+                        <div class="mx-auto my-5 max-w-sm overflow-hidden rounded-xl border bg-card p-6 relative">
+                            <RzShineBorder />
+                            <RzHeading Level="HeadingLevel.H3" class="mb-2">Project Summary</RzHeading>
+                            <RzParagraph class="mb-0 text-sm">Decorative shine border over a static card container.</RzParagraph>
+                        </div>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
@@ -60,10 +62,12 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Multicolor Shine" class="scroll-mt-20">Multicolor Shine</RzHeading>
                 <RzParagraph TextColor="SemanticColor.Foreground">Use multiple colors to create a more vibrant sweep around the host edge.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto my-5 min-h-60 max-w-sm overflow-hidden rounded-xl border bg-card p-6 relative">
-                        <RzShineBorder ShineColors="@(new[] { "#A07CFE", "#FE8FB5", "#FFBE7B" })" />
-                        <RzHeading Level="HeadingLevel.H3" class="mb-2">Login Panel</RzHeading>
-                        <RzParagraph class="mb-0 text-sm">Color order affects how the sweep appears during the animation.</RzParagraph>
+                    <div class="min-h-60">
+                        <div class="mx-auto my-5 max-w-sm overflow-hidden rounded-xl border bg-card p-6 relative">
+                            <RzShineBorder ShineColors="@(new[] { "#A07CFE", "#FE8FB5", "#FFBE7B" })" />
+                            <RzHeading Level="HeadingLevel.H3" class="mb-2">Login Panel</RzHeading>
+                            <RzParagraph class="mb-0 text-sm">Color order affects how the sweep appears during the animation.</RzParagraph>
+                        </div>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
@@ -121,9 +125,11 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Square Host" class="scroll-mt-20">Edge Case: Square Container / No Radius</RzHeading>
                 <RzParagraph TextColor="SemanticColor.Foreground">RzShineBorder inherits radius from the host. If the host is square, the shine remains square.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto my-5 min-h-60 relative overflow-hidden border bg-card p-6 max-w-xs">
-                        <RzShineBorder />
-                        <RzParagraph class="mb-0 text-sm">No rounded host class is applied here.</RzParagraph>
+                    <div class="min-h-60">
+                        <div class="mx-auto my-5 relative overflow-hidden border bg-card p-6 max-w-xs">
+                            <RzShineBorder />
+                            <RzParagraph class="mb-0 text-sm">No rounded host class is applied here.</RzParagraph>
+                        </div>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">

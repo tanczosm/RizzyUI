@@ -15,13 +15,17 @@ public partial class RzShineBorder : RzComponent<RzShineBorder.Slots>
     /// Defines the default styling for the <see cref="RzShineBorder"/> component.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
-        @base: "pointer-events-none absolute inset-0 size-full rounded-[inherit] will-change-[background-position]",
+        @base: "pointer-events-none absolute inset-0 size-full",
+        slots: new()
+        {
+            [s => s.Overlay] = "size-full rounded-[inherit] will-change-[background-position]"
+        },
         variants: new()
         {
             [c => ((RzShineBorder)c).RespectReducedMotion] = new Variant<bool, Slots>
             {
-                [true] = new() { [s => s.Base] = "motion-safe:animate-shine" },
-                [false] = new() { [s => s.Base] = "animate-shine" }
+                [true] = new() { [s => s.Overlay] = "motion-safe:animate-shine" },
+                [false] = new() { [s => s.Overlay] = "animate-shine" }
             }
         }
     );
@@ -128,5 +132,11 @@ public partial class RzShineBorder : RzComponent<RzShineBorder.Slots>
         /// </summary>
         [Slot("shine-border")]
         public string? Base { get; set; }
+
+        /// <summary>
+        /// The overlay slot that receives the computed shine style and animation classes.
+        /// </summary>
+        [Slot("shine-border-overlay")]
+        public string? Overlay { get; set; }
     }
 }

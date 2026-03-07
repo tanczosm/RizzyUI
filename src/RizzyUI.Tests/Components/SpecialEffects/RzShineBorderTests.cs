@@ -22,9 +22,10 @@ public class RzShineBorderTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Contains("absolute", root.ClassList);
         Assert.Contains("inset-0", root.ClassList);
         Assert.Contains("size-full", root.ClassList);
-        Assert.Contains("rounded-[inherit]", root.ClassList);
-        Assert.Contains("will-change-[background-position]", root.ClassList);
-        Assert.Contains("motion-safe:animate-shine", root.ClassList);
+        var overlay = cut.Find("[data-slot='shine-border-overlay']");
+        Assert.Contains("rounded-[inherit]", overlay.ClassList);
+        Assert.Contains("will-change-[background-position]", overlay.ClassList);
+        Assert.Contains("motion-safe:animate-shine", overlay.ClassList);
     }
 
     [Fact]
@@ -37,6 +38,7 @@ public class RzShineBorderTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Equal("[]", alpineRoot.GetAttribute("data-assets"));
         Assert.NotNull(alpineRoot.GetAttribute("data-nonce"));
         Assert.Equal("computedStyle", alpineRoot.GetAttribute("x-bind:style"));
+        Assert.Equal("shine-border-overlay", alpineRoot.GetAttribute("data-slot"));
     }
 
     [Fact]
@@ -146,9 +148,9 @@ public class RzShineBorderTests : BunitAlbaContext, IClassFixture<WebAppFixture>
     {
         var cut = Render<RzShineBorder>(p => p.Add(c => c.RespectReducedMotion, false));
 
-        var root = cut.Find("[data-slot='shine-border']");
-        Assert.Contains("animate-shine", root.ClassList);
-        Assert.DoesNotContain("motion-safe:animate-shine", root.ClassList);
+        var overlay = cut.Find("[data-slot='shine-border-overlay']");
+        Assert.Contains("animate-shine", overlay.ClassList);
+        Assert.DoesNotContain("motion-safe:animate-shine", overlay.ClassList);
     }
 
     [Fact]
