@@ -79,16 +79,18 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Width and Speed" class="scroll-mt-20">Width and Speed Customization</RzHeading>
                 <RzParagraph TextColor="SemanticColor.Foreground">Tune border thickness and animation loop duration for subtle or strong emphasis.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto my-5 min-h-60 grid max-w-3xl gap-4 md:grid-cols-2">
-                        <div class="relative overflow-hidden rounded-xl border bg-card p-6">
-                            <RzShineBorder BorderWidth="2" Duration="8" />
-                            <RzHeading Level="HeadingLevel.H4" class="mb-2">Faster</RzHeading>
-                            <RzParagraph class="mb-0 text-sm">Thicker border with a shorter loop.</RzParagraph>
-                        </div>
-                        <div class="relative overflow-hidden rounded-xl border bg-card p-6">
-                            <RzShineBorder BorderWidth="1" Duration="20" />
-                            <RzHeading Level="HeadingLevel.H4" class="mb-2">Slower</RzHeading>
-                            <RzParagraph class="mb-0 text-sm">Default thickness with a slower sweep.</RzParagraph>
+                    <div class="min-h-60">
+                        <div class="mx-auto my-5 grid max-w-3xl gap-4 md:grid-cols-2">
+                            <div class="relative overflow-hidden rounded-xl border bg-card p-6">
+                                <RzShineBorder BorderWidth="2" Duration="8"/>
+                                <RzHeading Level="HeadingLevel.H4" class="mb-2">Faster</RzHeading>
+                                <RzParagraph class="mb-0 text-sm">Thicker border with a shorter loop.</RzParagraph>
+                            </div>
+                            <div class="relative overflow-hidden rounded-xl border bg-card p-6">
+                                <RzShineBorder BorderWidth="1" Duration="20"/>
+                                <RzHeading Level="HeadingLevel.H4" class="mb-2">Slower</RzHeading>
+                                <RzParagraph class="mb-0 text-sm">Default thickness with a slower sweep.</RzParagraph>
+                            </div>
                         </div>
                     </div>
                 </RzBrowser>
@@ -102,40 +104,24 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Theme-Aware" class="scroll-mt-20">Theme-Aware Integration</RzHeading>
                 <RzParagraph TextColor="SemanticColor.Foreground">Choose colors from your design system at usage time; no client-side theme hook is required by the component.</RzParagraph>
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto my-5 min-h-60 grid max-w-3xl gap-4 md:grid-cols-2">
-                        <div class="relative overflow-hidden rounded-xl border bg-background p-6">
-                            <RzShineBorder ShineColor="hsl(var(--foreground))" />
-                            <RzHeading Level="HeadingLevel.H4" class="mb-2">Foreground token</RzHeading>
-                            <RzParagraph class="mb-0 text-sm">Uses semantic foreground color from the active theme.</RzParagraph>
-                        </div>
-                        <div class="relative overflow-hidden rounded-xl border bg-background p-6">
-                            <RzShineBorder ShineColors="@(new[] { "hsl(var(--primary))", "hsl(var(--accent))", "hsl(var(--secondary))" })" />
-                            <RzHeading Level="HeadingLevel.H4" class="mb-2">Semantic trio</RzHeading>
-                            <RzParagraph class="mb-0 text-sm">Multi-stop shine driven by semantic design tokens.</RzParagraph>
-                        </div>
-                    </div>
-                </RzBrowser>
-                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzShineBorder ShineColor=&quot;hsl(var(--foreground))&quot; /&gt;
-&lt;RzShineBorder ShineColors=&quot;@@(new[] { &quot;&quot;hsl(var(--primary))&quot;&quot;, &quot;&quot;hsl(var(--accent))&quot;&quot;, &quot;&quot;hsl(var(--secondary))&quot;&quot; })&quot; /&gt;
-                </RzCodeViewer>
-            </section>
-
-            <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Square Host" class="scroll-mt-20">Edge Case: Square Container / No Radius</RzHeading>
-                <RzParagraph TextColor="SemanticColor.Foreground">RzShineBorder inherits radius from the host. If the host is square, the shine remains square.</RzParagraph>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="min-h-60">
-                        <div class="mx-auto my-5 relative overflow-hidden border bg-card p-6 max-w-xs">
-                            <RzShineBorder />
-                            <RzParagraph class="mb-0 text-sm">No rounded host class is applied here.</RzParagraph>
+                    <div class="min-h-50">
+                        <div class="mx-auto my-5 grid max-w-3xl gap-4 md:grid-cols-2">
+                            <div class="relative overflow-hidden rounded-xl border bg-background p-6">
+                                <RzShineBorder ShineColor="var(--foreground)"/>
+                                <RzHeading Level="HeadingLevel.H4" class="mb-2">Foreground token</RzHeading>
+                                <RzParagraph class="mb-0 text-sm">Uses semantic foreground color from the active theme.</RzParagraph>
+                            </div>
+                            <div class="relative overflow-hidden rounded-xl border bg-background p-6">
+                                <RzShineBorder ShineColors="@(new[] { "var(--primary)", "var(--accent)", "var(--secondary)" })"/>
+                                <RzHeading Level="HeadingLevel.H4" class="mb-2">Semantic trio</RzHeading>
+                                <RzParagraph class="mb-0 text-sm">Multi-stop shine driven by semantic design tokens.</RzParagraph>
+                            </div>
                         </div>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;div class=&quot;relative overflow-hidden border bg-card p-6 max-w-xs&quot;&gt;
-    &lt;RzShineBorder /&gt;
-&lt;/div&gt;
+&lt;RzShineBorder ShineColor=&quot;var(--foreground)&quot; /&gt;
+&lt;RzShineBorder ShineColors=&quot;@@(new[] { &quot;&quot;var(--primary)&quot;&quot;, &quot;&quot;var(--accent)&quot;&quot;, &quot;&quot;var(--secondary)&quot;&quot; })&quot; /&gt;
                 </RzCodeViewer>
             </section>
 
