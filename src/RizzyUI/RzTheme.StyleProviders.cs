@@ -45,12 +45,16 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<RzChart.Slots>, RzChart.Slots> RzChart { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzMarquee"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzMarquee.Slots>, RzMarquee.Slots> RzMarquee { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzConfetti"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzConfetti.Slots>, RzConfetti.Slots> RzConfetti { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzIndicator"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzIndicator.Slots>, RzIndicator.Slots> RzIndicator { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzProgress"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzProgress.Slots>, RzProgress.Slots> RzProgress { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzSeparator"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzSeparator.Slots>, RzSeparator.Slots> RzSeparator { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzTypingAnimation"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzTypingAnimation.Slots>, RzTypingAnimation.Slots> RzTypingAnimation { get; set; }
 
     #endregion
 
@@ -548,6 +552,8 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<RzKbd.Slots>, RzKbd.Slots> RzKbd { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzKbdGroup"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzKbdGroup.Slots>, RzKbdGroup.Slots> RzKbdGroup { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzAuroraText"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzAuroraText.Slots>, RzAuroraText.Slots> RzAuroraText { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzParagraph"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzParagraph.Slots>, RzParagraph.Slots> RzParagraph { get; set; }
 

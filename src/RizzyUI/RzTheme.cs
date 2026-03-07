@@ -53,6 +53,8 @@ public partial class RzTheme
 
         // RzMarquee Family
         RzMarquee = RizzyUI.RzMarquee.DefaultDescriptor;
+        // RzConfetti
+        RzConfetti = RizzyUI.RzConfetti.DefaultDescriptor;
 
         // RzBreadcrumb Family
         RzBreadcrumb = RizzyUI.RzBreadcrumb.DefaultDescriptor;
@@ -318,6 +320,9 @@ public partial class RzTheme
         // RzSeparator Family
         RzSeparator = RizzyUI.RzSeparator.DefaultDescriptor;
 
+        // RzTypingAnimation Family
+        RzTypingAnimation = RizzyUI.RzTypingAnimation.DefaultDescriptor;
+
         // RzSheet Family
         RzSheet = RizzyUI.RzSheet.DefaultDescriptor;
         SheetContent = RizzyUI.SheetContent.DefaultDescriptor;
@@ -391,6 +396,7 @@ public partial class RzTheme
         RzHeading = RizzyUI.RzHeading.DefaultDescriptor;
         RzKbd = RizzyUI.RzKbd.DefaultDescriptor;
         RzKbdGroup = RizzyUI.RzKbdGroup.DefaultDescriptor;
+        RzAuroraText = RizzyUI.RzAuroraText.DefaultDescriptor;
         RzParagraph = RizzyUI.RzParagraph.DefaultDescriptor;
     }
 

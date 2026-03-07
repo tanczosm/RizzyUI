@@ -17,6 +17,7 @@ import registerRzCollapsible from './components/rzCollapsible.js';
 import registerRzClipboard from './components/rzClipboard.js';
 import registerRzBackToTop from './components/rzBackToTop.js';
 import registerRzCombobox from './components/rzCombobox.js';
+import registerRzConfetti from './components/rzConfetti.js';
 import registerRzColorPickerProvider from './components/rzColorPickerProvider.js';
 import registerRzColorSwatch from './components/rzColorSwatch.js';
 import registerRzDateEdit from './components/rzDateEdit.js';
@@ -50,6 +51,7 @@ import registerRzCommandItem from './components/rzCommandItem.js';
 import registerRzCommandList from './components/rzCommandList.js';
 import registerRzCommandGroup from './components/rzCommandGroup.js';
 import registerRzChart from './components/rzChart.js';
+import registerRzTypingAnimation from './components/rzTypingAnimation.js';
 
 /**
  * generateBundleId(paths)
@@ -171,6 +173,7 @@ function registerComponents(Alpine) {
     registerRzClipboard(Alpine);
     registerRzBackToTop(Alpine);
     registerRzCombobox(Alpine, rizzyRequire);
+    registerRzConfetti(Alpine, rizzyRequire);
     registerRzColorPickerProvider(Alpine, rizzyRequire);
     registerRzColorSwatch(Alpine);
     registerRzDateEdit(Alpine, rizzyRequire);
@@ -204,6 +207,7 @@ function registerComponents(Alpine) {
     registerRzCommandList(Alpine);
     registerRzCommandGroup(Alpine);
     registerRzChart(Alpine, rizzyRequire);
+    registerRzTypingAnimation(Alpine);
 }
 
 export { registerComponents, rizzyRequire as require };
