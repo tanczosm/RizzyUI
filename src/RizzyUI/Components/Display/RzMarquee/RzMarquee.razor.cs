@@ -26,7 +26,7 @@ public partial class RzMarquee : RzComponent<RzMarquee.Slots>
     /// Defines the default styling for the <see cref="RzMarquee"/> component.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<Slots>, Slots> DefaultDescriptor = new(
-        @base: "group relative flex overflow-hidden p-2",
+        @base: "group relative flex overflow-hidden p-2 [gap:var(--rz-marquee-gap)]",
         slots: new()
         {
             [s => s.Segment] = "flex shrink-0 justify-around [gap:var(--rz-marquee-gap)] motion-reduce:[animation-play-state:paused]"

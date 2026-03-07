@@ -160,45 +160,7 @@
                 </RzCodeViewer>
             </section>
 
-            <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="HTMX-Updated Announcements" class="scroll-mt-20">HTMX-Updated Announcements</RzHeading>
-                <RzParagraph>
-                    RzMarquee passes unmatched attributes to the root element, so HTMX refresh flows work naturally with no component-specific JavaScript.
-                </RzParagraph>
-                <RzAlert Variant="ThemeVariant.Warning" class="not-prose my-4">
-                    <AlertTitle>Demo note</AlertTitle>
-                    <AlertDescription>
-                        This preview is static. In production, use <code>hx-get</code> with a real endpoint that returns refreshed SSR markup.
-                    </AlertDescription>
-                </RzAlert>
-                <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div id="announcement-region" class="mx-auto w-full max-w-4xl">
-                        <RzMarquee hx-get="/announcements/marquee" hx-trigger="every 30s" hx-target="#announcement-region" hx-swap="outerHTML" class="rounded-lg border" PauseOnHover>
-                            <RzBadge Variant="ThemeVariant.Information">Maintenance window: Sunday 02:00 UTC</RzBadge>
-                            <RzBadge Variant="ThemeVariant.Warning">Status page refresh every 30s</RzBadge>
-                            <RzBadge Variant="ThemeVariant.Success">All systems operational</RzBadge>
-                        </RzMarquee>
-                    </div>
-                </RzBrowser>
-                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-6">
-&lt;div id=&quot;announcement-region&quot;&gt;
-    &lt;RzMarquee hx-get=&quot;/announcements/marquee&quot;
-               hx-trigger=&quot;every 30s&quot;
-               hx-target=&quot;#announcement-region&quot;
-               hx-swap=&quot;outerHTML&quot;&gt;
-        &lt;RzBadge Variant=&quot;ThemeVariant.Information&quot;&gt;Maintenance window: Sunday 02:00 UTC&lt;/RzBadge&gt;
-        &lt;RzBadge Variant=&quot;ThemeVariant.Warning&quot;&gt;Status page refresh every 30s&lt;/RzBadge&gt;
-        &lt;RzBadge Variant=&quot;ThemeVariant.Success&quot;&gt;All systems operational&lt;/RzBadge&gt;
-    &lt;/RzMarquee&gt;
-&lt;/div&gt;
-                </RzCodeViewer>
-                <RzCodeViewer Language="@CodeLanguage.CSharp" class="mb-10">
-app.MapGet("/announcements/marquee", () =&gt;
-{
-    return Results.Extensions.Component&lt;AnnouncementsMarqueePartial&gt;();
-});
-                </RzCodeViewer>
-            </section>
+            
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Interactive Child Content and Accessibility" class="scroll-mt-20">Interactive Child Content and Accessibility</RzHeading>
