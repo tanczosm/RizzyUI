@@ -89,22 +89,23 @@ export default function (Alpine, require) {
 
         showAnnotation() {
             const target = this.$refs.target;
-            const annotate = window.roughNotation?.annotate;
+            const annotate = window.RoughNotation?.annotate;
 
             if (!target || typeof annotate !== 'function') {
                 return;
             }
 
-            this.removeAnnotation();
-            this.annotation = annotate(target, {
-                type: this.config.action,
-                color: this.config.color,
-                strokeWidth: this.config.strokeWidth,
-                animationDuration: this.config.animationDuration,
-                iterations: this.config.iterations,
-                padding: this.config.padding,
-                multiline: this.config.multiline
-            });
+            if (!this.annotation) {
+                this.annotation = annotate(target, {
+                    type: this.config.action,
+                    color: this.config.color,
+                    strokeWidth: this.config.strokeWidth,
+                    animationDuration: this.config.animationDuration,
+                    iterations: this.config.iterations,
+                    padding: this.config.padding,
+                    multiline: this.config.multiline
+                });
+            }
 
             this.annotation.show();
             this.hasShown = true;
@@ -113,7 +114,7 @@ export default function (Alpine, require) {
 
         observeResize() {
             const target = this.$refs.target;
-            if (!target || typeof ResizeObserver === 'undefined') {
+            if (!target || typeof ResizeObserver === 'undefined' || this.resizeObserver) {
                 return;
             }
 
@@ -136,11 +137,12 @@ export default function (Alpine, require) {
         },
 
         refreshAnnotation() {
-            if (!this.hasShown) {
+            if (!this.hasShown || !this.annotation) {
                 return;
             }
 
-            this.showAnnotation();
+            this.annotation.hide();
+            this.annotation.show();
         },
 
         removeAnnotation() {
@@ -158,11 +160,11 @@ export default function (Alpine, require) {
                 this.rafId = 0;
             }
 
-            this.removeAnnotation();
             this.resizeObserver?.disconnect();
             this.intersectionObserver?.disconnect();
             this.resizeObserver = null;
             this.intersectionObserver = null;
+            this.removeAnnotation();
         },
 
         toBool(value, fallback) {
