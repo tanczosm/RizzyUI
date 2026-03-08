@@ -17,6 +17,7 @@ import registerRzCollapsible from './components/rzCollapsible.js';
 import registerRzClipboard from './components/rzClipboard.js';
 import registerRzBackToTop from './components/rzBackToTop.js';
 import registerRzCombobox from './components/rzCombobox.js';
+import registerRzConfetti from './components/rzConfetti.js';
 import registerRzColorPickerProvider from './components/rzColorPickerProvider.js';
 import registerRzColorSwatch from './components/rzColorSwatch.js';
 import registerRzDateEdit from './components/rzDateEdit.js';
@@ -35,6 +36,7 @@ import registerRzInputOTP from './components/rzInputOTP.js';
 import registerRzMarkdown from './components/rzMarkdown.js';
 import registerRzMenubar from './components/rzMenubar.js';
 import registerRzNavigationMenu from './components/rzNavigationMenu.js';
+import registerRzNumberTicker from './components/rzNumberTicker.js';
 import registerRzPopover from './components/rzPopover.js';
 import registerRzPrependInput from './components/rzPrependInput.js';
 import registerRzProgress from './components/rzProgress.js';
@@ -42,6 +44,7 @@ import registerRzQuickReferenceContainer from './components/rzQuickReferenceCont
 import registerRzScrollArea from './components/rzScrollArea.js';
 import registerRzSlider from './components/rzSlider.js';
 import registerRzSheet from './components/rzSheet.js';
+import registerRzShineBorder from './components/rzShineBorder.js';
 import registerRzTabs from './components/rzTabs.js';
 import registerRzToggle from './components/rzToggle.js';
 import registerRzTooltip from './components/rzTooltip.js';
@@ -51,6 +54,7 @@ import registerRzCommandItem from './components/rzCommandItem.js';
 import registerRzCommandList from './components/rzCommandList.js';
 import registerRzCommandGroup from './components/rzCommandGroup.js';
 import registerRzChart from './components/rzChart.js';
+import registerRzTypingAnimation from './components/rzTypingAnimation.js';
 
 /**
  * generateBundleId(paths)
@@ -172,6 +176,7 @@ function registerComponents(Alpine) {
     registerRzClipboard(Alpine);
     registerRzBackToTop(Alpine);
     registerRzCombobox(Alpine, rizzyRequire);
+    registerRzConfetti(Alpine, rizzyRequire);
     registerRzColorPickerProvider(Alpine, rizzyRequire);
     registerRzColorSwatch(Alpine);
     registerRzDateEdit(Alpine, rizzyRequire);
@@ -190,6 +195,7 @@ function registerComponents(Alpine) {
     registerRzMarkdown(Alpine, rizzyRequire);
     registerRzMenubar(Alpine);
     registerRzNavigationMenu(Alpine, $data);
+    registerRzNumberTicker(Alpine);
     registerRzPopover(Alpine);
     registerRzPrependInput(Alpine);
     registerRzProgress(Alpine);
@@ -197,6 +203,7 @@ function registerComponents(Alpine) {
     registerRzScrollArea(Alpine);
     registerRzSlider(Alpine);
     registerRzSheet(Alpine);
+    registerRzShineBorder(Alpine);
     registerRzTabs(Alpine);
     registerRzToggle(Alpine);
     registerRzTooltip(Alpine);
@@ -206,6 +213,7 @@ function registerComponents(Alpine) {
     registerRzCommandList(Alpine);
     registerRzCommandGroup(Alpine);
     registerRzChart(Alpine, rizzyRequire);
+    registerRzTypingAnimation(Alpine);
 }
 
 export { registerComponents, rizzyRequire as require };
