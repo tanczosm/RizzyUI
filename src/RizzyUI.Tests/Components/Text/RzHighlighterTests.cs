@@ -16,17 +16,18 @@ public class RzHighlighterTests : BunitAlbaContext, IClassFixture<WebAppFixture>
             .AddChildContent("Important text"));
 
         var root = cut.Find("span#hl-default[data-slot='highlighter']");
-        Assert.Equal("highlight", root.GetAttribute("data-action"));
-        Assert.Equal("#ffd1dc", root.GetAttribute("data-color"));
-        Assert.Equal("1.5", root.GetAttribute("data-stroke-width"));
-        Assert.Equal("600", root.GetAttribute("data-animation-duration"));
-        Assert.Equal("2", root.GetAttribute("data-iterations"));
-        Assert.Equal("2", root.GetAttribute("data-padding"));
-        Assert.Equal("true", root.GetAttribute("data-multiline"));
-        Assert.Equal("false", root.GetAttribute("data-start-on-view"));
-        Assert.Equal("-10%", root.GetAttribute("data-view-margin"));
+        Assert.Null(root.GetAttribute("data-action"));
 
         var alpineRoot = cut.Find("div[data-alpine-root='hl-default']");
+        Assert.Equal("highlight", alpineRoot.GetAttribute("data-action"));
+        Assert.Equal("#ffd1dc", alpineRoot.GetAttribute("data-color"));
+        Assert.Equal("1.5", alpineRoot.GetAttribute("data-stroke-width"));
+        Assert.Equal("600", alpineRoot.GetAttribute("data-animation-duration"));
+        Assert.Equal("2", alpineRoot.GetAttribute("data-iterations"));
+        Assert.Equal("2", alpineRoot.GetAttribute("data-padding"));
+        Assert.Equal("true", alpineRoot.GetAttribute("data-multiline"));
+        Assert.Equal("false", alpineRoot.GetAttribute("data-start-on-view"));
+        Assert.Equal("-10%", alpineRoot.GetAttribute("data-view-margin"));
         Assert.Equal("rzHighlighter", alpineRoot.GetAttribute("x-data"));
         Assert.NotNull(alpineRoot.GetAttribute("data-assets"));
         Assert.NotNull(alpineRoot.GetAttribute("data-nonce"));
@@ -49,16 +50,16 @@ public class RzHighlighterTests : BunitAlbaContext, IClassFixture<WebAppFixture>
             .Add(x => x.StartOnView, true)
             .Add(x => x.ViewMargin, "-15%"));
 
-        var root = cut.Find("[data-slot='highlighter']");
-        Assert.Equal("underline", root.GetAttribute("data-action"));
-        Assert.Equal("#87cefa", root.GetAttribute("data-color"));
-        Assert.Equal("2.25", root.GetAttribute("data-stroke-width"));
-        Assert.Equal("900", root.GetAttribute("data-animation-duration"));
-        Assert.Equal("4", root.GetAttribute("data-iterations"));
-        Assert.Equal("6", root.GetAttribute("data-padding"));
-        Assert.Equal("false", root.GetAttribute("data-multiline"));
-        Assert.Equal("true", root.GetAttribute("data-start-on-view"));
-        Assert.Equal("-15%", root.GetAttribute("data-view-margin"));
+        var alpineRoot = cut.Find("[data-alpine-root]");
+        Assert.Equal("underline", alpineRoot.GetAttribute("data-action"));
+        Assert.Equal("#87cefa", alpineRoot.GetAttribute("data-color"));
+        Assert.Equal("2.25", alpineRoot.GetAttribute("data-stroke-width"));
+        Assert.Equal("900", alpineRoot.GetAttribute("data-animation-duration"));
+        Assert.Equal("4", alpineRoot.GetAttribute("data-iterations"));
+        Assert.Equal("6", alpineRoot.GetAttribute("data-padding"));
+        Assert.Equal("false", alpineRoot.GetAttribute("data-multiline"));
+        Assert.Equal("true", alpineRoot.GetAttribute("data-start-on-view"));
+        Assert.Equal("-15%", alpineRoot.GetAttribute("data-view-margin"));
     }
 
     [Fact]
@@ -87,14 +88,13 @@ public class RzHighlighterTests : BunitAlbaContext, IClassFixture<WebAppFixture>
             .Add(x => x.ViewMargin, (string?)null)
             .Add(x => x.ComponentAssetKeys, []));
 
-        var root = cut.Find("[data-slot='highlighter']");
         var alpineRoot = cut.Find("[data-alpine-root]");
-        Assert.Equal("#ffd1dc", root.GetAttribute("data-color"));
-        Assert.Equal("0.1", root.GetAttribute("data-stroke-width"));
-        Assert.Equal("0", root.GetAttribute("data-animation-duration"));
-        Assert.Equal("1", root.GetAttribute("data-iterations"));
-        Assert.Equal("0", root.GetAttribute("data-padding"));
-        Assert.Equal("-10%", root.GetAttribute("data-view-margin"));
+        Assert.Equal("#ffd1dc", alpineRoot.GetAttribute("data-color"));
+        Assert.Equal("0.1", alpineRoot.GetAttribute("data-stroke-width"));
+        Assert.Equal("0", alpineRoot.GetAttribute("data-animation-duration"));
+        Assert.Equal("1", alpineRoot.GetAttribute("data-iterations"));
+        Assert.Equal("0", alpineRoot.GetAttribute("data-padding"));
+        Assert.Equal("-10%", alpineRoot.GetAttribute("data-view-margin"));
         Assert.Equal("[]", alpineRoot.GetAttribute("data-assets"));
     }
 

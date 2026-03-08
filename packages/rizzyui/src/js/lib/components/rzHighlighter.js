@@ -28,8 +28,7 @@ export default function (Alpine, require) {
         },
 
         readConfig() {
-            const root = this.$el.parentElement;
-            const dataset = root?.dataset ?? {};
+            const dataset = this.$el.dataset ?? {};
 
             return {
                 action: dataset.action || 'highlight',
