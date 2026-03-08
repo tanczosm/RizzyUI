@@ -67,13 +67,13 @@ Use an &lt;RzHighlighter Action="HighlighterAction.Underline" Color="#ff9800"&gt
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Color and Timing" class="scroll-mt-20">Color and Timing Customization</RzHeading>
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto p-8 flex flex-col gap-4 items-center leading-relaxed">
-                        <p><RzHighlighter Color="#87cefa" StrokeWidth="1.2" AnimationDuration="500">Gentle and quick</RzHighlighter></p>
-                        <p><RzHighlighter Color="#f59e0b" StrokeWidth="2" AnimationDuration="900" Iterations="3">Bold and expressive</RzHighlighter></p>
+                        <p><RzHighlighter Color="var(--highlight-3)" StrokeWidth="1.2" AnimationDuration="500">Gentle and quick</RzHighlighter></p>
+                        <p><RzHighlighter Color="var(--highlight-4)" StrokeWidth="2" AnimationDuration="900" Iterations="3">Bold and expressive</RzHighlighter></p>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzHighlighter Color="#87cefa" StrokeWidth="1.2" AnimationDuration="500"&gt;Gentle and quick&lt;/RzHighlighter&gt;
-&lt;RzHighlighter Color="#f59e0b" StrokeWidth="2" AnimationDuration="900" Iterations="3"&gt;Bold and expressive&lt;/RzHighlighter&gt;
+&lt;RzHighlighter Color="var(--highlight-3)" StrokeWidth="1.2" AnimationDuration="500"&gt;Gentle and quick&lt;/RzHighlighter&gt;
+&lt;RzHighlighter Color="var(--highlight-4)" StrokeWidth="2" AnimationDuration="900" Iterations="3"&gt;Bold and expressive&lt;/RzHighlighter&gt;
                 </RzCodeViewer>
             </section>
 
@@ -114,20 +114,39 @@ Use an &lt;RzHighlighter Action="HighlighterAction.Underline" Color="#ff9800"&gt
                 <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="mx-auto p-8 max-w-2xl">
                         <RzParagraph>
-                            Combine <RzHighlighter Color="#60a5fa">inline emphasis</RzHighlighter> with your normal typography flow, and reserve
+                            Combine <RzHighlighter Color="var(--highlight-2)">inline emphasis</RzHighlighter> with your normal typography flow, and reserve
                             <RzHighlighter Action="HighlighterAction.Underline" Color="#f97316">strong accents</RzHighlighter> for key phrases.
                         </RzParagraph>
                     </div>
                 </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
 &lt;RzParagraph&gt;
-    Combine &lt;RzHighlighter Color="#60a5fa"&gt;inline emphasis&lt;/RzHighlighter&gt; with your normal typography flow, and reserve
+    Combine &lt;RzHighlighter Color="var(--highlight-2)"&gt;inline emphasis&lt;/RzHighlighter&gt; with your normal typography flow, and reserve
     &lt;RzHighlighter Action="HighlighterAction.Underline" Color="#f97316"&gt;strong accents&lt;/RzHighlighter&gt; for key phrases.
 &lt;/RzParagraph&gt;
                 </RzCodeViewer>
             </section>
 
             <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Hightlight Colors" class="scroll-mt-20">Hightlight Color Variables</RzHeading>
+                <RzParagraph>
+                    The following CSS 5 color variables have light and dark mode equivalents and can be used in any of the highlighters.  For example, if you want to use `highlight-1` then pass `var(--highlight-1)` as the color parameter variable.
+                </RzParagraph>                
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                        <tr><th class="px-4 py-3">Color</th><th class="px-4 py-3">Variable Name</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                        <tr><td class="px-4 py-3"><RzColorSwatch Value="var(--highlight-1)"/></td><td class="px-4 py-3"><code>--highlight-1</code></td></tr>
+                        <tr><td class="px-4 py-3"><RzColorSwatch Value="var(--highlight-2)"/></td><td class="px-4 py-3"><code>--highlight-2</code></td></tr>
+                        <tr><td class="px-4 py-3"><RzColorSwatch Value="var(--highlight-3)"/></td><td class="px-4 py-3"><code>--highlight-3</code></td></tr>
+                        <tr><td class="px-4 py-3"><RzColorSwatch Value="var(--highlight-4)"/></td><td class="px-4 py-3"><code>--highlight-4</code></td></tr>
+                        <tr><td class="px-4 py-3"><RzColorSwatch Value="var(--highlight-5)"/></td><td class="px-4 py-3"><code>--highlight-5</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>                
+                
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
                 <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
                     <table class="w-full text-sm">
@@ -137,7 +156,7 @@ Use an &lt;RzHighlighter Action="HighlighterAction.Underline" Color="#ff9800"&gt
                         <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
                         <tr><td class="px-4 py-3"><code>ChildContent</code></td><td class="px-4 py-3"><code>RenderFragment?</code></td><td class="px-4 py-3"><code>null</code></td></tr>
                         <tr><td class="px-4 py-3"><code>Action</code></td><td class="px-4 py-3"><code>HighlighterAction</code></td><td class="px-4 py-3"><code>Highlight</code></td></tr>
-                        <tr><td class="px-4 py-3"><code>Color</code></td><td class="px-4 py-3"><code>string?</code></td><td class="px-4 py-3"><code>#ffd1dc</code></td></tr>
+                        <tr><td class="px-4 py-3"><code>Color</code></td><td class="px-4 py-3"><code>string?</code></td><td class="px-4 py-3"><code>var(--highlight-1)</code></td></tr>
                         <tr><td class="px-4 py-3"><code>StrokeWidth</code></td><td class="px-4 py-3"><code>double</code></td><td class="px-4 py-3"><code>1.5</code></td></tr>
                         <tr><td class="px-4 py-3"><code>AnimationDuration</code></td><td class="px-4 py-3"><code>int</code></td><td class="px-4 py-3"><code>600</code></td></tr>
                         <tr><td class="px-4 py-3"><code>Iterations</code></td><td class="px-4 py-3"><code>int</code></td><td class="px-4 py-3"><code>2</code></td></tr>

@@ -12,7 +12,7 @@ namespace RizzyUI;
 /// </summary>
 public partial class RzHighlighter : RzComponent<RzHighlighter.Slots>
 {
-    private const string DefaultColor = "#ffd1dc";
+    private const string DefaultColor = "var(--highlight-1)";
     private const double DefaultStrokeWidth = 1.5;
     private const int DefaultAnimationDuration = 600;
     private const int DefaultIterations = 2;
