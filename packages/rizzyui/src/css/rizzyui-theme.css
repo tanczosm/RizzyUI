@@ -183,7 +183,15 @@
     --clr-bg: var(--popover);
     --clr-text: var(--popover-foreground);
     --clr-border: var(--input);
-    --clr-shadow: 0 10px 30px color-mix(in oklab, var(--foreground) 16%, transparent);    
+    --clr-shadow: 0 10px 30px color-mix(in oklab, var(--foreground) 16%, transparent);
+
+    --animate-gradient: gradient 8s linear infinite;
+
+    @keyframes gradient {
+        to {
+            background-position: var(--bg-size, 300%) 0;
+        }
+    }    
 }
 
 @layer base {
