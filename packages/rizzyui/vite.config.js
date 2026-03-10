@@ -7,6 +7,7 @@ const DIST_DIR = path.resolve(ROOT, 'dist/js');
 const isMinified = process.env.MINIFY === 'true';
 
 export default defineConfig({
+    base: './',
     build: {
         emptyOutDir: !isMinified,
         outDir: DIST_DIR,
