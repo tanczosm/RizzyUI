@@ -3,6 +3,15 @@ import { componentBundleManifest } from './componentBundleManifest.js';
 
 const registrationPromises = new Map();
 
+function parseComponentNameFromXData(expression) {
+    if (!expression) {
+        return null;
+    }
+
+    const parsedName = expression.trim().split(/[({]/)[0]?.trim();
+    return parsedName || null;
+}
+
 function getComponentFactory(Alpine, componentName) {
     const factory = Alpine.data(componentName);
     if (!factory) {
@@ -43,6 +52,24 @@ export function registerAsyncBundleComponents(Alpine) {
             return getComponentFactory(Alpine, componentName);
         });
     }
+}
+
+export async function preloadBundlesForDocument(Alpine, root = document) {
+    if (!root || typeof root.querySelectorAll !== 'function') {
+        return;
+    }
+
+    const componentNames = new Set();
+    const xDataNodes = root.querySelectorAll('[x-data]');
+
+    for (const node of xDataNodes) {
+        const componentName = parseComponentNameFromXData(node.getAttribute('x-data'));
+        if (componentName && componentBundleManifest[componentName]) {
+            componentNames.add(componentName);
+        }
+    }
+
+    await Promise.all([...componentNames].map(componentName => ensureBundleRegistered(Alpine, componentName)));
 }
 
 export async function loadComponentDefinition(Alpine, componentName) {

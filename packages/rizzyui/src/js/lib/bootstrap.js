@@ -10,7 +10,11 @@ import registerSyncDirective from './directives/sync-prop.js';
 import registerValidateDirective, { initializeValidation } from './directives/validate.js';
 import { themeController } from './theme.js';
 import { registerStores } from './stores.js';
-import { registerAsyncBundleComponents, loadComponentDefinition } from '../runtime/asyncBundleRegistrar.js';
+import {
+    registerAsyncBundleComponents,
+    loadComponentDefinition,
+    preloadBundlesForDocument,
+} from '../runtime/asyncBundleRegistrar.js';
 import { require } from '../runtime/rizzyRequire.js';
 
 let cachedRizzyUI;
@@ -40,12 +44,32 @@ export function bootstrapRizzyUI(Alpine) {
         validationInstance = validation;
     });
 
+    const ready = (async () => {
+        if (typeof document !== 'undefined') {
+            await preloadBundlesForDocument(Alpine, document);
+        }
+
+        if (typeof window !== 'undefined') {
+            themeController.init();
+
+            window.Alpine = Alpine;
+            window.Rizzy = { ...(window.Rizzy || {}), ...cachedRizzyUI };
+
+            document.dispatchEvent(new CustomEvent('rz:init', {
+                detail: { Rizzy: window.Rizzy },
+            }));
+        }
+
+        return cachedRizzyUI;
+    })();
+
     cachedRizzyUI = {
         Alpine,
         require,
         toast,
         $data,
         props,
+        ready,
         theme: themeController,
         loadComponent: componentName => loadComponentDefinition(Alpine, componentName),
         ensureValidation: async () => {
@@ -56,17 +80,6 @@ export function bootstrapRizzyUI(Alpine) {
             return validationInstance;
         },
     };
-
-    if (typeof window !== 'undefined') {
-        themeController.init();
-
-        window.Alpine = Alpine;
-        window.Rizzy = { ...(window.Rizzy || {}), ...cachedRizzyUI };
-
-        document.dispatchEvent(new CustomEvent('rz:init', {
-            detail: { Rizzy: window.Rizzy },
-        }));
-    }
 
     return cachedRizzyUI;
 }
