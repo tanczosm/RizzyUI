@@ -1,56 +1,37 @@
 import { bundleLoaderRegistry } from './bundleLoaderRegistry.js';
 import { componentBundleManifest } from './componentBundleManifest.js';
 
-const registrationPromises = new Map();
+// Cache the promises so we only fetch a bundle once
+const loadedBundles = new Map();
 
-function parseComponentNameFromXData(expression) {
-    if (!expression) {
-        return null;
-    }
-
-    const parsedName = expression.trim().split(/[({]/)[0]?.trim();
-    return parsedName || null;
-}
-
-function getComponentFactory(Alpine, componentName) {
-    const factory = Alpine.data(componentName);
-    if (!factory) {
-        throw new Error(`[RizzyUI] Alpine component '${componentName}' was requested but is not registered after bundle load.`);
-    }
-    return factory;
-}
-
-async function ensureBundleRegistered(Alpine, componentName) {
+async function loadComponentFactory(componentName) {
     const bundleName = componentBundleManifest[componentName];
     if (!bundleName) {
         throw new Error(`[RizzyUI] No owning bundle was found for component '${componentName}'.`);
     }
 
-    if (!registrationPromises.has(bundleName)) {
+    if (!loadedBundles.has(bundleName)) {
         const loader = bundleLoaderRegistry[bundleName];
         if (!loader) {
             throw new Error(`[RizzyUI] Bundle loader '${bundleName}' is missing.`);
         }
-
-        registrationPromises.set(bundleName, (async () => {
-            const module = await loader();
-            if (typeof module.register !== 'function') {
-                throw new Error(`[RizzyUI] Bundle '${bundleName}' does not export register(Alpine).`);
-            }
-            await module.register(Alpine);
-            return true;
-        })());
+        loadedBundles.set(bundleName, loader());
     }
 
-    return registrationPromises.get(bundleName);
+    const bundleModule = await loadedBundles.get(bundleName);
+    const factory = bundleModule[componentName];
+    
+    if (!factory) {
+        throw new Error(`[RizzyUI] Component '${componentName}' is not exported by bundle '${bundleName}'.`);
+    }
+
+    return factory;
 }
 
 export function registerAsyncBundleComponents(Alpine) {
     for (const componentName of Object.keys(componentBundleManifest)) {
-        Alpine.asyncData(componentName, async () => {
-            await ensureBundleRegistered(Alpine, componentName);
-            return getComponentFactory(Alpine, componentName);
-        });
+        // async-alpine accepts a function returning a Promise that resolves to the component factory
+        Alpine.asyncData(componentName, () => loadComponentFactory(componentName));
     }
 }
 
@@ -63,16 +44,19 @@ export async function preloadBundlesForDocument(Alpine, root = document) {
     const xDataNodes = root.querySelectorAll('[x-data]');
 
     for (const node of xDataNodes) {
-        const componentName = parseComponentNameFromXData(node.getAttribute('x-data'));
-        if (componentName && componentBundleManifest[componentName]) {
-            componentNames.add(componentName);
+        const expression = node.getAttribute('x-data');
+        if (!expression) continue;
+        const parsedName = expression.trim().split(/[({]/)[0]?.trim();
+        
+        if (parsedName && componentBundleManifest[parsedName]) {
+            componentNames.add(parsedName);
         }
     }
 
-    await Promise.all([...componentNames].map(componentName => ensureBundleRegistered(Alpine, componentName)));
+    // Await the loading of the factories for all detected components
+    await Promise.all([...componentNames].map(name => loadComponentFactory(name)));
 }
 
 export async function loadComponentDefinition(Alpine, componentName) {
-    await ensureBundleRegistered(Alpine, componentName);
-    return getComponentFactory(Alpine, componentName);
+    return await loadComponentFactory(componentName);
 }

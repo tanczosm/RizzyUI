@@ -1,24 +1,6 @@
-import registerRzBrowser from '../lib/components/rzBrowser.js';
-import registerRzCodeViewer from '../lib/components/rzCodeViewer.js';
-import registerRzEmbeddedPreview from '../lib/components/rzEmbeddedPreview.js';
-import registerRzEventViewer from '../lib/components/rzEventViewer.js';
-import registerRzMarkdown from '../lib/components/rzMarkdown.js';
-import registerRzQuickReferenceContainer from '../lib/components/rzQuickReferenceContainer.js';
-import { require } from '../runtime/rizzyRequire.js';
-
-let isRegistered = false;
-
-export function register(Alpine) {
-    if (isRegistered) {
-        return;
-    }
-
-    registerRzBrowser(Alpine);
-    registerRzCodeViewer(Alpine, require);
-    registerRzEmbeddedPreview(Alpine);
-    registerRzEventViewer(Alpine);
-    registerRzMarkdown(Alpine, require);
-    registerRzQuickReferenceContainer(Alpine);
-
-    isRegistered = true;
-}
+export { default as rzBrowser } from '../lib/components/rzBrowser.js';
+export { default as rzCodeViewer } from '../lib/components/rzCodeViewer.js';
+export { default as rzEmbeddedPreview } from '../lib/components/rzEmbeddedPreview.js';
+export { default as rzEventViewer } from '../lib/components/rzEventViewer.js';
+export { default as rzMarkdown } from '../lib/components/rzMarkdown.js';
+export { default as rzQuickReferenceContainer } from '../lib/components/rzQuickReferenceContainer.js';

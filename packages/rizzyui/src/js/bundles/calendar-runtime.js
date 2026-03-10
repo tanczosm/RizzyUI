@@ -1,18 +1,3 @@
-import registerRzCalendar from '../lib/components/rzCalendar.js';
-import registerRzCalendarProvider from '../lib/components/rzCalendarProvider.js';
-import registerRzDateEdit from '../lib/components/rzDateEdit.js';
-import { require } from '../runtime/rizzyRequire.js';
-
-let isRegistered = false;
-
-export function register(Alpine) {
-    if (isRegistered) {
-        return;
-    }
-
-    registerRzCalendar(Alpine, require);
-    registerRzCalendarProvider(Alpine);
-    registerRzDateEdit(Alpine, require);
-
-    isRegistered = true;
-}
+export { default as rzCalendar } from '../lib/components/rzCalendar.js';
+export { default as rzCalendarProvider } from '../lib/components/rzCalendarProvider.js';
+export { default as rzDateEdit } from '../lib/components/rzDateEdit.js';

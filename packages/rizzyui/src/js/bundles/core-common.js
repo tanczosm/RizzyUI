@@ -1,41 +1,15 @@
-import registerAccordionItem from '../lib/components/accordionItem.js';
-import registerRzAccordion from '../lib/components/rzAccordion.js';
-import registerRzAlert from '../lib/components/rzAlert.js';
-import registerRzAspectRatio from '../lib/components/rzAspectRatio.js';
-import registerRzBackToTop from '../lib/components/rzBackToTop.js';
-import registerRzClipboard from '../lib/components/rzClipboard.js';
-import registerRzCollapsible from '../lib/components/rzCollapsible.js';
-import registerRzDarkModeToggle from '../lib/components/rzDarkModeToggle.js';
-import registerRzHeading from '../lib/components/rzHeading.js';
-import registerRzIndicator from '../lib/components/rzIndicator.js';
-import registerRzInputGroupAddon from '../lib/components/rzInputGroupAddon.js';
-import registerRzPrependInput from '../lib/components/rzPrependInput.js';
-import registerRzProgress from '../lib/components/rzProgress.js';
-import registerRzTabs from '../lib/components/rzTabs.js';
-import registerRzToggle from '../lib/components/rzToggle.js';
-
-let isRegistered = false;
-
-export function register(Alpine) {
-    if (isRegistered) {
-        return;
-    }
-
-    registerAccordionItem(Alpine);
-    registerRzAccordion(Alpine);
-    registerRzAlert(Alpine);
-    registerRzAspectRatio(Alpine);
-    registerRzBackToTop(Alpine);
-    registerRzClipboard(Alpine);
-    registerRzCollapsible(Alpine);
-    registerRzDarkModeToggle(Alpine);
-    registerRzHeading(Alpine);
-    registerRzIndicator(Alpine);
-    registerRzInputGroupAddon(Alpine);
-    registerRzPrependInput(Alpine);
-    registerRzProgress(Alpine);
-    registerRzTabs(Alpine);
-    registerRzToggle(Alpine);
-
-    isRegistered = true;
-}
+export { default as accordionItem } from '../lib/components/accordionItem.js';
+export { default as rzAccordion } from '../lib/components/rzAccordion.js';
+export { default as rzAlert } from '../lib/components/rzAlert.js';
+export { default as rzAspectRatio } from '../lib/components/rzAspectRatio.js';
+export { default as rzBackToTop } from '../lib/components/rzBackToTop.js';
+export { default as rzClipboard } from '../lib/components/rzClipboard.js';
+export { default as rzCollapsible } from '../lib/components/rzCollapsible.js';
+export { default as rzDarkModeToggle } from '../lib/components/rzDarkModeToggle.js';
+export { default as rzHeading } from '../lib/components/rzHeading.js';
+export { default as rzIndicator } from '../lib/components/rzIndicator.js';
+export { default as rzInputGroupAddon } from '../lib/components/rzInputGroupAddon.js';
+export { default as rzPrependInput } from '../lib/components/rzPrependInput.js';
+export { default as rzProgress } from '../lib/components/rzProgress.js';
+export { default as rzTabs } from '../lib/components/rzTabs.js';
+export { default as rzToggle } from '../lib/components/rzToggle.js';
