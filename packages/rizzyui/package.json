@@ -3,14 +3,14 @@
   "version": "0.6.2",
   "description": "Client library for Asp.net RizzyUI",
   "main": "dist/js/rizzyui.js",
-  "module": "dist/js/rizzyui.es.js",
+  "module": "dist/js/rizzyui.js",
   "exports": {
     ".": {
-      "import": "./dist/js/rizzyui.es.js",
+      "import": "./dist/js/rizzyui.js",
       "require": "./dist/js/rizzyui.js"
     },
     "./csp": {
-      "import": "./dist/js/rizzyui-csp.es.js",
+      "import": "./dist/js/rizzyui-csp.js",
       "require": "./dist/js/rizzyui-csp.js"
     },
     "./antiforgerySnippet": {

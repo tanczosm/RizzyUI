@@ -1,6 +1,4 @@
-import { require } from '../components.js';
-
-export default function (Alpine) {
+export default function (Alpine, require) {
     Alpine.data('rzSlider', () => ({
         min: 0,
         max: 100,

@@ -1,7 +1,6 @@
-
 /**
- * @file RizzyUI Standard Entry Point
- * @module rizzyui
+ * RizzyUI default entrypoint.
+ * Intentionally shell-only: no eager component registration.
  */
 import Alpine from 'alpinejs';
 import { bootstrapRizzyUI } from './lib/bootstrap.js';
