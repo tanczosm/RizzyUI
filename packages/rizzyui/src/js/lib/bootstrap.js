@@ -19,29 +19,6 @@ import { require } from '../runtime/rizzyRequire.js';
 
 let cachedRizzyUI;
 
-function registerHtmxBundlePreloadHandlers(Alpine) {
-    if (typeof document === 'undefined') {
-        return;
-    }
-
-    const reinitializeTarget = async event => {
-        const target = event?.detail?.target;
-        if (!target || typeof target.querySelectorAll !== 'function') {
-            return;
-        }
-
-        await preloadBundlesForDocument(Alpine, target);
-        Alpine.destroyTree(target);
-        Alpine.initTree(target);
-    };
-
-    document.addEventListener('htmx:afterSwap', event => {
-        reinitializeTarget(event).catch(error => {
-            console.error('[RizzyUI] Failed to preload bundles for HTMX swap target.', error);
-        });
-    });
-}
-
 export function bootstrapRizzyUI(Alpine) {
     if (cachedRizzyUI) {
         return cachedRizzyUI;
@@ -56,8 +33,6 @@ export function bootstrapRizzyUI(Alpine) {
         document.addEventListener('alpine:init', () => {
             registerStores(Alpine);
         }, { once: true });
-
-        registerHtmxBundlePreloadHandlers(Alpine);
     }
 
     registerAsyncBundleComponents(Alpine);
