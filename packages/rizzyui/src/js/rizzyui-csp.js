@@ -1,8 +1,3 @@
-
-/**
- * @file RizzyUI CSP-Compliant Entry Point
- * @module rizzyui-csp
- */
 import Alpine from '@alpinejs/csp';
 import { bootstrapRizzyUI } from './lib/bootstrap.js';
 

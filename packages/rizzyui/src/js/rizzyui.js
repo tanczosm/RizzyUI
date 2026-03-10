@@ -1,8 +1,3 @@
-
-/**
- * @file RizzyUI Standard Entry Point
- * @module rizzyui
- */
 import Alpine from 'alpinejs';
 import { bootstrapRizzyUI } from './lib/bootstrap.js';
 

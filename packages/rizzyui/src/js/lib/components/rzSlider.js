@@ -1,4 +1,4 @@
-import { require } from '../components.js';
+import { require } from '../../runtime/rizzyRequire.js';
 
 export default function (Alpine) {
     Alpine.data('rzSlider', () => ({
