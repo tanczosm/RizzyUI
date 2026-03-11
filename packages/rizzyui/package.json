@@ -34,7 +34,8 @@
     "build:copy": "node ./build/copy-dist.mjs",
     "dev": "vite",
     "preview": "vite preview --outDir dist",
-    "analyze": "vite build"
+    "analyze": "vite build",
+    "clean": "node ./build/clean-generated.mjs"
   },
   "repository": {
     "type": "git",
