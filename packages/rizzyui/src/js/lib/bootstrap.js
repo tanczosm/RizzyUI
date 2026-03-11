@@ -15,6 +15,7 @@ import {
     loadComponentDefinition
 } from '../runtime/asyncBundleRegistrar.js';
 import { require } from '../runtime/rizzyRequire.js';
+import { registerAsyncComponent } from '../runtime/asyncComponentRegistrar.js';
 
 let cachedRizzyUI;
 
@@ -57,6 +58,7 @@ export function bootstrapRizzyUI(Alpine) {
         ready,
         theme: themeController,
         loadComponent: componentName => loadComponentDefinition(Alpine, componentName),
+        registerAsyncComponent,
         ensureValidation: async () => {
             validationInstance = await initializeValidation();
             return validationInstance;
