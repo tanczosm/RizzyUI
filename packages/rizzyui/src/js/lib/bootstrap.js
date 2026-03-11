@@ -43,20 +43,10 @@ export function bootstrapRizzyUI(Alpine) {
         validationInstance = validation;
     });
 
-    const ready = (async () => {
-        if (typeof window !== 'undefined') {
-            themeController.init();
-
-            window.Alpine = Alpine;
-            window.Rizzy = { ...(window.Rizzy || {}), ...cachedRizzyUI };
-
-            document.dispatchEvent(new CustomEvent('rz:init', {
-                detail: { Rizzy: window.Rizzy },
-            }));
-        }
-
-        return cachedRizzyUI;
-    })();
+    let resolveReady;
+    const ready = new Promise(resolve => {
+        resolveReady = resolve;
+    });
 
     cachedRizzyUI = {
         Alpine,
@@ -75,6 +65,19 @@ export function bootstrapRizzyUI(Alpine) {
             return validationInstance;
         },
     };
+
+    if (typeof window !== 'undefined') {
+        themeController.init();
+
+        window.Alpine = Alpine;
+        window.Rizzy = { ...(window.Rizzy || {}), ...cachedRizzyUI };
+
+        document.dispatchEvent(new CustomEvent('rz:init', {
+            detail: { Rizzy: window.Rizzy },
+        }));
+    }
+
+    resolveReady(cachedRizzyUI);
 
     return cachedRizzyUI;
 }
