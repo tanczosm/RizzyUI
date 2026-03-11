@@ -12,8 +12,7 @@ import { themeController } from './theme.js';
 import { registerStores } from './stores.js';
 import {
     registerAsyncBundleComponents,
-    loadComponentDefinition,
-    preloadBundlesForDocument,
+    loadComponentDefinition
 } from '../runtime/asyncBundleRegistrar.js';
 import { require } from '../runtime/rizzyRequire.js';
 
@@ -45,10 +44,6 @@ export function bootstrapRizzyUI(Alpine) {
     });
 
     const ready = (async () => {
-        if (typeof document !== 'undefined') {
-            await preloadBundlesForDocument(Alpine, document);
-        }
-
         if (typeof window !== 'undefined') {
             themeController.init();
 
