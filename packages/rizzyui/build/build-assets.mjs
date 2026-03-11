@@ -6,6 +6,7 @@ async function buildAssets() {
     logStep('Copying package assets into dist...');
     await copyFileOrDir(path.join(srcJsRoot, 'lib'), path.join(distJsRoot, 'lib'));
     await copyFileOrDir(path.join(srcCssRoot, 'rizzyui-theme.css'), path.join(distCssRoot, 'rizzyui-theme.css'));
+    await copyFileOrDir(path.join(srcCssRoot, 'rizzyui-plugin-dist.css'), path.join(distCssRoot, 'rizzyui-plugin.css'));
     await copyFileOrDir(path.join(srcJsRoot, 'antiforgerySnippet.js'), path.join(distJsRoot, 'antiforgerySnippet.js'));
 }
 
