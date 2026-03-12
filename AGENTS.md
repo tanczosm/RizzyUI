@@ -27,7 +27,6 @@
    * Never emit full `TItem` instances or server object graphs in browser event payloads.
    * For table-like stateful primitives, emit granular events and a table-level aggregate state event when useful (for example `rz:table:on-state-change`).
 
-
    * **Every** new component must have a corresponding documentation page in `src/RizzyUI.Docs/Components/Pages/Components/`.
    * **Every** modified component must have its documentation page updated to reflect API, parameter, or behavior changes.
    * **Every** new component must be added to the navigation menu in `src/RizzyUI.Docs/Components/Layout/ComponentList.razor`.
@@ -52,13 +51,18 @@ The main Razor Class Library (RCL) containing all UI components and logic.
 
 ### `packages/rizzyui` (Client Assets)
 
-The NPM package responsible for building the CSS (Tailwind) and JavaScript (Alpine.js) bundles distributed with the library.
+The NPM package responsible for building the CSS (Tailwind) and JavaScript bundles distributed with the library.
 
-* **`src/js/lib/components/`**: Individual Alpine.js component definitions (e.g., `rzAccordion.js`, `rzTabs.js`). These map to the `x-data` attributes used in Razor components.
-* **`src/js/rizzyui.js`**: The main entry point that bootstraps Alpine.js and registers components.
+* **`src/js/lib/components/`**: Individual Alpine component factories. Each file usually maps to a single `x-data` name.
+* **`src/js/bundles/`**: Bundle entry modules that re-export owned Alpine components as a feature cluster.
+* **`src/js/runtime/componentBundleManifest.js`**: Canonical Alpine component-to-bundle ownership map.
+* **`src/js/runtime/bundleLoaderRegistry.js`**: Dynamic import registry for bundle loading.
+* **`src/js/runtime/asyncBundleRegistrar.js`**: Async Alpine integration that resolves a component name to its owning bundle.
+* **`src/js/rizzyui.js`**: Standard shell runtime entrypoint.
+* **`src/js/rizzyui-csp.js`**: CSP-safe shell runtime entrypoint.
 * **`src/css/`**: Tailwind CSS source files.
 
-** DO NOT ** directly alter files in `packages/rizzyui/dist` and `src/RizzyUI/wwwroot` as files from those directory are build assets from running `npm run build` in `packages/rizzyui`
+**Do not directly alter files in `packages/rizzyui/dist` or `src/RizzyUI/wwwroot`.** Those are build outputs produced from the `packages/rizzyui` source tree.
 
 ### `src/RizzyUI.Docs` (Documentation)
 
@@ -123,7 +127,7 @@ When the user requests code, wrap each file in a single **`output` block** so au
   </file>
 </files>
 ```
-````
+`````
 
 * Never nest `<files>` elements.
 * Always close every `<file>` tag.
@@ -414,7 +418,7 @@ This file MUST contain exactly these three types:
 
 **Example: `Styling/TableHeaderCellStyles.cs`**
 
-````csharp
+```csharp
 using TailwindVariants.NET;
 
 namespace RizzyUI;
@@ -446,7 +450,8 @@ public static class TableHeaderCellStyles
             [c => ((IHasTableHeaderCellStylingProperties)c).Sortable] = new Variant<bool, TableHeaderCellSlots> { ... }
         }
     );
-}```
+}
+```
 
 **3. Update the Component (`.razor.cs`):**
 The component must then inherit from `RzComponent<{ComponentName}Slots>` and implement the styling interface.
@@ -457,7 +462,7 @@ public partial class TableHeaderCell<TItem> : RzComponent<TableHeaderCellSlots>,
     // ... implementation ...
     protected override TvDescriptor<RzComponent<TableHeaderCellSlots>, TableHeaderCellSlots> GetDescriptor() => Theme.TableHeaderCell;
 }
-````
+```
 
 ---
 
@@ -611,7 +616,7 @@ RizzyUI components that require client-side interactivity leverage Alpine.js. Th
 
 **It is CRITICAL to understand and adhere to these API restrictions when writing Alpine.js code for RizzyUI components.** Since Alpine.js, when built for Content Security Policy (CSP) compliance, can no longer interpret strings as plain JavaScript, it has to parse and construct JavaScript functions from them manually.
 
-Due to this limitation, you **MUST** use `Alpine.data` to register your `x-data` objects, and **MUST** reference properties and methods from it by key only.
+Due to this limitation, RizzyUI Alpine components **must** be referenced by name through `x-data`, must be loadable through the shell + Async Alpine runtime, and **must** expose properties and methods that are referenced by key only.
 
 For example, an inline component like this **will not work** with the CSP build:
 
@@ -623,7 +628,7 @@ For example, an inline component like this **will not work** with the CSP build:
 </div>
 ```
 
-However, breaking out the expressions into external APIs, the following is **valid** with the CSP build:
+Instead, use a named Alpine component and reference methods and properties by key:
 
 ```html
 <!-- Good -->
@@ -634,15 +639,17 @@ However, breaking out the expressions into external APIs, the following is **val
 ```
 
 ```javascript
-Alpine.data('counter', () => ({
-    count: 1,
-    increment() {
-        this.count++
-    },
-}))
+export default function counter() {
+    return {
+        count: 1,
+        increment() {
+            this.count++;
+        },
+    };
+}
 ```
 
-The CSP build supports accessing nested properties (property accessors) using the dot notation:
+The CSP build supports accessing nested properties using dot notation:
 
 ```html
 <!-- This works too -->
@@ -653,20 +660,23 @@ The CSP build supports accessing nested properties (property accessors) using th
 ```
 
 ```javascript
-Alpine.data('counter', () => ({
-    foo: {
-        count: 1,
-        increment() {
-            this.count++
+export default function counter() {
+    return {
+        foo: {
+            count: 1,
+            increment() {
+                this.count++;
+            },
         },
-    },
-}))
+    };
+}
 ```
 
 **Key Takeaways for LLMs:**
 
-* **Always use `Alpine.data`** for `x-data` definitions. Never inline `x-data` objects.
-* **Reference properties and methods by key only** (e.g., `increment`, `count`, `foo.increment`). Avoid complex inline expressions like `count++`, `isActive = !isActive`, or `myFunction(param1, param2)`. Instead, encapsulate such logic within methods defined in your `Alpine.data` object.
+* Never inline `x-data` objects in RizzyUI components.
+* Always reference methods and properties by key only (e.g., `increment`, `count`, `foo.increment`).
+* Avoid complex inline expressions like `count++`, `isActive = !isActive`, or `myFunction(param1, param2)`. Encapsulate such logic within methods on the Alpine component object.
 * Dot notation for nested properties is allowed.
 
 ### 10.2 Alpine Child-Container Convention (in `.razor` file)
@@ -677,9 +687,9 @@ If a RizzyUI component uses Alpine.js, its root `<HtmlElement>` in the `.razor` 
 <HtmlElement Element="@EffectiveElement" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()">
     <div data-alpine-root="@Id" @* Crucial: Must match the Blazor component's @Id *@
          x-data="rzFancyThing"   @* Alpine component name, e.g., 'rzComponentName' *@
-         x-load="@LoadStrategy"   @* Shared RzComponent parameter (default: "eager") *@
-         data-assets="@_assets"   @* Serialized JSON string of asset URLs for this component *@
-         data-nonce="@Nonce">     @* CSP nonce for inline scripts/styles loaded by this component *@
+         x-load="@LoadStrategy"  @* Shared RzComponent parameter (default: "eager") *@
+         data-assets="@_assets"  @* Serialized JSON string of asset URLs for this component *@
+         data-nonce="@Nonce">    @* CSP nonce for inline scripts/styles loaded by this component *@
         @* Alpine-interactive content, x-ref, x-on:, :class, etc. goes here *@
     </div>
 </HtmlElement>
@@ -737,116 +747,146 @@ Components **do not** hardcode asset URLs. Instead, they declare their dependenc
      }
      ```
 
-### 10.4 Alpine Component Definition (Individual JavaScript File)
+### 10.4 Alpine component definition (individual JavaScript file)
 
-* Each new Alpine component (e.g., `rzFancyThing`) MUST have its logic defined in a **new, separate JavaScript file**.
-* Location: `packages/rizzyui/src/js/lib/components/rzFancyThing.js` (replace `rzFancyThing` with the actual component name).
-* This file MUST export a default function.
+Each interactive RizzyUI component written in Alpine.js **must** live in its own file under
 
-  * The first argument to this function will always be the `Alpine` instance.
-  * If the component needs to dynamically load assets (using the `data-assets` attribute), the function should accept `require` as a second argument. This `require` is the `rizzyRequire` utility provided by `components.js`.
-* Inside this exported function, the Alpine component is defined using `Alpine.data('rzFancyThing', () => ({ /* component logic */ }));`. The name used here (e.g., `'rzFancyThing'`) MUST match the `x-data` attribute in the Razor markup.
-* The `init()` method within the Alpine data object is typically responsible for:
-
-  1. Retrieving `assetsToLoad` by parsing `this.$el.dataset.assets`.
-  2. Retrieving `nonce` from `this.$el.dataset.nonce`.
-  3. If `assetsToLoad` is not empty and the `require` function was passed in, call `require(assetsToLoad, { success: callback, error: errCallback }, nonce)`.
-  4. Place any Alpine initialization logic that *depends* on these external assets (e.g., initializing a third-party library like Flatpickr or Highlight.js) inside the `success` callback of `require`.
-  5. Other initialization logic (e.g., setting up internal state, watchers) can be placed directly in `init()` or in a separate method called from `init()` (either before or after `require`, or within its callbacks, as appropriate).
-
-**Example: `packages/rizzyui/src/js/lib/components/rzFancyThing.js`**
-
-```javascript
-// This component demonstrates conditional asset loading.
-// If data-assets is empty or 'require' is not provided, it proceeds without loading.
-export default function(Alpine, require) { // 'require' is optional here
-    Alpine.data('rzFancyThing', () => ({
-        someProperty: 'initialValue',
-        assetsLoaded: false,
-
-        init() {
-            const assetsToLoad = JSON.parse(this.$el.dataset.assets || '[]');
-            const nonce = this.$el.dataset.nonce || '';
-            const self = this; // Retain 'this' context for callbacks
-
-            // Example: Read an initial value from a data attribute
-            this.someProperty = this.$el.dataset.initialFancyValue || 'default fancy value';
-
-            if (assetsToLoad.length > 0 && typeof require === 'function') {
-                console.log(`rzFancyThing (${this.$el.id}): Attempting to load assets:`, assetsToLoad);
-                require(assetsToLoad, {
-                    success: function() {
-                        console.log(`rzFancyThing (${self.$el.id}): Assets loaded successfully.`);
-                        self.assetsLoaded = true;
-                        // Example: Initialize a library if 'some-library.js' was loaded
-                        // if (window.SomeLibrary) {
-                        //     self.libraryInstance = new window.SomeLibrary(self.$el.querySelector('.target-for-lib'));
-                        // }
-                        self.setupInteractivity(); // Call main logic after assets
-                    },
-                    error: function(err) {
-                        console.error(`rzFancyThing (${self.$el.id}): Failed to load assets.`, err);
-                        // Decide if setupInteractivity should still run or if it's critical
-                        self.setupInteractivity(); // Or handle error state
-                    }
-                }, nonce);
-            } else {
-                // No assets to load, or 'require' function not available/needed by this component.
-                // Proceed with non-asset-dependent setup.
-                console.log(`rzFancyThing (${this.$el.id}): No assets to load or require not provided.`);
-                self.setupInteractivity();
-            }
-        },
-
-        setupInteractivity() {
-            // Main Alpine logic that runs (potentially after assets are loaded)
-            console.log(`rzFancyThing (${this.$el.id}): Setting up interactivity. Current someProperty:`, this.someProperty);
-            
-            // Example: Watch for changes to 'someProperty'
-            // this.$watch('someProperty', (value) => {
-            //    console.log(`rzFancyThing (${this.$el.id}): someProperty changed to:`, value);
-            // });
-        },
-
-        updateFancyProperty(newValue) {
-            this.someProperty = newValue;
-        }
-        // ... other methods and properties for rzFancyThing
-    }));
-}
+```text
+packages/rizzyui/src/js/lib/components/
 ```
 
-### 10.5 Alpine Component Registration (in `packages/rizzyui/src/js/lib/components.js`)
+The filename and exported function **must** match the value of the `x-data` attribute used in your `.razor` file. For example, `rzFancyThing.js` defines the `rzFancyThing` Alpine component.
 
-* The newly created component registration function (e.g., `registerRzFancyThing` which is the default export from `rzFancyThing.js`) MUST be imported into `packages/rizzyui/src/js/lib/components.js`.
-* It must then be called within the `registerComponents(Alpine)` function in `components.js`. Pass the `Alpine` instance. If the component's registration function (e.g., `export default function(Alpine, require)`) expects the `require` utility, pass `rizzyRequire` (which is `loadjs` aliased as `require` in this file) as the second argument.
+Follow these rules when authoring a new JS file:
 
-**Example: Modifying `packages/rizzyui/src/js/lib/components.js`**
+1. **Use ES modules and default exports.** Define your component as:
 
-```javascript
-// packages/rizzyui/src/js/lib/components.js
-import loadjs from "./loadjs/loadjs.js"; // Underlying asset loader
+   ```javascript
+   // packages/rizzyui/src/js/lib/components/rzFancyThing.js
+   export default function rzFancyThing() {
+       return {
+           // component state and methods here
+           init() {
+               // initialization code
+           },
+           // other lifecycle methods and helpers
+       };
+   }
+   ```
 
-// ... other existing component imports ...
-import registerRzAccordion from './components/rzAccordion.js';
-import registerRzFancyThing from './components/rzFancyThing.js'; // <-- NEW IMPORT
+2. **Do not accept `Alpine` or `require` as parameters** on the exported function. Async Alpine loads the component factory directly.
 
-// ... (rizzyRequire function definition using loadjs) ...
-// async function generateBundleId(paths) { ... }
-// function rizzyRequire(paths, callbackFn, nonce) { ... }
+3. **Keep logic CSP-safe.** Avoid inline expression-oriented patterns and expose methods and properties that can be referenced by key.
 
+4. **If third-party assets are required, import the runtime asset loader directly.** For example:
 
-function registerComponents(Alpine) {
-    // ... other existing component registrations ...
-    registerRzAccordion(Alpine); // Example of a component not needing 'require'
-    
-    // Register the new component.
-    // Pass 'rizzyRequire' if its definition function expects it.
-    registerRzFancyThing(Alpine, rizzyRequire); // <-- NEW REGISTRATION
-}
+   ```javascript
+   import { require } from '../../runtime/rizzyRequire.js';
 
-export { registerComponents, rizzyRequire as require };
+   export default function rzChart() {
+       return {
+           init() {
+               const assetsToLoad = JSON.parse(this.$el.dataset.assets || '[]');
+               const nonce = this.$el.dataset.nonce || '';
+
+               if (assetsToLoad.length > 0) {
+                   require(assetsToLoad, {
+                       success: () => this.initializeChart(),
+                       error: err => console.error('[rzChart] Failed to load assets.', err)
+                   }, nonce);
+                   return;
+               }
+
+               this.initializeChart();
+           },
+           initializeChart() {
+               // chart initialization logic
+           }
+       };
+   }
+   ```
+
+5. Continue to read `data-assets` and `data-nonce` from the component root when you need external assets. These values are supplied by the Blazor component.
+
+### 10.5 Alpine component registration (bundle-based architecture)
+
+The previous `packages/rizzyui/src/js/lib/components.js` file and its `registerComponents()` function are **not** part of the current architecture. Components are now lazily loaded through **bundles** and a **component-to-bundle manifest**.
+
+To register a new component:
+
+1. **Create your component file** as described in §10.4 and ensure the exported factory name matches your `x-data` attribute.
+
+2. **Assign the component to an owning bundle** in `packages/rizzyui/src/js/runtime/componentBundleManifest.js`. This file maps each Alpine component name to a bundle identifier.
+
+   Choose the bundle based on the component’s feature area and weight:
+
+   * **core-common**: lightweight primitives used on most pages
+   * **command-runtime**: command palette and related components
+   * **advanced-input-runtime**: heavier input controls
+   * **calendar-runtime**
+   * **color-runtime**
+   * **content-visual-runtime**
+   * **dialogs-panels-runtime**
+   * **menu-runtime**
+   * **popover-tooltip-runtime**
+   * **docs-runtime**
+   * **effects-runtime**
+
+   If a suitable bundle does not exist, create a new bundle file under `packages/rizzyui/src/js/bundles/` and add it to `bundleLoaderRegistry.js`.
+
+3. **Export the component from its bundle file.** For example, if your component belongs to `core-common`:
+
+   ```javascript
+   export { default as rzFancyThing } from '../lib/components/rzFancyThing.js';
+   // existing exports remain unchanged
+   ```
+
+4. **Do not modify `rizzyui.js` or `rizzyui-csp.js`** to register the component directly. These shell entrypoints delegate component loading to the async bundle runtime.
+
+5. **Do not reintroduce eager global registration.** Bundle ownership plus Async Alpine loading is the required architecture.
+
+6. **Exclude `RzEmpty` from the manifest** if it has no meaningful client-side behavior. `RzEmpty` remains in the component library, but it should not participate in the active JavaScript bundle graph unless there is a documented reason.
+
+### 10.6 Async Alpine child-container loading rule
+
+If a RizzyUI component uses Alpine.js, the Alpine root element must follow the child-container convention in §10.2. In addition, the following loading rule is mandatory:
+
+* `x-load="@LoadStrategy"` must appear on the same element as `x-data`.
+* `LoadStrategy` is inherited from `RzComponent`.
+* The default value is `"eager"`.
+* Emit `x-load` only when `LoadStrategy` is non-empty.
+* Do not rely on bootstrap-time preloading for correctness. Async Alpine is the source of truth for component activation.
+
+Example:
+
+```razor
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()">
+    <div data-alpine-root="@Id"
+         x-data="rzFancyThing"
+         x-load="@LoadStrategy"
+         data-assets="@_assets"
+         data-nonce="@Nonce">
+        @ChildContent
+    </div>
+</HtmlElement>
 ```
+
+For `RzAsChildComponent`-based components, ensure the equivalent attribute emission path also includes `x-load` when `LoadStrategy` is non-empty.
+
+### 10.7 Summary of the new registration flow
+
+When a Razor component renders with `x-data="rzFancyThing"` and `x-load`, the shell runtime in `rizzyui.js` or `rizzyui-csp.js` observes the `x-data` attribute. Async Alpine requests the factory for `rzFancyThing`. The async bundle registrar looks up `rzFancyThing` in `componentBundleManifest.js`, identifies its owning bundle, dynamically imports that bundle through `bundleLoaderRegistry.js`, and resolves the exported factory. The factory is then used by Async Alpine to initialize the requested component. Once loaded, that bundle is cached and reused.
+
+This architecture has several important consequences:
+
+* component loading is demand-driven
+* one bundle can own multiple Alpine components
+* bundles load once and are cached
+* the standard and CSP entrypoints share the same async bundle graph
+* large features stay out of the shell runtime by default
 
 ---
 
@@ -907,6 +947,7 @@ When unit tests are specifically requested for a new or modified component, they
 
        * Assert the presence of the Alpine child-container (`div[data-alpine-root='@Id']`).
        * Assert `x-data` attribute matches the component's Alpine module name.
+       * Assert `x-load` is present when `LoadStrategy` is non-empty.
        * Assert `data-assets` attribute is present and contains the JSON serialized URLs resolved from the default `ComponentAssetKeys`.
        * Assert `data-nonce` attribute is present.
 
@@ -1068,70 +1109,81 @@ Every documentation page **MUST** use the following Razor skeleton exactly. You 
 
 ### 12.2 Top-of-page Content
 
-*   **H1 then “One-Paragraph Contract”:**
-    *   Immediately after the H1, include a short paragraph covering:
-        *   What the component is for (use-cases).
-        *   What the “suite” is composed of (subcomponents).
-        *   What provides interactivity (Alpine, not Blazor runtime interactivity).
-        *   Any notable integration hooks (stable IDs, HTMX targeting, events).
-*   **“Under the Hood” Alert:**
-    *   Add an info alert near the top explaining implementation details:
-        *   Alpine `x-data="<name>"`.
-        *   Teleport strategy (e.g., `x-teleport="body"`).
-        *   Focus trapping / escape / backdrop click behaviors.
-    *   Keep it practical: mention the consequence (e.g., avoids z-index issues, enables predictable DOM placement).
+* **H1 then “One-Paragraph Contract”:**
+
+  * Immediately after the H1, include a short paragraph covering:
+
+    * What the component is for (use-cases).
+    * What the “suite” is composed of (subcomponents).
+    * What provides interactivity (Alpine, not Blazor runtime interactivity).
+    * Any notable integration hooks (stable IDs, HTMX targeting, events).
+* **“Under the Hood” Alert:**
+
+  * Add an info alert near the top explaining implementation details:
+
+    * Alpine `x-data="<name>"`.
+    * Teleport strategy (e.g., `x-teleport="body"`).
+    * Focus trapping / escape / backdrop click behaviors.
+  * Keep it practical: mention the consequence (e.g., avoids z-index issues, enables predictable DOM placement).
 
 ### 12.3 Section Structure (Repeatable Pattern)
 
 Every H2 section should follow this mini-template:
 
-1.  **H2 + Explanation:**
-    *   `<RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="…" class="scroll-mt-20">`
-    *   **Note:** Always include `class="scroll-mt-20"` on headings for scroll positioning.
-    *   Short paragraph naming the scenario, stating what the example demonstrates, and mentioning relevant parameters.
-2.  **Live Demo Region:**
-    *   Provide a centered demo container (e.g., `mx-auto p-8 mb-5 flex justify-center items-center min-h-40`).
-    *   Demos should be minimal but real.
-3.  **Matching Code Block:**
-    *   Immediately follow each demo with an `RzCodeViewer` containing the exact markup used.
-    *   If multiple snippets exist, add `ViewerTitle` (e.g., “Blazor Component”, “Controller Action”).
-    *   **Copy/Paste Safe:** Show all required attributes (`AsChild`, `hx-*`, ids/targets).
-4.  **Progressive Complexity:**
-    *   Order sections from simplest to most integrated: Basic Usage → Appearance Customization → Integration (HTMX) → Advanced Flows.
+1. **H2 + Explanation:**
+
+   * `<RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="…" class="scroll-mt-20">`
+   * **Note:** Always include `class="scroll-mt-20"` on headings for scroll positioning.
+   * Short paragraph naming the scenario, stating what the example demonstrates, and mentioning relevant parameters.
+2. **Live Demo Region:**
+
+   * Provide a centered demo container (e.g., `mx-auto p-8 mb-5 flex justify-center items-center min-h-40`).
+   * Demos should be minimal but real.
+3. **Matching Code Block:**
+
+   * Immediately follow each demo with an `RzCodeViewer` containing the exact markup used.
+   * If multiple snippets exist, add `ViewerTitle` (e.g., “Blazor Component”, “Controller Action”).
+   * **Copy/Paste Safe:** Show all required attributes (`AsChild`, `hx-*`, ids/targets).
+4. **Progressive Complexity:**
+
+   * Order sections from simplest to most integrated: Basic Usage → Appearance Customization → Integration (HTMX) → Advanced Flows.
 
 ### 12.4 Environment Limitations
 
-*   **Explicit Limitation Alerts:** If an example cannot work in the docs environment (e.g., requires a real backend endpoint not present in the static docs site), add a warning alert immediately before the demo.
-*   The alert must state what will *not* happen, what *would* happen in a real app, and what the developer should copy.
+* **Explicit Limitation Alerts:** If an example cannot work in the docs environment (e.g., requires a real backend endpoint not present in the static docs site), add a warning alert immediately before the demo.
+* The alert must state what will *not* happen, what *would* happen in a real app, and what the developer should copy.
 
 ### 12.5 Parameter and API Reference
 
-*   **Parameters Section (Mandatory):**
-    *   Include a “Component Parameters” H2 near the bottom.
-    *   Break down by component type (e.g., `RzDialog`, `DialogContent`).
-    *   Tables must include: **Property, Description, Type, Default**.
-    *   Clearly mark required values (“Required” pill).
-*   **Alpine API Section:**
-    *   If the component exposes/relies on an Alpine API, include a table with: **Method, Parameters, Description**.
-*   **Event Names & Interoperability:**
-    *   Document event names, default values, and how HTMX/server code triggers them.
+* **Parameters Section (Mandatory):**
+
+  * Include a “Component Parameters” H2 near the bottom.
+  * Break down by component type (e.g., `RzDialog`, `DialogContent`).
+  * Tables must include: **Property, Description, Type, Default**.
+  * Clearly mark required values (“Required” pill).
+* **Alpine API Section:**
+
+  * If the component exposes/relies on an Alpine API, include a table with: **Method, Parameters, Description**.
+* **Event Names & Interoperability:**
+
+  * Document event names, default values, and how HTMX/server code triggers them.
 
 ### 12.6 Example Quality Standards
 
-*   **Happy Path:** Basic examples must show the trigger, content surface, close mechanism, and exit strategies (Escape, backdrop).
-*   **Customization:** Show at least one example changing a meaningful parameter (size, visibility).
-*   **Integration:** When showing HTMX patterns, include both client markup (`hx-get`, `hx-target`) and server endpoint/controller samples.
+* **Happy Path:** Basic examples must show the trigger, content surface, close mechanism, and exit strategies (Escape, backdrop).
+* **Customization:** Show at least one example changing a meaningful parameter (size, visibility).
+* **Integration:** When showing HTMX patterns, include both client markup (`hx-get`, `hx-target`) and server endpoint/controller samples.
 
 ### 12.7 Consistency
 
-*   **Terminology:** Pick one term (Dialog vs Modal) and explain the relationship.
-*   **Naming:** Component/parameter names in inline `<code>` must match API casing exactly.
-*   **Quick Reference:** Set `QuickReferenceTitle` on headers. Keep titles short and task-oriented.
+* **Terminology:** Pick one term (Dialog vs Modal) and explain the relationship.
+* **Naming:** Component/parameter names in inline `<code>` must match API casing exactly.
+* **Quick Reference:** Set `QuickReferenceTitle` on headers. Keep titles short and task-oriented.
 
 ### 12.8 Updating ComponentList.razor
 
-*   Any new component must be added to the side navigation in `src/RizzyUI.Docs/Components/Layout/ComponentList.razor`.
-*   This ensures the new documentation page is discoverable.
+* Any new component must be added to the side navigation in `src/RizzyUI.Docs/Components/Layout/ComponentList.razor`.
+* This ensures the new documentation page is discoverable.
 
 ---
 
@@ -1216,23 +1268,49 @@ Please add the following default asset URLs to the `PostConfigure` action in `sr
 | ------------------------ | ----------------------------------------------------------------- |
 | `"FancyThingCoreScript"` | `"https://cdn.jsdelivr.net/npm/fancylib@1.2.3/dist/fancy.min.js"` |
 
-**JavaScript Integration (if new Alpine component `rzFancyThing` was created):**
+**JavaScript Integration (if a new Alpine component `rzFancyThing` was created):**
 
-1. **Modify `packages/rizzyui/src/js/lib/components.js`**:
+1. **Create the component file** in:
 
-   * Add an import statement for your new component module at the top of the file:
+   ```text
+   packages/rizzyui/src/js/lib/components/rzFancyThing.js
+   ```
 
-     ```javascript
-     import registerRzFancyThing from './components/rzFancyThing.js'; 
-     ```
-   * Call the imported registration function within the `registerComponents(Alpine)` function:
+2. **Add the component to the owning bundle manifest** in:
 
-     ```javascript
-     function registerComponents(Alpine) {
-         // ...
-         registerRzFancyThing(Alpine, rizzyRequire); 
-     }
-     ```
+   ```text
+   packages/rizzyui/src/js/runtime/componentBundleManifest.js
+   ```
+
+   Example:
+
+   ```javascript
+   rzFancyThing: 'core-common',
+   ```
+
+3. **Export the component from the owning bundle file**, for example:
+
+   ```text
+   packages/rizzyui/src/js/bundles/core-common.js
+   ```
+
+   ```javascript
+   export { default as rzFancyThing } from '../lib/components/rzFancyThing.js';
+   ```
+
+4. **If a new bundle is introduced**, also add it to:
+
+   ```text
+   packages/rizzyui/src/js/runtime/bundleLoaderRegistry.js
+   ```
+
+   Example:
+
+   ```javascript
+   'my-new-runtime': () => import('../bundles/my-new-runtime.js'),
+   ```
+
+5. **Do not add new components to `rizzyui.js`, `rizzyui-csp.js`, or any legacy `components.js` registry.** The shell runtime plus Async Alpine manifest-driven loading is the required architecture.
 
 **Documentation Navigation (if new component):**
 
@@ -1266,11 +1344,18 @@ Please add the following default asset URLs to the `PostConfigure` action in `sr
   * Define the non-generic `Slots` class.
   * Define the `static class` containing the `DefaultDescriptor`.
   * Variant expressions in the descriptor **MUST** cast to the `IHas...StylingProperties` interface.
-* Alpine.js: Strictly adhere to API restrictions by always using `Alpine.data` and referencing properties/methods by key only.
+* Alpine.js: Strictly adhere to API restrictions by using named `x-data` components, key-based property and method references, and the bundle-based Async Alpine architecture.
 * Documentation: Ensure the generated documentation page (`Info.razor`) strictly follows the layout, structure, and content rules in §12.
 * Include unit tests *only* when specifically requested (§11).
 * Adhere to all specified conventions and avoid manual concatenation of class strings.
 * Do not include comments in Razor markup or using statements. Any comments in code blocks should be production-ready.
+* If Alpine is used, ensure the Alpine root element includes `x-data` and `x-load="@LoadStrategy"` on the same element.
+* Emit `x-load` only when `LoadStrategy` is non-empty.
+* Ensure the component’s Alpine name is added to `componentBundleManifest.js`.
+* Ensure the component is exported from exactly one bundle file in `packages/rizzyui/src/js/bundles/`.
+* Do not reintroduce eager global component registration.
+* Do not modify build artifacts in `packages/rizzyui/dist` or `src/RizzyUI/wwwroot`.
+* If the component has no meaningful client-side behavior, prefer no Alpine runtime at all and do not add it to the bundle graph.
 
 **SSR-only enforcement (CRITICAL):**
 
@@ -1278,7 +1363,7 @@ Please add the following default asset URLs to the `PostConfigure` action in `sr
 
 **Agent-only enforcement (CRITICAL):**
 
-* AGENTS ONLY — run `npm install` in any directory containing `packages.json` (and do not skip equivalent Node manifest directories) except if it has a path prefixed with `src/RizzyUI/wwwroot/vendor/`.  
+* AGENTS ONLY — run `npm install` in any directory containing `packages.json` (and do not skip equivalent Node manifest directories) except if it has a path prefixed with `src/RizzyUI/wwwroot/vendor/`.
 
 ---
 
@@ -1324,3 +1409,5 @@ Please add the following default asset URLs to the `PostConfigure` action in `sr
 * **[ ] 24. Build Success:** Does the entire `RizzyUI` solution build without errors?
 * **[ ] 25. Unit Tests:** Do all existing unit tests for the component pass?
 * **[ ] 26. Demo Application:** Visually confirm that the component renders and behaves exactly as it did before the refactor in the `RizzyUI.Docs` application.
+
+```
