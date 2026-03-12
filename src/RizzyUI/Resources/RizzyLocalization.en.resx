@@ -532,4 +532,23 @@
   </data>
   <data name="RzBackToTop.DefaultAriaLabel" xml:space="preserve">
     <value>Back to top</value>
-  </data></root>
+  </data>
+  <data name="RzDataTable.NoResults" xml:space="preserve">
+    <value>No results.</value>
+  </data>
+  <data name="RzDataTable.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="RzDataTable.SearchPlaceholder" xml:space="preserve">
+    <value>Search rows...</value>
+  </data>
+  <data name="RzDataTable.ColumnMenuLabel" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="RzDataTable.SelectAllRows" xml:space="preserve">
+    <value>Select all rows on this page</value>
+  </data>
+  <data name="RzDataTable.SelectRow" xml:space="preserve">
+    <value>Select row</value>
+  </data>
+</root>
