@@ -1,16 +1,10 @@
 @namespace RizzyUI
-@typeparam TItem
 @inherits RzComponent<TableRowSlots>
 
-<CascadingValue Value="this" Name="ParentTableRow" IsFixed="true">
-    <tr id="@Id"
-        @attributes="@AdditionalAttributes"
-        class="@SlotClasses.GetBase()"
-        data-slot="table-row"
-        data-row-key="@ResolvedRowKey"
-        data-selection-mode="@(ParentRzTable?.SelectionMode.ToString().ToKebabCase())"
-        data-state="@(IsSelected ? "selected" : "unselected")"
-        onclick="@(ParentRzTable?.SelectionMode is TableSelectionMode.None ? null : SelectionDispatchScript)">
-        @ChildContent
-    </tr>
-</CascadingValue>
+<HtmlElement Element="@EffectiveElement"
+             id="@Id"
+             @attributes="@AdditionalAttributes"
+             class="@SlotClasses.GetBase()"
+             data-slot="table-row">
+    @ChildContent
+</HtmlElement>

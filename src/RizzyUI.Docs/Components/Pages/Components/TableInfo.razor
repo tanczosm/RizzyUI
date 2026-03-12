@@ -20,8 +20,8 @@
 
             <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Table" class="scroll-mt-20">Table</RzHeading>
             <RzParagraph>
-                <code>RzTable</code> is an SSR-first table composition suite aligned to shadcn/ui table structure.
-                It renders table primitives on the server and emits browser <code>rz:</code> custom events for sort, paging, and selection interactions.
+                <code>RzTable</code> is an SSR-first table composition suite aligned to the shadcn/ui table family.
+                The components focus on semantic HTML table markup and styling primitives.
             </RzParagraph>
 
             <section class="my-8 py-2">
@@ -31,16 +31,6 @@
                         <TableDemo />
                     </div>
                 </RzBrowser>
-            </section>
-
-            <section class="my-8 py-2">
-                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Browser Events" class="scroll-mt-20">Browser Events</RzHeading>
-                <ul>
-                    <li><code>rz:tableheadercell:on-sort-change</code></li>
-                    <li><code>rz:tablepagination:on-page-change</code></li>
-                    <li><code>rz:tablerow:on-selection-change</code></li>
-                    <li><code>rz:table:on-state-change</code></li>
-                </ul>
             </section>
         </MainContent>
     </RzArticle>

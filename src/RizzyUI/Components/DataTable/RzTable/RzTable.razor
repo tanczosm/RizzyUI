@@ -1,14 +1,8 @@
 @namespace RizzyUI
-@typeparam TItem
 @inherits RzComponent<RzTableSlots>
 
 <CascadingValue Value="this" Name="ParentRzTable" IsFixed="true">
-    <HtmlElement Element="div" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()" data-slot="table-container"
-                 data-rz-table-id="@Id"
-                 data-rz-current-page="@CurrentPage"
-                 data-rz-page-size="@PageSize"
-                 data-rz-sort-by="@SortBy"
-                 data-rz-sort-direction="@SortDirection.ToString().ToKebabCase()">
+    <HtmlElement Element="div" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()" data-slot="table-container">
         <table id="@TableId" class="@SlotClasses.GetTable()" data-slot="table">
             @ChildContent
         </table>

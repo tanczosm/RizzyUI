@@ -1,65 +1,6 @@
 @namespace RizzyUI
-@typeparam TItem
 @inherits RzComponent<TablePaginationSlots>
 
-<HtmlElement Element="@EffectiveElement" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()" data-slot="table-pagination" aria-label="@NavigationAriaLabel">
-    @if (EffectiveTotalPages > 1)
-    {
-        <RzPagination AriaLabel="@NavigationAriaLabel" class="@SlotClasses.GetBase()" data-slot="table-pagination-nav">
-            <PaginationList class="@SlotClasses.GetList()" data-slot="@TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.List)">
-                <PaginationItem>
-                    @if (CanGoPrevious)
-                    {
-                        <button id="@($"{Id}-previous")" type="button" class="@SlotClasses.GetLink()" data-slot="@TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.Link)" onclick="@BuildPageChangeScript(EffectiveCurrentPage - 1)">
-                            @PreviousButtonLabel
-                        </button>
-                    }
-                    else
-                    {
-                        <span class="@SlotClasses.GetLinkDisabled()" data-slot="@TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.LinkDisabled)" aria-disabled="true">
-                            @PreviousButtonLabel
-                        </span>
-                    }
-                </PaginationItem>
-
-                @foreach (var link in GetPageLinks())
-                {
-                    <PaginationItem>
-                        @if (link.IsEllipsis)
-                        {
-                            <span class="@SlotClasses.GetEllipsis()" data-slot="@TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.Ellipsis)" aria-hidden="true">…</span>
-                        }
-                        else
-                        {
-                            <button id="@($"{Id}-page-{link.PageNumber}")"
-                                    type="button"
-                                    class="@(link.IsCurrent ? SlotClasses.GetLinkCurrent() : SlotClasses.GetLink())"
-                                    data-slot="@(link.IsCurrent ? TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.LinkCurrent) : TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.Link))"
-                                    aria-label="@($"Go to page {link.PageNumber}")"
-                                    aria-current="@(link.IsCurrent ? "page" : null)"
-                                    disabled="@link.IsCurrent"
-                                    onclick="@BuildPageChangeScript(link.PageNumber)">
-                                @link.Text
-                            </button>
-                        }
-                    </PaginationItem>
-                }
-
-                <PaginationItem>
-                    @if (CanGoNext)
-                    {
-                        <button id="@($"{Id}-next")" type="button" class="@SlotClasses.GetLink()" data-slot="@TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.Link)" onclick="@BuildPageChangeScript(EffectiveCurrentPage + 1)">
-                            @NextButtonLabel
-                        </button>
-                    }
-                    else
-                    {
-                        <span class="@SlotClasses.GetLinkDisabled()" data-slot="@TablePaginationSlotNames.NameOf(TablePaginationSlotTypes.LinkDisabled)" aria-disabled="true">
-                            @NextButtonLabel
-                        </span>
-                    }
-                </PaginationItem>
-            </PaginationList>
-        </RzPagination>
-    }
+<HtmlElement Element="@EffectiveElement" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()" data-slot="table-pagination">
+    @ChildContent
 </HtmlElement>

@@ -4,7 +4,7 @@ using TailwindVariants.NET;
 namespace RizzyUI;
 
 /// <summary>
-/// Represents a caption (<c>caption</c>) for an <see cref="RzTable{TItem}"/>.
+/// Represents a caption (<c>caption</c>) for an <see cref="RzTable"/>.
 /// </summary>
 public partial class TableCaption : RzComponent<TableCaptionSlots>
 {

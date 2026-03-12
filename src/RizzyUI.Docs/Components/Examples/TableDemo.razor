@@ -1,56 +1,48 @@
 @using RizzyUI
 
-<RzTable TItem="OrderRow"
-         Items="@Rows"
-         CurrentPage="1"
-         PageSize="5"
-         TotalItems="@Rows.Count"
-         SortBy="name"
-         SortDirection="SortDirection.Ascending"
-         Hoverable
-         Striped
-         Border
-         Id="orders-demo-table">
-    <TableCaption>Recent orders with sortable columns and SSR-dispatched table events.</TableCaption>
+<RzTable Border Id="orders-demo-table">
+    <TableCaption>Recent orders</TableCaption>
 
     <TableHeader>
         <TableRow>
-            <TableHeaderCell TItem="OrderRow" ColumnKey="name" Sortable="true">Customer</TableHeaderCell>
-            <TableHeaderCell TItem="OrderRow" ColumnKey="status" Sortable="true">Status</TableHeaderCell>
-            <TableHeaderCell TItem="OrderRow" ColumnKey="total" Sortable="true">Total</TableHeaderCell>
+            <TableHeaderCell>Customer</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Total</TableHeaderCell>
         </TableRow>
     </TableHeader>
 
-    <TableBody TItem="OrderRow" Items="@Rows">
-        <RowTemplate Context="row">
-            <TableRow TItem="OrderRow" RowKey="@row.Id">
-                <TableCell TItem="OrderRow">@row.Customer</TableCell>
-                <TableCell TItem="OrderRow">@row.Status</TableCell>
-                <TableCell TItem="OrderRow">@row.Total.ToString("C")</TableCell>
-            </TableRow>
-        </RowTemplate>
+    <TableBody>
+        <TableRow>
+            <TableCell>Ada Lovelace</TableCell>
+            <TableCell>Paid</TableCell>
+            <TableCell>$129.00</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>Grace Hopper</TableCell>
+            <TableCell>Paid</TableCell>
+            <TableCell>$88.49</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>Linus Torvalds</TableCell>
+            <TableCell>Pending</TableCell>
+            <TableCell>$312.15</TableCell>
+        </TableRow>
     </TableBody>
 
     <TableFooter>
         <TableRow>
-            <TableCell TItem="OrderRow" Colspan="3">
-                <div class="flex justify-end p-2">
-                    <TablePagination TItem="OrderRow" MaxVisiblePageLinks="5" />
-                </div>
+            <TableCell Colspan="3">
+                <TablePagination class="justify-end">
+                    <RzPagination>
+                        <PaginationList>
+                            <PaginationItem><PaginationPrevious Href="#" /></PaginationItem>
+                            <PaginationItem><PaginationLink Href="#" IsActive="true">1</PaginationLink></PaginationItem>
+                            <PaginationItem><PaginationLink Href="#">2</PaginationLink></PaginationItem>
+                            <PaginationItem><PaginationNext Href="#" /></PaginationItem>
+                        </PaginationList>
+                    </RzPagination>
+                </TablePagination>
             </TableCell>
         </TableRow>
     </TableFooter>
 </RzTable>
-
-@code {
-    private readonly List<OrderRow> Rows =
-    [
-        new("ord-1001", "Ada Lovelace", "Paid", 129.00m),
-        new("ord-1002", "Grace Hopper", "Paid", 88.49m),
-        new("ord-1003", "Linus Torvalds", "Pending", 312.15m),
-        new("ord-1004", "Margaret Hamilton", "Refunded", 42.00m),
-        new("ord-1005", "Dennis Ritchie", "Paid", 16.75m)
-    ];
-
-    private sealed record OrderRow(string Id, string Customer, string Status, decimal Total);
-}

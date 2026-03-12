@@ -23,21 +23,12 @@ public static class TableRowStyles
     /// The default descriptor for row styling.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<TableRowSlots>, TableRowSlots> DefaultDescriptor = new(
-        @base: "border-b transition-colors data-[state=selected]:bg-muted",
+        @base: "border-b transition-colors",
         variants: new()
         {
-            [c => ((IHasTableRowStylingProperties)c).IsEven] = new Variant<bool, TableRowSlots>
-            {
-                [true] = new() { [s => s.Base] = "bg-secondary/40" },
-                [false] = new() { [s => s.Base] = "bg-background" }
-            },
             [c => ((IHasTableRowStylingProperties)c).IsHoverable] = new Variant<bool, TableRowSlots>
             {
                 [true] = new() { [s => s.Base] = "hover:bg-muted/50" }
-            },
-            [c => ((IHasTableRowStylingProperties)c).IsSelected] = new Variant<bool, TableRowSlots>
-            {
-                [true] = new() { [s => s.Base] = "bg-muted hover:bg-muted" }
             }
         }
     );

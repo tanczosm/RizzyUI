@@ -2,13 +2,11 @@
 
 <PageTitle>RzTable Demo</PageTitle>
 
-<RzHeading Level="HeadingLevel.H1">RzTable SSR Demo</RzHeading>
+<RzHeading Level="HeadingLevel.H1">RzTable Demo</RzHeading>
 <RzParagraph>
-    This demo shows the SSR-first <code>RzTable</code> API without built-in HTMX coupling.
-    Sort, pagination, and selection interactions emit <code>rz:</code> browser events.
+    This demo shows the minimal, SSR-first <code>RzTable</code> markup primitives.
 </RzParagraph>
 
 <div class="my-6 space-y-4">
     <TableDemo />
-    <RzEventViewer EventNames="rz:tableheadercell:on-sort-change,rz:tablepagination:on-page-change,rz:tablerow:on-selection-change,rz:table:on-state-change" />
 </div>

@@ -3,7 +3,7 @@ using TailwindVariants.NET;
 namespace RizzyUI;
 
 /// <summary>
-/// Defines styling properties for an <see cref="RzTable{TItem}"/> component.
+/// Defines styling properties for an <see cref="RzTable"/> component.
 /// </summary>
 public interface IHasTableStylingProperties
 {
@@ -19,7 +19,7 @@ public interface IHasTableStylingProperties
 }
 
 /// <summary>
-/// Defines the slots available for styling in the <see cref="RzTable{TItem}"/> component.
+/// Defines the slots available for styling in the <see cref="RzTable"/> component.
 /// </summary>
 public sealed partial class RzTableSlots : ISlots
 {
@@ -37,7 +37,7 @@ public sealed partial class RzTableSlots : ISlots
 }
 
 /// <summary>
-/// Provides the default styling descriptor for the <see cref="RzTable{TItem}"/> component.
+/// Provides the default styling descriptor for the <see cref="RzTable"/> component.
 /// </summary>
 public static class RzTableStyles
 {
