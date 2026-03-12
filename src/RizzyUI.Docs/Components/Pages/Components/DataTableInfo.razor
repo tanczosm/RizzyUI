@@ -1,0 +1,73 @@
+@page "/components/data-table"
+
+<PageTitle>Data Table</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink Href="/">Docs</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>Data Table</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Data Table">Data Table</RzHeading>
+            <RzParagraph>
+                <code>RzDataTable&lt;TItem&gt;</code> is an SSR-first table component that renders useful fallback markup, then progressively enhances sorting, search,
+                pagination, selection, and column visibility in the browser using TanStack Table and Alpine orchestration.
+            </RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Stable row keys" class="mt-8">Stable row keys</RzHeading>
+            <RzParagraph>
+                <code>RowKey</code> is required. Every row key must be stable across renders because selection, row-click events, and state payloads all use keys,
+                not server object instances.
+            </RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Usage" class="mt-8">Usage</RzHeading>
+            <RzCodeViewer Language="@CodeLanguage.Razor">
+&lt;RzDataTable TItem=&quot;UserRow&quot;
+             Items=&quot;Users&quot;
+             RowKey=&quot;u =&gt; u.Id&quot;
+             Search=&quot;true&quot;
+             SelectionMode=&quot;DataTableSelectionMode.Multiple&quot;&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;name&quot; HeaderText=&quot;Name&quot; Field=&quot;u =&gt; u.Name&quot; Sortable=&quot;true&quot; Searchable=&quot;true&quot; /&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;email&quot; HeaderText=&quot;Email&quot; Field=&quot;u =&gt; u.Email&quot; Searchable=&quot;true&quot; /&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;status&quot; HeaderText=&quot;Status&quot; Field=&quot;u =&gt; u.Status&quot; Sortable=&quot;true&quot;&gt;
+        &lt;ClientTemplate&gt;
+            &lt;span :class=&quot;row.statusClass&quot; x-text=&quot;row.statusLabel&quot;&gt;&lt;/span&gt;
+        &lt;/ClientTemplate&gt;
+    &lt;/DataTableColumn&gt;
+&lt;/RzDataTable&gt;
+            </RzCodeViewer>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Behavior notes" class="mt-8">Behavior notes</RzHeading>
+            <ul>
+                <li>Search is case-insensitive and only includes columns marked <code>Searchable=true</code>.</li>
+                <li>Initial column visibility precedence: <code>InitialColumnVisibility</code> overrides per-column <code>Visible</code> for matching ids.</li>
+                <li><code>Single</code> selection selects by row click; <code>Multiple</code> renders checkboxes with current-page select all.</li>
+                <li>Hidden columns can remain searchable when <code>Searchable=true</code>.</li>
+            </ul>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Events" class="mt-8">Events</RzHeading>
+            <RzParagraph>The component dispatches browser events: <code>rz:datatable:ready</code>, <code>sort-change</code>, <code>page-change</code>, <code>search-change</code>, <code>column-visibility-change</code>, <code>selection-change</code>, <code>row-click</code>, and <code>state-change</code>.</RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Client template limitations" class="mt-8">Client template limitations</RzHeading>
+            <RzParagraph>
+                <code>ClientTemplate</code> is an SSR-emitted template reservoir cloned on the client. It is not a live server <code>RenderFragment&lt;TItem&gt;</code> rendering path.
+                Templates should bind to <code>row</code>, <code>column</code>, and <code>cell</code> keys.
+            </RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="When not to use" class="mt-8">When not to use</RzHeading>
+            <RzParagraph>
+                Avoid <code>RzDataTable</code> for virtualization, server-driven query pipelines, grouping, expandable sub-rows, or per-column filtering in v1.
+            </RzParagraph>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>
