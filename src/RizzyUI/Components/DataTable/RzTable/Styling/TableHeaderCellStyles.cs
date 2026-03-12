@@ -27,18 +27,22 @@ public sealed partial class TableHeaderCellSlots : ISlots
     /// <summary>
     /// The base slot for the `&lt;th&gt;` element.
     /// </summary>
+    [Slot("table-head")]
     public string? Base { get; set; }
     /// <summary>
     /// The slot for the sortable button within the header cell.
     /// </summary>
+    [Slot("sortable-button")]
     public string? SortableButton { get; set; }
     /// <summary>
     /// The slot for the title span within the header cell.
     /// </summary>
+    [Slot("title-span")]
     public string? TitleSpan { get; set; }
     /// <summary>
     /// The slot for the sort direction indicator icon.
     /// </summary>
+    [Slot("sort-indicator")]
     public string? SortIndicator { get; set; }
 }
 

@@ -1,65 +1,44 @@
-
 using Microsoft.AspNetCore.Components;
 using TailwindVariants.NET;
 
 namespace RizzyUI;
 
 /// <summary>
-/// Represents the body (`&lt;tbody&gt;`) of an <see cref="RzTable{TItem}"/>, responsible for rendering rows of data.
+/// Represents the body (<c>tbody</c>) of an <see cref="RzTable{TItem}"/>.
 /// </summary>
-/// <typeparam name="TItem">The type of data item for each row.</typeparam>
+/// <typeparam name="TItem">The row item type.</typeparam>
 public partial class TableBody<TItem> : RzComponent<TableBodySlots>
 {
     /// <summary>
-    /// Gets or sets the parent <see cref="RzTable{TItem}"/> component.
+    /// Gets or sets the parent table component.
     /// </summary>
     [CascadingParameter(Name = "ParentRzTable")]
     protected RzTable<TItem>? ParentRzTable { get; set; }
 
     /// <summary>
-    /// Gets or sets the collection of items to render. If not provided, it falls back to the items from the parent <see cref="RzTable{TItem}"/>.
+    /// Gets or sets the items to render.
     /// </summary>
     [Parameter] public IEnumerable<TItem>? Items { get; set; }
 
     /// <summary>
-    /// Gets or sets the template for rendering each row. This is a required parameter.
+    /// Gets or sets the row template.
     /// </summary>
     [Parameter, EditorRequired] public RenderFragment<TItem> RowTemplate { get; set; } = default!;
 
     /// <summary>
-    /// Gets or sets the template to display when there are no items to render.
+    /// Gets or sets the empty-state template.
     /// </summary>
     [Parameter] public RenderFragment? EmptyTemplate { get; set; }
 
     /// <summary>
-    /// Gets the effective collection of items to be rendered.
+    /// Gets the effective items to render.
     /// </summary>
     protected IEnumerable<TItem> EffectiveItems => Items ?? ParentRzTable?.Items ?? Enumerable.Empty<TItem>();
 
     /// <summary>
-    /// Gets the number of columns in the table, used for colspan in the empty template.
+    /// Gets the effective table column count.
     /// </summary>
     protected int ColumnCount => ParentRzTable?.ColumnCount ?? 1;
-
-    /// <summary>
-    /// Gets the unique ID for the loading spinner element.
-    /// </summary>
-    protected string SpinnerId => $"{Id}-spinner";
-
-    /// <summary>
-    /// Gets the effective CSS selector for the HTMX loading indicator.
-    /// </summary>
-    protected string? EffectiveHxIndicatorSelector
-    {
-        get
-        {
-            if (AdditionalAttributes?.TryGetValue("hx-indicator", out var indicator) == true && indicator is string indicatorStr)
-            {
-                return indicatorStr;
-            }
-            return ParentRzTable?.HxIndicatorSelector ?? $"#{SpinnerId}";
-        }
-    }
 
     /// <inheritdoc/>
     protected override void OnInitialized()
@@ -67,16 +46,14 @@ public partial class TableBody<TItem> : RzComponent<TableBodySlots>
         base.OnInitialized();
 
         if (string.IsNullOrEmpty(Element))
+        {
             Element = "tbody";
+        }
 
         if (ParentRzTable == null)
         {
             throw new InvalidOperationException($"{GetType().Name} must be used within an RzTable.");
         }
-        ParentRzTable.RegisterTableBodyId(Id);
-
-        AdditionalAttributes ??= new Dictionary<string, object>();
-        AdditionalAttributes[$"data-rztable-body-for"] = ParentRzTable.Id;
     }
 
     /// <inheritdoc/>

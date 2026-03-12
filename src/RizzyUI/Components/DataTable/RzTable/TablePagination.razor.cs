@@ -1,112 +1,80 @@
-
 using Microsoft.AspNetCore.Components;
 using TailwindVariants.NET;
 
 namespace RizzyUI;
 
 /// <summary>
-/// A component that renders pagination controls for an <see cref="RzTable{TItem}"/>.
-/// It generates page links and previous/next buttons, with HTMX attributes for dynamic page loading.
+/// Renders pagination controls for an <see cref="RzTable{TItem}"/>.
 /// </summary>
-/// <typeparam name="TItem">The type of data item in the table.</typeparam>
+/// <typeparam name="TItem">The row item type.</typeparam>
 [CascadingTypeParameter(nameof(TItem))]
 public partial class TablePagination<TItem> : RzComponent<TablePaginationSlots>
 {
     /// <summary>
-    /// Gets or sets the parent <see cref="RzTable{TItem}"/> component.
+    /// Gets or sets the parent table component.
     /// </summary>
     [CascadingParameter(Name = "ParentRzTable")]
     protected RzTable<TItem>? ParentRzTable { get; set; }
 
     /// <summary>
-    /// Gets or sets the pagination state. If not provided, it's inherited from the parent <see cref="RzTable{TItem}"/>.
+    /// Gets or sets the current page.
     /// </summary>
-    [Parameter] public PaginationState? PaginationState { get; set; }
+    [Parameter] public int? CurrentPage { get; set; }
 
     /// <summary>
-    /// Gets or sets the base URL for HTMX requests. If not provided, it's inherited from the parent <see cref="RzTable{TItem}"/>.
+    /// Gets or sets the page size.
     /// </summary>
-    [Parameter] public string? HxControllerUrl { get; set; }
+    [Parameter] public int? PageSize { get; set; }
 
     /// <summary>
-    /// Gets or sets the CSS selector for the HTMX target. If not provided, it's inherited from the parent <see cref="RzTable{TItem}"/>.
+    /// Gets or sets the total item count.
     /// </summary>
-    [Parameter] public string? HxTargetSelector { get; set; }
+    [Parameter] public long? TotalItems { get; set; }
 
     /// <summary>
-    /// Gets or sets the HTMX swap mode. If not provided, it's inherited from the parent <see cref="RzTable{TItem}"/>.
-    /// </summary>
-    [Parameter] public string? HxSwapMode { get; set; }
-
-    /// <summary>
-    /// Gets or sets the CSS selector for the HTMX loading indicator. If not provided, it's inherited from the parent <see cref="RzTable{TItem}"/>.
-    /// </summary>
-    [Parameter] public string? HxIndicatorSelector { get; set; }
-
-    /// <summary>
-    /// Gets or sets additional HTMX attributes to apply to each page link.
-    /// </summary>
-    [Parameter] public Dictionary<string, object>? HxPageLinkAttributes { get; set; }
-
-    /// <summary>
-    /// Gets or sets the maximum number of visible page links to display. Defaults to 7.
+    /// Gets or sets the maximum number of page links.
     /// </summary>
     [Parameter] public int MaxVisiblePageLinks { get; set; } = 7;
 
     /// <summary>
-    /// Gets or sets the label for the 'Previous' button. Defaults to a localized value.
+    /// Gets or sets the previous button label.
     /// </summary>
     [Parameter] public string? PreviousButtonLabel { get; set; }
 
     /// <summary>
-    /// Gets or sets the label for the 'Next' button. Defaults to a localized value.
+    /// Gets or sets the next button label.
     /// </summary>
     [Parameter] public string? NextButtonLabel { get; set; }
 
     /// <summary>
-    /// Gets or sets the ARIA label for the pagination navigation container. Defaults to a localized value.
+    /// Gets or sets the pagination navigation aria-label.
     /// </summary>
     [Parameter] public string? NavigationAriaLabel { get; set; }
 
     /// <summary>
-    /// Gets the effective pagination state, falling back to the parent table's state if not directly provided.
+    /// Gets the effective current page.
     /// </summary>
-    protected PaginationState EffectivePaginationState => PaginationState ?? ParentRzTable?.CurrentPaginationState ?? new PaginationState(1, 0, 10, 0);
-
+    protected int EffectiveCurrentPage => CurrentPage ?? ParentRzTable?.CurrentPage ?? 1;
     /// <summary>
-    /// Gets the current table request model from the parent table.
+    /// Gets the effective page size.
     /// </summary>
-    protected TableRequestModel CurrentTableRequest => ParentRzTable?.CurrentTableRequest ?? new TableRequestModel();
-
+    protected int EffectivePageSize => PageSize ?? ParentRzTable?.PageSize ?? 10;
     /// <summary>
-    /// Gets the effective controller URL for HTMX requests.
+    /// Gets the effective total item count.
     /// </summary>
-    protected string EffectiveHxControllerUrl => HxControllerUrl ?? ParentRzTable?.HxControllerUrl ?? string.Empty;
-
+    protected long EffectiveTotalItems => TotalItems ?? ParentRzTable?.TotalItems ?? 0;
     /// <summary>
-    /// Gets the effective CSS selector for the HTMX target.
+    /// Gets the total number of pages.
     /// </summary>
-    protected string EffectiveHxTargetSelector => HxTargetSelector ?? ParentRzTable?.EffectiveHxTargetSelector ?? $"#{(ParentRzTable?.TableBodyIdInternal ?? ParentRzTable?.Id + "-tbody-default")}";
-
+    protected int EffectiveTotalPages => EffectivePageSize <= 0 ? 0 : (int)Math.Ceiling(EffectiveTotalItems / (double)EffectivePageSize);
     /// <summary>
-    /// Gets the effective HTMX swap mode.
+    /// Gets a value indicating whether previous navigation is available.
     /// </summary>
-    protected string EffectiveHxSwapMode => HxSwapMode ?? ParentRzTable?.HxSwapMode ?? "innerHTML";
-
+    protected bool CanGoPrevious => EffectiveCurrentPage > 1;
     /// <summary>
-    /// Gets the effective CSS selector for the HTMX loading indicator.
+    /// Gets a value indicating whether next navigation is available.
     /// </summary>
-    protected string? EffectiveHxIndicatorSelector => HxIndicatorSelector ?? ParentRzTable?.HxIndicatorSelector ?? $"#{(ParentRzTable?.TableBodyIdInternal ?? ParentRzTable?.Id + "-tbody-default")}-spinner";
-
-    /// <summary>
-    /// Gets a value indicating whether it's possible to navigate to a previous page.
-    /// </summary>
-    protected bool CanGoPrevious => EffectivePaginationState.CurrentPage > 1;
-
-    /// <summary>
-    /// Gets a value indicating whether it's possible to navigate to a next page.
-    /// </summary>
-    protected bool CanGoNext => EffectivePaginationState.CurrentPage < EffectivePaginationState.TotalPages;
+    protected bool CanGoNext => EffectiveCurrentPage < EffectiveTotalPages;
 
     /// <inheritdoc/>
     protected override void OnInitialized()
@@ -114,11 +82,13 @@ public partial class TablePagination<TItem> : RzComponent<TablePaginationSlots>
         base.OnInitialized();
 
         if (string.IsNullOrEmpty(Element))
-            Element = "nav";
-
-        if (ParentRzTable == null && PaginationState == null)
         {
-            throw new InvalidOperationException($"{GetType().Name} requires either to be within an RzTable, or to have PaginationState provided.");
+            Element = "nav";
+        }
+
+        if (ParentRzTable == null && (CurrentPage == null || PageSize == null || TotalItems == null))
+        {
+            throw new InvalidOperationException($"{GetType().Name} requires either to be within an RzTable, or to have CurrentPage, PageSize and TotalItems provided.");
         }
 
         EnsureParameterDefaults();
@@ -128,7 +98,11 @@ public partial class TablePagination<TItem> : RzComponent<TablePaginationSlots>
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (MaxVisiblePageLinks < 5) MaxVisiblePageLinks = 5;
+        if (MaxVisiblePageLinks < 5)
+        {
+            MaxVisiblePageLinks = 5;
+        }
+
         EnsureParameterDefaults();
     }
 
@@ -140,131 +114,86 @@ public partial class TablePagination<TItem> : RzComponent<TablePaginationSlots>
     }
 
     /// <summary>
-    /// Generates the URL for a specific page number.
+    /// Builds the inline script that dispatches pagination events for a target page.
     /// </summary>
-    /// <param name="pageNumber">The page number to generate the URL for.</param>
-    /// <returns>The generated URL string.</returns>
-    protected string GetPageUrl(int pageNumber)
-    {
-        if (string.IsNullOrEmpty(EffectiveHxControllerUrl) || pageNumber < 1) return "#";
+    /// <param name="targetPage">The requested page number.</param>
+    /// <returns>A JavaScript snippet for the click handler.</returns>
+    protected string BuildPageChangeScript(int targetPage) =>
+        $"(function(){{const host=this.closest('[data-rz-table-id]');if(!host){{return;}}const table=host.querySelector('[data-slot=table]');const detail={{tableId:host.id,tableElementId:table?table.id:null,sourceId:this.id,action:'page-change',targetPage:{targetPage},request:{{page:{targetPage},pageSize:{EffectivePageSize},sortBy:{ToJsString(ParentRzTable?.SortBy)},sortDirection:{ToJsString(ToRequestSortDirection(ParentRzTable?.SortDirection ?? SortDirection.Unset))}}}}};this.dispatchEvent(new CustomEvent('rz:tablepagination:on-page-change',{{detail,bubbles:true,composed:true}}));host.dispatchEvent(new CustomEvent('rz:table:on-state-change',{{detail,bubbles:true,composed:true}}));}})();";
 
-        var requestParams = CurrentTableRequest with { Page = pageNumber, PageSize = EffectivePaginationState.PageSize };
-        return $"{EffectiveHxControllerUrl}{requestParams.ToQueryString()}";
-    }
+    private static string? ToRequestSortDirection(SortDirection direction) => direction switch
+    {
+        SortDirection.Ascending => "asc",
+        SortDirection.Descending => "desc",
+        _ => null
+    };
+
+    private static string ToJsString(string? value) => value is null ? "null" : $"\"{value.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
 
     /// <summary>
-    /// Generates the HTMX attributes for a page link button.
+    /// Builds the visible set of page links.
     /// </summary>
-    /// <param name="pageNumber">The page number the link navigates to.</param>
-    /// <returns>A dictionary of HTMX attributes.</returns>
-    protected Dictionary<string, object> GetPageLinkHxAttributes(int pageNumber)
-    {
-        var defaultAttributes = new Dictionary<string, object>();
-
-        if (!string.IsNullOrEmpty(EffectiveHxControllerUrl))
-        {
-            defaultAttributes["hx-get"] = GetPageUrl(pageNumber);
-            defaultAttributes["hx-target"] = EffectiveHxTargetSelector;
-            defaultAttributes["hx-swap"] = EffectiveHxSwapMode;
-
-            if (!string.IsNullOrEmpty(EffectiveHxIndicatorSelector))
-            {
-                defaultAttributes["hx-indicator"] = EffectiveHxIndicatorSelector;
-            }
-        }
-
-        if (HxPageLinkAttributes != null)
-        {
-            foreach (var attr in HxPageLinkAttributes)
-            {
-                defaultAttributes[attr.Key] = attr.Value;
-            }
-        }
-
-        return defaultAttributes;
-    }
-
-    /// <summary>
-    /// Generates the list of page links to be displayed in the pagination control.
-    /// </summary>
-    /// <returns>A list of <see cref="PageLink"/> records.</returns>
+    /// <returns>A list of page links and ellipsis placeholders.</returns>
     protected List<PageLink> GetPageLinks()
     {
         var links = new List<PageLink>();
-        var totalPages = EffectivePaginationState.TotalPages;
-        var currentPage = EffectivePaginationState.CurrentPage;
+        var totalPages = EffectiveTotalPages;
+        var currentPage = EffectiveCurrentPage;
 
-        if (totalPages <= 0) return links;
+        if (totalPages <= 0)
+        {
+            return links;
+        }
 
         if (totalPages <= MaxVisiblePageLinks)
         {
-            for (int i = 1; i <= totalPages; i++)
+            for (var i = 1; i <= totalPages; i++)
             {
                 links.Add(new PageLink(i.ToString(), i, i == currentPage, false));
             }
+
+            return links;
         }
-        else
+
+        links.Add(new PageLink("1", 1, currentPage == 1, false));
+
+        var window = MaxVisiblePageLinks - 2;
+        var start = Math.Max(2, currentPage - (window / 2));
+        var end = Math.Min(totalPages - 1, start + window - 1);
+
+        if (end - start + 1 < window)
         {
-            int linksToShow = MaxVisiblePageLinks - 2;
-            bool hasStartEllipsis = false;
-            bool hasEndEllipsis = false;
-
-            if (currentPage > linksToShow / 2 + 1 && totalPages > linksToShow)
-            {
-                hasStartEllipsis = true;
-                linksToShow--;
-            }
-            if (currentPage < totalPages - linksToShow / 2 && totalPages > linksToShow)
-            {
-                hasEndEllipsis = true;
-                linksToShow--;
-            }
-
-            links.Add(new PageLink("1", 1, currentPage == 1, false));
-
-            if (hasStartEllipsis)
-            {
-                links.Add(new PageLink("...", -1, false, true));
-            }
-
-            int rangeStart = Math.Max(2, currentPage - (linksToShow / 2) + (hasStartEllipsis && !hasEndEllipsis && (MaxVisiblePageLinks % 2 == 0) ? 1 : 0));
-            int rangeEnd = Math.Min(totalPages - 1, rangeStart + linksToShow - 1);
-
-            if (rangeEnd == totalPages - 1 && (rangeEnd - rangeStart + 1) < linksToShow)
-            {
-                rangeStart = Math.Max(2, rangeEnd - linksToShow + 1);
-            }
-
-            for (int i = rangeStart; i <= rangeEnd; i++)
-            {
-                if (i == 1 && links.Any(l => l.PageNumber == 1)) continue;
-                if (i == totalPages && links.Any(l => l.PageNumber == totalPages)) continue;
-                links.Add(new PageLink(i.ToString(), i, i == currentPage, false));
-            }
-
-            if (hasEndEllipsis)
-            {
-                if (links.Last().PageNumber < totalPages - 1)
-                    links.Add(new PageLink("...", -2, false, true));
-            }
-            if (totalPages > 1)
-                links.Add(new PageLink(totalPages.ToString(), totalPages, totalPages == currentPage, false));
+            start = Math.Max(2, end - window + 1);
         }
-        return links.GroupBy(l => l.PageNumber)
-                    .Select(g => g.OrderBy(l => l.IsEllipsis).First())
-                    .OrderBy(l => l.PageNumber == -2 ? totalPages - 0.5 : (l.PageNumber == -1 ? 1.5 : l.PageNumber))
-                    .ToList();
+
+        if (start > 2)
+        {
+            links.Add(new PageLink("...", -1, false, true));
+        }
+
+        for (var i = start; i <= end; i++)
+        {
+            links.Add(new PageLink(i.ToString(), i, i == currentPage, false));
+        }
+
+        if (end < totalPages - 1)
+        {
+            links.Add(new PageLink("...", -2, false, true));
+        }
+
+        links.Add(new PageLink(totalPages.ToString(), totalPages, totalPages == currentPage, false));
+        return links;
     }
 
     /// <inheritdoc/>
     protected override TvDescriptor<RzComponent<TablePaginationSlots>, TablePaginationSlots> GetDescriptor() => Theme.TablePagination;
 
     /// <summary>
-    /// Represents a single link in the pagination control.
+    /// Represents a link or ellipsis entry in the pagination control.
     /// </summary>
-    /// <param name="Text">The text to display for the link.</param>
-    /// <param name="PageNumber">The page number this link navigates to.</param>
-    /// <param name="IsCurrent">Indicates if this is the current page.</param>
-    /// <param name="IsEllipsis">Indicates if this is an ellipsis placeholder.</param>
+    /// <param name="Text">The display text.</param>
+    /// <param name="PageNumber">The represented page number.</param>
+    /// <param name="IsCurrent">Indicates whether this is the active page.</param>
+    /// <param name="IsEllipsis">Indicates whether this item is an ellipsis placeholder.</param>
     protected record PageLink(string Text, int PageNumber, bool IsCurrent, bool IsEllipsis);
 }

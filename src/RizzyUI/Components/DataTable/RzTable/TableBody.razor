@@ -1,12 +1,11 @@
-
 @namespace RizzyUI
 @typeparam TItem
 @inherits RzComponent<TableBodySlots>
 
-<HtmlElement Element="@EffectiveElement" @attributes="AdditionalAttributes" id="@Id" data-slot="table-body" class="@SlotClasses.GetBase()" hx-indicator="@EffectiveHxIndicatorSelector">
+<HtmlElement Element="@EffectiveElement" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()" data-slot="table-body">
     @if (EffectiveItems.Any())
     {
-        int rowIndex = (this.ParentRzTable?.CurrentPaginationState.CurrentPage-1) * this.ParentRzTable?.CurrentPaginationState.PageSize ?? 0;
+        var rowIndex = ((ParentRzTable?.CurrentPage ?? 1) - 1) * (ParentRzTable?.PageSize ?? 10);
         foreach (var item in EffectiveItems)
         {
             <CascadingValue Value="rowIndex" Name="RowIndex" IsFixed="false">
@@ -17,19 +16,28 @@
     }
     else if (EmptyTemplate != null)
     {
-        <tr data-slot="table-row"> 
-            <TableCell TItem="@TItem" Colspan="@ColumnCount"> 
+        <tr class="border-b transition-colors" data-slot="table-row">
+            <TableCell TItem="@TItem" Colspan="@ColumnCount">
                 @EmptyTemplate
             </TableCell>
         </tr>
     }
     else
     {
-        <tr data-slot="table-row">
+        <tr class="border-b transition-colors" data-slot="table-row">
             <TableCell TItem="@TItem" Colspan="@ColumnCount">
                 @Localizer["RzTable.DefaultEmptyMessage"]
             </TableCell>
         </tr>
     }
-    <RzSpinner Id="@SpinnerId" Size="Size.Small" class="htmx-indicator absolute top-2.5 left-1/2 -translate-x-1/2" data-slot="table-spinner"/>
+    @if (ParentRzTable?.IsLoading == true)
+    {
+        <tr class="border-b transition-colors" data-slot="table-row">
+            <TableCell TItem="@TItem" Colspan="@ColumnCount">
+                <div class="flex items-center justify-center py-3" data-slot="table-loading">
+                    <RzSpinner Size="Size.Small" />
+                </div>
+            </TableCell>
+        </tr>
+    }
 </HtmlElement>

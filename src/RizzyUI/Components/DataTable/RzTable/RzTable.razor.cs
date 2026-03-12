@@ -1,166 +1,119 @@
-
 using Microsoft.AspNetCore.Components;
 using TailwindVariants.NET;
 
 namespace RizzyUI;
 
 /// <summary>
-/// A highly configurable and HTMX-interactive table component.
-/// It supports generic data types, templated headers, body, and footers,
-/// and integrates with HTMX for dynamic operations like sorting, pagination, and filtering.
-/// This component cascades itself to child components for easy access to table-wide properties.
+/// Provides an SSR-first, composable table container with shared table state.
 /// </summary>
+/// <typeparam name="TItem">The type of data item rendered by the table.</typeparam>
 [CascadingTypeParameter(nameof(TItem))]
 public partial class RzTable<TItem> : RzComponent<RzTableSlots>, IHasTableStylingProperties
 {
     private readonly List<ColumnDefinition<TItem>> _columnDefinitions = new();
-    private string? _tableBodyIdInternal;
-    private bool _hasRegisteredBody = false;
-
-    internal string? TableBodyIdInternal
-    {
-        get => _tableBodyIdInternal;
-        private set => _tableBodyIdInternal = value;
-    }
-
-    internal void RegisterTableBodyId(string tableBodyId)
-    {
-        if (_hasRegisteredBody && TableBodyIdInternal != tableBodyId)
-        {
-            throw new InvalidOperationException($"An RzTableBody with ID '{TableBodyIdInternal}' is already registered with this RzTable. Only one RzTableBody is allowed.");
-        }
-
-        TableBodyIdInternal = tableBodyId;
-        _hasRegisteredBody = true;
-    }
 
     /// <summary>
-    /// Gets the effective CSS selector for HTMX `hx-target` attributes.
-    /// It prioritizes the user-provided <see cref="HxTargetSelector"/>, then the ID of a registered <see cref="TableBody{TItem}"/>,
-    /// and finally falls back to a data attribute selector based on this table's ID.
-    /// </summary>
-    public string EffectiveHxTargetSelector =>
-        HxTargetSelector ??
-        (!string.IsNullOrEmpty(TableBodyIdInternal) ? $"#{TableBodyIdInternal}" : $"[data-rztable-body-for='{Id}']");
-
-    /// <summary>
-    /// Gets or sets the collection of items to be displayed in the table. This is a required parameter.
+    /// Gets or sets the collection of items rendered by the table.
     /// </summary>
     [Parameter, EditorRequired] public IEnumerable<TItem> Items { get; set; } = Enumerable.Empty<TItem>();
 
     /// <summary>
-    /// Gets or sets the base URL for HTMX requests (e.g., sorting, pagination).
+    /// Gets or sets the current page number.
     /// </summary>
-    [Parameter] public string? HxControllerUrl { get; set; }
+    [Parameter] public int CurrentPage { get; set; } = 1;
 
     /// <summary>
-    /// Gets or sets the current state of the table request, including sorting, filtering, and pagination info.
+    /// Gets or sets the current page size.
     /// </summary>
-    [Parameter] public TableRequestModel CurrentTableRequest { get; set; } = new();
+    [Parameter] public int PageSize { get; set; } = 10;
 
     /// <summary>
-    /// Gets or sets the current pagination state of the table, including total items and page count.
+    /// Gets or sets the total number of items available for pagination.
     /// </summary>
-    [Parameter] public PaginationState CurrentPaginationState { get; set; } = new(1, 0, 10, 0);
+    [Parameter] public long TotalItems { get; set; }
 
     /// <summary>
-    /// Gets or sets a specific CSS selector for the `hx-target` attribute, overriding the default behavior.
+    /// Gets or sets the column key currently used for sorting.
     /// </summary>
-    [Parameter] public string? HxTargetSelector { get; set; }
+    [Parameter] public string? SortBy { get; set; }
 
     /// <summary>
-    /// Gets or sets the HTMX swap mode (e.g., "innerHTML", "outerHTML"). Defaults to "innerHTML".
+    /// Gets or sets the current sort direction.
     /// </summary>
-    [Parameter] public string HxSwapMode { get; set; } = "innerHTML";
+    [Parameter] public SortDirection SortDirection { get; set; } = SortDirection.Unset;
 
     /// <summary>
-    /// Gets or sets the CSS selector for an element to be shown as a loading indicator during HTMX requests.
+    /// Gets or sets a value indicating whether the table is currently loading.
     /// </summary>
-    [Parameter] public string? HxIndicatorSelector { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
 
     /// <summary>
-    /// Gets or sets the content rendered inside the `&lt;table&gt;` element.
+    /// Gets or sets the content rendered inside the <c>table</c> element.
     /// </summary>
     [Parameter, EditorRequired] public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to apply striped styling to table rows. Defaults to false.
+    /// Gets or sets a value indicating whether to apply striped row styling.
     /// </summary>
-    [Parameter] public bool Striped { get; set; } = false;
+    [Parameter] public bool Striped { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether rows should have a hover effect. Defaults to true.
+    /// Gets or sets a value indicating whether rows should display hover styling.
     /// </summary>
     [Parameter] public bool Hoverable { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the table should have a border. Defaults to false.
+    /// Gets or sets a value indicating whether table chrome (border and rounded corners) should be applied.
     /// </summary>
-    [Parameter] public bool Border { get; set; } = false;
+    [Parameter] public bool Border { get; set; }
 
     /// <summary>
-    /// Gets or sets the row selection mode for the table. Defaults to <see cref="TableSelectionMode.None"/>.
+    /// Gets or sets the row selection mode.
     /// </summary>
     [Parameter] public TableSelectionMode SelectionMode { get; set; } = TableSelectionMode.None;
 
     /// <summary>
-    /// Gets or sets an event callback that is invoked when the selected items change.
+    /// Gets or sets the selected row keys used for SSR-selected state.
     /// </summary>
-    [Parameter] public EventCallback<List<TItem>> SelectedItemsChanged { get; set; }
+    [Parameter] public HashSet<string> SelectedItems { get; set; } = new(StringComparer.Ordinal);
 
     /// <summary>
-    /// Gets or sets the list of currently selected items in the table.
+    /// Gets or sets a value indicating whether the table header should be sticky.
     /// </summary>
-    [Parameter] public List<TItem> SelectedItems { get; set; } = new();
+    [Parameter] public bool FixedHeader { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the table header should remain fixed while scrolling. Defaults to false.
-    /// </summary>
-    [Parameter] public bool FixedHeader { get; set; } = false;
-
-    /// <summary>
-    /// Gets or sets the CSS height class for the table body when <see cref="FixedHeader"/> is true. Defaults to "h-96".
+    /// Gets or sets the body height class used when <see cref="FixedHeader"/> is enabled.
     /// </summary>
     [Parameter] public string TableBodyHeightClass { get; set; } = "h-96";
 
     /// <summary>
-    /// Gets the unique ID for the inner `&lt;table&gt;` element.
+    /// Gets the unique identifier for the inner table element.
     /// </summary>
     public string TableId => $"{Id}-table";
 
-    internal void AddColumnDefinition(ColumnDefinition<TItem> columnDefinition)
-    {
-        if (!_columnDefinitions.Any(cd => cd.Key == columnDefinition.Key))
-        {
-            _columnDefinitions.Add(columnDefinition);
-            StateHasChanged();
-        }
-    }
-
-    internal IReadOnlyList<ColumnDefinition<TItem>> GetColumnDefinitions() => _columnDefinitions.AsReadOnly();
-
     /// <summary>
-    /// Gets the total number of columns defined in the table.
+    /// Gets the total number of registered columns.
     /// </summary>
     public int ColumnCount => _columnDefinitions.Count > 0 ? _columnDefinitions.Count : 1;
 
-    /// <inheritdoc/>
-    protected override void OnParametersSet()
+    /// <summary>
+    /// Gets the total page count based on table pagination state.
+    /// </summary>
+    public int TotalPages => PageSize <= 0 ? 0 : (int)Math.Ceiling(TotalItems / (double)PageSize);
+
+    internal void AddColumnDefinition(ColumnDefinition<TItem> columnDefinition)
     {
-        base.OnParametersSet();
-        if (FixedHeader)
+        if (_columnDefinitions.Any(cd => cd.Key == columnDefinition.Key))
         {
-            AdditionalAttributes ??= new Dictionary<string, object>();
-            if (AdditionalAttributes.TryGetValue("class", out var existingClass))
-            {
-                AdditionalAttributes["class"] = $"{existingClass} {TableBodyHeightClass}";
-            }
-            else
-            {
-                AdditionalAttributes["class"] = TableBodyHeightClass;
-            }
+            return;
         }
+
+        _columnDefinitions.Add(columnDefinition);
+        StateHasChanged();
     }
+
+    internal IReadOnlyList<ColumnDefinition<TItem>> GetColumnDefinitions() => _columnDefinitions.AsReadOnly();
 
     /// <inheritdoc/>
     protected override TvDescriptor<RzComponent<RzTableSlots>, RzTableSlots> GetDescriptor() => Theme.RzTable;
