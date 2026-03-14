@@ -69,4 +69,6 @@ export const componentBundleManifest = Object.freeze({
     rzQuickReferenceContainer: 'docs-runtime',
 
     rzConfetti: 'effects-runtime',
+
+    rzDataTable: 'table-runtime',
 });

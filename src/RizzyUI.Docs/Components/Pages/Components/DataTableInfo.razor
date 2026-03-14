@@ -1,0 +1,293 @@
+@page "/components/data-table"
+@using RizzyUI.Docs.Components.Examples
+
+<PageTitle>Data Table</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink Href="/">Docs</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>Data Table</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Data Table" class="scroll-mt-20">Data Table</RzHeading>
+            <RzParagraph>
+                <code>RzDataTable&lt;TItem&gt;</code> is an SSR-first, progressively enhanced data table primitive.
+                The server renders a usable first page, and Alpine + TanStack upgrade client state for search, sort,
+                pagination, selection, and column visibility without Blazor interactive runtime dependencies.
+            </RzParagraph>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Stable row keys" class="scroll-mt-20">Stable row keys</RzHeading>
+                <RzParagraph>
+                    <code>RowKey</code> is required and must be stable for each row. Selection, row click payloads,
+                    and all <code>rz:datatable:*</code> events use stable keys instead of serialized server object graphs.
+                </RzParagraph>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Default searchable table" class="scroll-mt-20">Default searchable table</RzHeading>
+                <RzParagraph>
+                    The default pattern includes global search, sorting, pagination, and column visibility toggles.
+                </RzParagraph>
+
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4">
+                        <RzDataTable TItem="UserRow"
+                                     Id="datatable-default"
+                                     Items="@_users"
+                                     RowKey="@(u => u.Id)"
+                                     Search="true"
+                                     ShowColumnVisibility="true"
+                                     EnablePagination="true"
+                                     InitialSorting="@_nameSort"
+                                     PageSize="5"
+                                     PageSizeOptions="_pageSizes">
+                            <DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="@(u => u.Name)" Sortable="true" Searchable="true" />
+                            <DataTableColumn TItem="UserRow" Id="email" HeaderText="Email" Field="@(u => u.Email)" Searchable="true" />
+                            <DataTableColumn TItem="UserRow" Id="team" HeaderText="Team" Field="@(u => u.Team)" Sortable="true" Searchable="true" />
+                            <DataTableColumn TItem="UserRow" Id="status" HeaderText="Status" Field="@(u => u.StatusLabel)" Sortable="true" Searchable="true" />
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
+
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-8">
+&lt;RzDataTable TItem=&quot;UserRow&quot;
+             Items=&quot;Users&quot;
+             RowKey=&quot;u =&gt; u.Id&quot;
+             Search=&quot;true&quot;
+             ShowColumnVisibility=&quot;true&quot;
+             EnablePagination=&quot;true&quot;
+             InitialSorting=&quot;@@nameSort&quot;
+             PageSize=&quot;5&quot;&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;name&quot; HeaderText=&quot;Name&quot; Field=&quot;u =&gt; u.Name&quot; Sortable=&quot;true&quot; Searchable=&quot;true&quot; /&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;email&quot; HeaderText=&quot;Email&quot; Field=&quot;u =&gt; u.Email&quot; Searchable=&quot;true&quot; /&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;team&quot; HeaderText=&quot;Team&quot; Field=&quot;u =&gt; u.Team&quot; Sortable=&quot;true&quot; Searchable=&quot;true&quot; /&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;status&quot; HeaderText=&quot;Status&quot; Field=&quot;u =&gt; u.StatusLabel&quot; Sortable=&quot;true&quot; Searchable=&quot;true&quot; /&gt;
+&lt;/RzDataTable&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Selection modes" class="scroll-mt-20">Selection modes</RzHeading>
+                <RzParagraph>
+                    <code>Single</code> selection binds row clicks to one active key. <code>Multiple</code> selection adds checkbox controls,
+                    including a current-page header toggle.
+                </RzParagraph>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Single selection" class="scroll-mt-20 mt-6">Single selection</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4">
+                        <RzDataTable TItem="UserRow"
+                                     Id="datatable-single"
+                                     Items="@_users"
+                                     RowKey="@(u => u.Id)"
+                                     SelectionMode="DataTableSelectionMode.Single"
+                                     ShowColumnVisibility="false"
+                                     Search="false"
+                                     PageSize="4"
+                                     EnablePagination="true">
+                            <DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="@(u => u.Name)" Sortable="true" />
+                            <DataTableColumn TItem="UserRow" Id="role" HeaderText="Role" Field="@(u => u.Role)" />
+                            <DataTableColumn TItem="UserRow" Id="team" HeaderText="Team" Field="@(u => u.Team)" />
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Multiple selection" class="scroll-mt-20 mt-6">Multiple selection</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4">
+                        <RzDataTable TItem="UserRow"
+                                     Id="datatable-multi"
+                                     Items="@_users"
+                                     RowKey="@(u => u.Id)"
+                                     SelectionMode="DataTableSelectionMode.Multiple"
+                                     Search="true"
+                                     InitialSelectedKeys="_initialSelection"
+                                     ShowColumnVisibility="true"
+                                     EnablePagination="true"
+                                     PageSize="6">
+                            <DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="@(u => u.Name)" Searchable="true" Sortable="true" />
+                            <DataTableColumn TItem="UserRow" Id="email" HeaderText="Email" Field="@(u => u.Email)" Searchable="true" />
+                            <DataTableColumn TItem="UserRow" Id="status" HeaderText="Status" Field="@(u => u.StatusLabel)" Sortable="true" Searchable="true" />
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Client template cells" class="scroll-mt-20">Client template cells</RzHeading>
+                <RzParagraph>
+                    Use <code>ClientTemplate</code> for browser-rendered cell fragments cloned from inert SSR templates.
+                    Templates can bind to <code>row</code>, <code>column</code>, and <code>cell</code> scope keys.
+                </RzParagraph>
+
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4">
+                        <RzDataTable TItem="UserRow"
+                                     Id="datatable-template"
+                                     Items="@_users"
+                                     RowKey="@(u => u.Id)"
+                                     Search="true"
+                                     PageSize="5"
+                                     ClientRowProjection="ProjectTemplateFields">
+                            <DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="@(u => u.Name)" Searchable="true" />
+                            <DataTableColumn TItem="UserRow" Id="status" HeaderText="Status" Field="@(u => u.StatusLabel)" Sortable="true">
+                                <ClientTemplate>
+                                    <span class="inline-flex rounded-md px-2 py-1 text-xs font-medium"
+                                          :class="row.statusClass"
+                                          x-text="row.statusLabel"></span>
+                                </ClientTemplate>
+                            </DataTableColumn>
+                            <DataTableColumn TItem="UserRow" Id="lastSeen" HeaderText="Last Seen" Field="@(u => u.LastSeenText)" Sortable="true" />
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
+
+                <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-8">
+&lt;RzDataTable TItem=&quot;UserRow&quot;
+             Items=&quot;Users&quot;
+             RowKey=&quot;u =&gt; u.Id&quot;
+             ClientRowProjection=&quot;ProjectTemplateFields&quot;&gt;
+    &lt;DataTableColumn TItem=&quot;UserRow&quot; Id=&quot;status&quot; HeaderText=&quot;Status&quot; Field=&quot;u =&gt; u.StatusLabel&quot;&gt;
+        &lt;ClientTemplate&gt;
+            &lt;span :class=&quot;row.statusClass&quot; x-text=&quot;row.statusLabel&quot;&gt;&lt;/span&gt;
+        &lt;/ClientTemplate&gt;
+    &lt;/DataTableColumn&gt;
+&lt;/RzDataTable&gt;
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Loading and empty states" class="scroll-mt-20">Loading and empty states</RzHeading>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Loading" class="scroll-mt-20 mt-6">Loading</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4">
+                        <RzDataTable TItem="UserRow"
+                                     Id="datatable-loading"
+                                     Items="@_users"
+                                     RowKey="@(u => u.Id)"
+                                     Loading="true"
+                                     EnablePagination="false"
+                                     Search="false">
+                            <ChildContent>
+                                <DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="@(u => u.Name)" />
+                                <DataTableColumn TItem="UserRow" Id="email" HeaderText="Email" Field="@(u => u.Email)" />
+                            </ChildContent>
+                            <LoadingTemplate>
+                                <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                                    <RzSpinner Size="Size.Small" />
+                                    <span>Fetching directory data...</span>
+                                </div>
+                            </LoadingTemplate>
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Empty" class="scroll-mt-20 mt-6">Empty</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4">
+                        <RzDataTable TItem="UserRow"
+                                     Id="datatable-empty"
+                                     Items="@_empty"
+                                     RowKey="@(u => u.Id)"
+                                     Search="true"
+                                     EnablePagination="false">
+                            <ChildContent>
+                                <DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="@(u => u.Name)" />
+                                <DataTableColumn TItem="UserRow" Id="email" HeaderText="Email" Field="@(u => u.Email)" />
+                            </ChildContent>
+                            <EmptyTemplate>
+                                <div class="flex flex-col items-center justify-center gap-1 text-sm text-muted-foreground">
+                                    <span class="font-medium text-foreground">No matching users</span>
+                                    <span>Try a broader search term.</span>
+                                </div>
+                            </EmptyTemplate>
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Behavior notes" class="scroll-mt-20">Behavior notes</RzHeading>
+                <ul>
+                    <li>Search is case-insensitive and only checks columns with <code>Searchable=true</code>.</li>
+                    <li>Hidden columns can remain searchable when marked searchable.</li>
+                    <li><code>InitialColumnVisibility</code> takes precedence over column <code>Visible</code> values when ids overlap.</li>
+                    <li><code>selectedKeys</code> in emitted state follows current table row order.</li>
+                </ul>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Events" class="scroll-mt-20">Events</RzHeading>
+                <RzParagraph>
+                    The component dispatches browser events:
+                    <code>rz:datatable:ready</code>, <code>rz:datatable:sort-change</code>, <code>rz:datatable:page-change</code>,
+                    <code>rz:datatable:search-change</code>, <code>rz:datatable:column-visibility-change</code>,
+                    <code>rz:datatable:selection-change</code>, <code>rz:datatable:row-click</code>, and <code>rz:datatable:state-change</code>.
+                </RzParagraph>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="When not to use" class="scroll-mt-20">When not to use</RzHeading>
+                <RzParagraph>
+                    For virtualization, server-backed table mode, grouping, row expansion, or per-column filter UIs, prefer specialized data-grid patterns.
+                    Those capabilities are out of scope for the v1 <code>RzDataTable</code> implementation.
+                </RzParagraph>
+            </section>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>
+
+@code {
+    private readonly IReadOnlyList<UserRow> _users =
+    [
+        new("1", "Ava Patel", "ava.patel@contoso.com", "Platform", "Engineer", "active", "Active", "bg-green-100 text-green-800", "2 minutes ago"),
+        new("2", "Noah Kim", "noah.kim@contoso.com", "Security", "Analyst", "away", "Away", "bg-amber-100 text-amber-800", "15 minutes ago"),
+        new("3", "Mia Johnson", "mia.johnson@contoso.com", "Platform", "Tech Lead", "active", "Active", "bg-green-100 text-green-800", "35 minutes ago"),
+        new("4", "Ethan Rivera", "ethan.rivera@contoso.com", "Support", "Manager", "inactive", "Inactive", "bg-zinc-200 text-zinc-700", "1 hour ago"),
+        new("5", "Sophia Nguyen", "sophia.nguyen@contoso.com", "Design", "Product Designer", "active", "Active", "bg-green-100 text-green-800", "2 hours ago"),
+        new("6", "Liam Chen", "liam.chen@contoso.com", "Security", "Engineer", "away", "Away", "bg-amber-100 text-amber-800", "3 hours ago"),
+        new("7", "Olivia Brooks", "olivia.brooks@contoso.com", "Support", "Specialist", "active", "Active", "bg-green-100 text-green-800", "4 hours ago"),
+        new("8", "James Carter", "james.carter@contoso.com", "Platform", "Architect", "inactive", "Inactive", "bg-zinc-200 text-zinc-700", "Yesterday")
+    ];
+
+    private readonly IReadOnlyList<UserRow> _empty = [];
+
+    private readonly IReadOnlyList<DataTableSortDefinition> _nameSort =
+    [
+        new() { ColumnId = "name", Descending = false }
+    ];
+
+    private readonly IReadOnlyList<string> _initialSelection = ["2", "5"];
+
+    private readonly IReadOnlyList<int> _pageSizes = [5, 10, 25];
+
+    private static IReadOnlyDictionary<string, object?> ProjectTemplateFields(UserRow row)
+        => new Dictionary<string, object?>
+        {
+            ["statusLabel"] = row.StatusLabel,
+            ["statusClass"] = row.StatusClass
+        };
+
+    private sealed record UserRow(
+        string Id,
+        string Name,
+        string Email,
+        string Team,
+        string Role,
+        string Status,
+        string StatusLabel,
+        string StatusClass,
+        string LastSeenText);
+}

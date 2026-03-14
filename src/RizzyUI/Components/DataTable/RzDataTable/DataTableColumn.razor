@@ -1,0 +1,9 @@
+@namespace RizzyUI
+@typeparam TItem
+
+@if (ClientTemplate is not null)
+{
+    <template data-rz-datatable-template-for="@Id">
+        @ClientTemplate
+    </template>
+}
