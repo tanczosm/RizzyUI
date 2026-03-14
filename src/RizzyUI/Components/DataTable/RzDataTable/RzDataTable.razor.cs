@@ -18,6 +18,7 @@ public partial class RzDataTable<TItem> : RzComponent<RzDataTableSlots>, IHasRzD
 
     private readonly List<DataTableColumnDefinition<TItem>> _columns = [];
     private bool _isCollectingColumns;
+    private bool _payloadReady;
     private string _configJson = "{}";
     private string _assets = "[]";
     private List<Dictionary<string, object?>> _projectedRows = [];
@@ -187,20 +188,14 @@ public partial class RzDataTable<TItem> : RzComponent<RzDataTableSlots>, IHasRzD
         }
 
         _columns.Clear();
+        _projectedRows.Clear();
+        _configJson = "{}";
+        _assets = "[]";
+
         _isCollectingColumns = true;
-    }
+        _payloadReady = false;
 
-    /// <inheritdoc/>
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (_isCollectingColumns)
-        {
-            _isCollectingColumns = false;
-            BuildClientPayload();
-            StateHasChanged();
-        }
-
-        base.OnAfterRender(firstRender);
+        _ = InvokeAsync(StateHasChanged);
     }
 
     internal void RegisterColumn(DataTableColumnDefinition<TItem> definition)
@@ -216,6 +211,29 @@ public partial class RzDataTable<TItem> : RzComponent<RzDataTableSlots>, IHasRzD
         }
 
         _columns.Add(definition);
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void EnsurePayloadBuilt()
+    {
+        if (_payloadReady)
+        {
+            return;
+        }
+
+        if (!_isCollectingColumns)
+        {
+            return;
+        }
+
+        if (_columns.Count == 0)
+        {
+            return;
+        }
+
+        _isCollectingColumns = false;
+        BuildClientPayload();
+        _payloadReady = true;
     }
 
     private void BuildClientPayload()
@@ -297,7 +315,8 @@ public partial class RzDataTable<TItem> : RzComponent<RzDataTableSlots>, IHasRzD
                 pagination = new { pageIndex = InitialPageIndex, pageSize = EffectivePageSize },
                 sorting = InitialSorting.Select(x => new { id = x.ColumnId, desc = x.Descending }),
                 columnVisibility = columnConfig.ToDictionary(x => x.id, x => x.visible),
-                selectedKeys = InitialSelectedKeys ?? []
+                selectedKeys = InitialSelectedKeys ?? [],
+                columnPinning = new { left = Array.Empty<string>(), right = Array.Empty<string>() },
             },
             columns = columnConfig,
             rows
@@ -309,6 +328,7 @@ public partial class RzDataTable<TItem> : RzComponent<RzDataTableSlots>, IHasRzD
             .Select(key => RizzyUIConfig.Value.AssetUrls.TryGetValue(key, out var url) ? url : null)
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .ToList();
+
         _assets = JsonSerializer.Serialize(assetUrls);
     }
 
