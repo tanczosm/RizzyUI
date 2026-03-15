@@ -273,6 +273,113 @@ function buildPaginationItems(pageIndex, pageCount) {
     return items;
 }
 
+function createSortApi(component) {
+    return {
+        can: header => !!header?.column?.getCanSort?.(),
+
+        direction: header => {
+            const value = header?.column?.getIsSorted?.();
+            return value === 'asc' || value === 'desc' ? value : false;
+        },
+
+        isSorted: header => {
+            const value = header?.column?.getIsSorted?.();
+            return value === 'asc' || value === 'desc';
+        },
+
+        toggle: header => {
+            if (!header?.column?.getCanSort?.()) {
+                return;
+            }
+
+            header.column.toggleSorting();
+        },
+
+        ariaSort: header => {
+            const value = header?.column?.getIsSorted?.();
+
+            if (value === 'asc') {
+                return 'ascending';
+            }
+
+            if (value === 'desc') {
+                return 'descending';
+            }
+
+            return 'none';
+        },
+
+        nextLabel: header => {
+            if (!header?.column?.getCanSort?.()) {
+                return 'Sorting unavailable';
+            }
+
+            const value = header?.column?.getIsSorted?.();
+            const enableSortingRemoval = component.table?.options?.enableSortingRemoval !== false;
+
+            if (value === 'asc') {
+                return 'Sort descending';
+            }
+
+            if (value === 'desc') {
+                return enableSortingRemoval ? 'Clear sort' : 'Sort ascending';
+            }
+
+            return 'Sort ascending';
+        },
+    };
+}
+
+function createSelectionApi(component) {
+    return {
+        canSelect: row => row?.getCanSelect?.() !== false,
+
+        isSelected: row => !!row?.getIsSelected?.(),
+
+        isSomeSelected: row => !!row?.getIsSomeSelected?.(),
+
+        setRowSelected: (row, value) => {
+            if (row?.getCanSelect?.() === false) {
+                return;
+            }
+
+            row?.toggleSelected?.(!!value);
+        },
+
+        toggleRow: row => {
+            if (row?.getCanSelect?.() === false) {
+                return;
+            }
+
+            row?.toggleSelected?.();
+        },
+
+        allRowsSelected: () => !!component.table?.getIsAllRowsSelected?.(),
+
+        someRowsSelected: () => !!component.table?.getIsSomeRowsSelected?.(),
+
+        setAllRows: value => {
+            component.table?.toggleAllRowsSelected?.(!!value);
+        },
+
+        toggleAllRows: () => {
+            component.table?.toggleAllRowsSelected?.();
+        },
+
+        allPageRowsSelected: () => !!component.table?.getIsAllPageRowsSelected?.(),
+
+        somePageRowsSelected: () => !!component.table?.getIsSomePageRowsSelected?.(),
+
+        setAllPageRows: value => {
+            component.table?.toggleAllPageRowsSelected?.(!!value);
+        },
+
+        toggleAllPageRows: () => {
+            component.table?.toggleAllPageRowsSelected?.();
+        },
+    };
+}
+
 export default function rzDataTable() {
     return {
         table: null,
@@ -285,6 +392,8 @@ export default function rzDataTable() {
         isEmpty: true,
         selectedRowCount: 0,
         flex,
+        sort: null,
+        selection: null,
 
         init() {
             const root = this.$el;
@@ -332,6 +441,9 @@ export default function rzDataTable() {
             });
 
             this.table = table;
+            this.sort = createSortApi(this);
+            this.selection = createSelectionApi(this);
+
             this.refreshDerivedState();
 
             this.dispatchEvent('rz:datatable:ready', {
