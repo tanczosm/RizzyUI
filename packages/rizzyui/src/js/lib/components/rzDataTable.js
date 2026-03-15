@@ -22,6 +22,30 @@ function readJsonConfig(rootEl) {
     return JSON.parse(scriptEl.textContent || '{}');
 }
 
+function getSegmentValue(source, segment) {
+    if (source === null || source === undefined) {
+        return undefined;
+    }
+
+    if (typeof source !== 'object') {
+        return undefined;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(source, segment)) {
+        return source[segment];
+    }
+
+    const camelCaseSegment = segment.length > 0
+        ? segment.charAt(0).toLowerCase() + segment.slice(1)
+        : segment;
+
+    if (Object.prototype.hasOwnProperty.call(source, camelCaseSegment)) {
+        return source[camelCaseSegment];
+    }
+
+    return undefined;
+}
+
 function getByPath(source, path) {
     if (!path) return undefined;
 
@@ -29,11 +53,10 @@ function getByPath(source, path) {
     let current = source;
 
     for (const segment of segments) {
-        if (current === null || current === undefined) {
+        current = getSegmentValue(current, segment);
+        if (current === undefined) {
             return undefined;
         }
-
-        current = current[segment];
     }
 
     return current;
