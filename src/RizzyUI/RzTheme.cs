@@ -385,6 +385,12 @@ public partial class RzTheme
         // RzTable Family
         RzTable = RizzyUI.RzTableStyles.DefaultDescriptor;
         RzDataTable = RizzyUI.RzDataTableStyles.DefaultDescriptor;
+        DataTableSortToggle = RizzyUI.DataTableSortToggle.DefaultDescriptor;
+        DataTableSortIcon = RizzyUI.DataTableSortIcon.DefaultDescriptor;
+        DataTableSelectAllCheckbox = RizzyUI.DataTableSelectAllCheckbox.DefaultDescriptor;
+        DataTableRowSelectCheckbox = RizzyUI.DataTableRowSelectCheckbox.DefaultDescriptor;
+        DataTableSelectionHeaderCell = RizzyUI.DataTableSelectionHeaderCell.DefaultDescriptor;
+        DataTableSelectionCell = RizzyUI.DataTableSelectionCell.DefaultDescriptor;
         TableBody = RizzyUI.TableBodyStyles.DefaultDescriptor;
         TableCell = RizzyUI.TableCellStyles.DefaultDescriptor;
         TableHeader = RizzyUI.TableHeaderStyles.DefaultDescriptor;

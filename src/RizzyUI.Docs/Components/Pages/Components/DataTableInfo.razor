@@ -277,9 +277,23 @@
             </section>
 
             <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Sorting" class="scroll-mt-20">Sorting</RzHeading>
+                <RzCodeViewer Language="@CodeLanguage.Razor">
+                    @((MarkupString)EncodeCode(_sortingHelpersCode))
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection" class="scroll-mt-20">Row selection</RzHeading>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_rowSelectionCode))
+                </RzCodeViewer>
+            </section>
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection column" class="scroll-mt-20">Row selection column</RzHeading>
+                <RzCodeViewer Language="@CodeLanguage.Razor">
+                    @((MarkupString)EncodeCode(_rowSelectionColumnCode))
                 </RzCodeViewer>
             </section>
 
@@ -305,6 +319,21 @@
                     <li><code>hasRows</code></li>
                     <li><code>isEmpty</code></li>
                     <li><code>selectedRowCount</code></li>
+                    <li><code>sort.can(header)</code></li>
+                    <li><code>sort.direction(header)</code></li>
+                    <li><code>sort.toggle(header)</code></li>
+                    <li><code>sort.ariaSort(header)</code></li>
+                    <li><code>sort.nextLabel(header)</code></li>
+                    <li><code>selection.canSelect(row)</code></li>
+                    <li><code>selection.isSelected(row)</code></li>
+                    <li><code>selection.isSomeSelected(row)</code></li>
+                    <li><code>selection.setRowSelected(row, value)</code></li>
+                    <li><code>selection.allPageRowsSelected()</code></li>
+                    <li><code>selection.somePageRowsSelected()</code></li>
+                    <li><code>selection.setAllPageRows(value)</code></li>
+                    <li><code>selection.allRowsSelected()</code></li>
+                    <li><code>selection.someRowsSelected()</code></li>
+                    <li><code>selection.setAllRows(value)</code></li>
                     <li><code>toggleColumnVisibility(id)</code></li>
                     <li><code>setGlobalFilter(value)</code></li>
                     <li><code>previousPage()</code></li>
@@ -596,6 +625,56 @@
     private const string _rowSelectionCode =
 """
 <p>Selected rows: <span x-text="selectedRowCount"></span></p>
+""";
+
+    private const string _sortingHelpersCode =
+"""
+<TableHeader>
+    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+        <TableRow>
+            <template x-for="header in headerGroup.headers" :key="header.id">
+                <TableHeaderCell x-bind:colspan="header.colSpan"
+                                 x-bind:aria-sort="sort.ariaSort(header)">
+                    <template x-if="!header.isPlaceholder">
+                        <DataTableSortToggle HeaderExpr="header" />
+                    </template>
+                </TableHeaderCell>
+            </template>
+        </TableRow>
+    </template>
+</TableHeader>
+""";
+
+    private const string _rowSelectionColumnCode =
+"""
+<TableHeader>
+    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+        <TableRow>
+            <DataTableSelectionHeaderCell Scope="DataTableSelectionScope.Page" />
+
+            <template x-for="header in headerGroup.headers" :key="header.id">
+                <TableHeaderCell x-bind:colspan="header.colSpan"
+                                 x-bind:aria-sort="sort.ariaSort(header)">
+                    <template x-if="!header.isPlaceholder">
+                        <DataTableSortToggle HeaderExpr="header" />
+                    </template>
+                </TableHeaderCell>
+            </template>
+        </TableRow>
+    </template>
+</TableHeader>
+
+<TableBody>
+    <template x-for="rowView in rowViews" :key="rowView.id">
+        <TableRow>
+            <DataTableSelectionCell RowExpr="rowView.row" />
+
+            <template x-for="cell in rowView.cells" :key="cell.id">
+                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+            </template>
+        </TableRow>
+    </template>
+</TableBody>
 """;
 
     private sealed record UserRow(string Id, string Name, string Email);
