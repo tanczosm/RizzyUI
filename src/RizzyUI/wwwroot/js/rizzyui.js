@@ -1,4 +1,4 @@
-import { b as bootstrapRizzyUI } from "./chunks/bootstrap-DmUTAXwT.js";
+import { b as bootstrapRizzyUI } from "./chunks/bootstrap-D1hoDQyf.js";
 var flushPending = false;
 var flushing = false;
 var queue = [];
