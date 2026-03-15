@@ -16,4 +16,5 @@ export const bundleLoaderRegistry = Object.freeze({
     'popover-tooltip-runtime': () => import('../bundles/popover-tooltip-runtime.js'),
     'docs-runtime': () => import('../bundles/docs-runtime.js'),
     'effects-runtime': () => import('../bundles/effects-runtime.js'),
+    'table-runtime': () => import('../bundles/table-runtime.js'),
 });
