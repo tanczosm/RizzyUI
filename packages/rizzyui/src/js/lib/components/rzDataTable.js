@@ -100,6 +100,19 @@ function buildRowModelGetters(pipeline) {
     return result;
 }
 
+
+function normalizeInitialState(initialState) {
+    return {
+        sorting: initialState?.sorting || [],
+        pagination: initialState?.pagination || { pageIndex: 0, pageSize: 10 },
+        columnVisibility: initialState?.columnVisibility || {},
+        columnFilters: initialState?.columnFilters || [],
+        globalFilter: initialState?.globalFilter,
+        rowSelection: initialState?.rowSelection || {},
+        columnPinning: initialState?.columnPinning || { left: [], right: [] },
+    };
+}
+
 function normalizeStatePayload(state, componentId, table) {
     return {
         componentId,
@@ -127,9 +140,7 @@ export default function rzDataTable() {
             const columns = normalizeColumns(transport.columns);
             const rowModelGetters = buildRowModelGetters(transport.rowModelPipeline || {});
 
-            const state = {
-                ...transport.initialState,
-            };
+            const state = normalizeInitialState(transport.initialState);
 
             this.table = createTable({
                 data: transport.data || [],
