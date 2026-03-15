@@ -384,6 +384,7 @@ public partial class RzTheme
 
         // RzTable Family
         RzTable = RizzyUI.RzTableStyles.DefaultDescriptor;
+        RzDataTable = RizzyUI.RzDataTableStyles.DefaultDescriptor;
         TableBody = RizzyUI.TableBodyStyles.DefaultDescriptor;
         TableCell = RizzyUI.TableCellStyles.DefaultDescriptor;
         TableHeader = RizzyUI.TableHeaderStyles.DefaultDescriptor;
