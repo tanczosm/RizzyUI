@@ -1,0 +1,10 @@
+@typeparam TItem
+@namespace RizzyUI
+@inherits RzComponent<DataTableColumnSlots>
+
+@if (ClientTemplate is not null)
+{
+    <template id="@TemplateId" data-column-template-id="@Id" data-slot="datatable-column-template">
+        @ClientTemplate
+    </template>
+}

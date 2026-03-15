@@ -28,6 +28,10 @@ public partial class RzTheme
     public virtual TvDescriptor<RzComponent<TableRowSlots>, TableRowSlots> TableRow { get; set; }
     /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzTable"/> component. </summary>
     public virtual TvDescriptor<RzComponent<RzTableSlots>, RzTableSlots> RzTable { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.RzDataTable{TItem}"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<RzDataTableSlots>, RzDataTableSlots> RzDataTable { get; set; }
+    /// <summary> Gets or sets the style definitions for the <see cref="RizzyUI.DataTableColumn{TItem}"/> component. </summary>
+    public virtual TvDescriptor<RzComponent<DataTableColumnSlots>, DataTableColumnSlots> DataTableColumn { get; set; }
 
     #endregion
 

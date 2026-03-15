@@ -1,0 +1,91 @@
+@page "/components/data-table"
+
+<PageTitle>Data Table</PageTitle>
+
+<RzQuickReferenceContainer>
+    <RzArticle ProseWidth="ProseWidth.UltraWide">
+        <SideContent>
+            <RzQuickReference />
+        </SideContent>
+        <MainContent>
+            <RzBreadcrumb class="mb-4 not-prose">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink Href="/">Docs</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbLink Href="/components">Components</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem><BreadcrumbPage>Data Table</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </RzBreadcrumb>
+
+            <RzHeading Level="HeadingLevel.H1" QuickReferenceTitle="Data Table" class="scroll-mt-20">Data Table</RzHeading>
+            <RzParagraph>
+                <code>RzDataTable&lt;TItem&gt;</code> is an SSR-first table component that progressively enhances into TanStack-driven client state for sorting, searching, pagination, selection, and column visibility.
+            </RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="SSR-first model" class="scroll-mt-20 mt-8">SSR-first model</RzHeading>
+            <RzParagraph>
+                Razor renders a meaningful fallback table for first paint and no-JS resilience. Alpine then reads inert JSON config and hands table state to TanStack Table.
+            </RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Stable row key" class="scroll-mt-20 mt-8">Stable row key</RzHeading>
+            <RzParagraph>
+                You must provide <code>RowKey</code>. It is projected to <code>__key</code> and wired to TanStack <code>getRowId</code>.
+            </RzParagraph>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic usage" class="scroll-mt-20 mt-8">Basic usage</RzHeading>
+            <RzCodeViewer Language="@CodeLanguage.Razor">
+&lt;RzDataTable TItem="UserDto"
+             Items="@@Users"
+             RowKey="u =&gt; u.Id"
+             Search="true"
+             SelectionMode="DataTableSelectionMode.Multiple"&gt;
+    &lt;DataTableColumn TItem="UserDto" Id="name" HeaderText="Name" Field="u =&gt; u.Name" Sortable="true" Searchable="true" /&gt;
+    &lt;DataTableColumn TItem="UserDto" Id="email" HeaderText="Email" Field="u =&gt; u.Email" Searchable="true" /&gt;
+    &lt;DataTableColumn TItem="UserDto" Id="status" HeaderText="Status" Field="u =&gt; u.Status" Sortable="true" /&gt;
+&lt;/RzDataTable&gt;
+            </RzCodeViewer>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Client template" class="scroll-mt-20 mt-8">Client template</RzHeading>
+            <RzParagraph>
+                <code>ClientTemplate</code> emits an inert HTML template once per column and is cloned client-side with <code>row</code>, <code>column</code>, and <code>cell</code> scope values.
+            </RzParagraph>
+            <RzCodeViewer Language="@CodeLanguage.Razor">
+&lt;DataTableColumn TItem="UserDto" Id="status" HeaderText="Status" Field="u =&gt; u.Status" Sortable="true"&gt;
+    &lt;ClientTemplate&gt;
+        &lt;span class="inline-flex rounded-md px-2 py-1 text-xs font-medium"
+              :class="row.statusClass"
+              x-text="row.statusLabel"&gt;&lt;/span&gt;
+    &lt;/ClientTemplate&gt;
+&lt;/DataTableColumn&gt;
+            </RzCodeViewer>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Behavior" class="scroll-mt-20 mt-8">Behavior</RzHeading>
+            <ul>
+                <li>Global search is case-insensitive and only checks columns marked <code>Searchable</code>.</li>
+                <li>Column visibility precedence: <code>InitialColumnVisibility</code> first, then <code>DataTableColumn.Visible</code>.</li>
+                <li>Single selection uses row click; multiple selection adds header/row checkboxes.</li>
+                <li>All client state is in-memory in v1 (no server mode or virtualization).</li>
+            </ul>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Events" class="scroll-mt-20 mt-8">Events</RzHeading>
+            <RzCodeViewer Language="@CodeLanguage.JavaScript">
+rz:datatable:ready
+rz:datatable:sort-change
+rz:datatable:page-change
+rz:datatable:search-change
+rz:datatable:column-visibility-change
+rz:datatable:selection-change
+rz:datatable:row-click
+rz:datatable:state-change
+            </RzCodeViewer>
+
+            <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="When not to use" class="scroll-mt-20 mt-8">When not to use</RzHeading>
+            <ul>
+                <li>Large virtualized datasets (not in v1).</li>
+                <li>Server-driven paging/sorting/filtering workflows.</li>
+                <li>Complex grouping, expansion, or tree-grid interactions.</li>
+            </ul>
+        </MainContent>
+    </RzArticle>
+</RzQuickReferenceContainer>
