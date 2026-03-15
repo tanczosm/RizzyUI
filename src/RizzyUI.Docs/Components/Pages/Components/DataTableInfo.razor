@@ -271,6 +271,42 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Column visibility" class="scroll-mt-20">Column visibility</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4 min-h-96 space-y-3">
+                        <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+                            <button type="button"
+                                    class="inline-flex items-center rounded border px-3 py-1.5 text-sm"
+                                    x-on:click="toggleColumnVisibility('email')">
+                                Toggle email column
+                            </button>
+
+                            <RzTable Border>
+                                <TableHeader>
+                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                        <TableRow>
+                                            <template x-for="header in headerGroup.headers" :key="header.id">
+                                                <TableHeaderCell x-bind:colspan="header.colSpan">
+                                                    <template x-if="!header.isPlaceholder">
+                                                        <span x-flexrender="flex.header(header)"></span>
+                                                    </template>
+                                                </TableHeaderCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableHeader>
+                                <TableBody>
+                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                        <TableRow>
+                                            <template x-for="cell in rowView.cells" :key="cell.id">
+                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableBody>
+                            </RzTable>
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_columnVisibilityCode))
                 </RzCodeViewer>
@@ -278,6 +314,37 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Sorting" class="scroll-mt-20">Sorting</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4 min-h-96">
+                        <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+                            <RzTable Border>
+                                <TableHeader>
+                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                        <TableRow>
+                                            <template x-for="header in headerGroup.headers" :key="header.id">
+                                                <TableHeaderCell x-bind:colspan="header.colSpan"
+                                                                 x-bind:aria-sort="sort.ariaSort(header)">
+                                                    <template x-if="!header.isPlaceholder">
+                                                        <DataTableSortToggle HeaderExpr="header" />
+                                                    </template>
+                                                </TableHeaderCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableHeader>
+                                <TableBody>
+                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                        <TableRow>
+                                            <template x-for="cell in rowView.cells" :key="cell.id">
+                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableBody>
+                            </RzTable>
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_sortingHelpersCode))
                 </RzCodeViewer>
@@ -285,6 +352,45 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection" class="scroll-mt-20">Row selection</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4 min-h-96 space-y-3">
+                        <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+                            <p class="text-sm text-muted-foreground">
+                                Selected rows: <span x-text="selectedRowCount"></span>
+                            </p>
+
+                            <RzTable Border>
+                                <TableHeader>
+                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                        <TableRow>
+                                            <template x-for="header in headerGroup.headers" :key="header.id">
+                                                <TableHeaderCell x-bind:colspan="header.colSpan">
+                                                    <template x-if="!header.isPlaceholder">
+                                                        <span x-flexrender="flex.header(header)"></span>
+                                                    </template>
+                                                </TableHeaderCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableHeader>
+                                <TableBody>
+                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                        <TableRow>
+                                            <template x-for="cell in rowView.cells" :key="cell.id">
+                                                <TableCell>
+                                                    <div class="inline-flex items-center gap-2">
+                                                        <DataTableRowSelectCheckbox RowExpr="rowView.row" />
+                                                        <span x-flexrender="flex.cell(cell)"></span>
+                                                    </div>
+                                                </TableCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableBody>
+                            </RzTable>
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_rowSelectionCode))
                 </RzCodeViewer>
@@ -292,6 +398,42 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection column" class="scroll-mt-20">Row selection column</RzHeading>
+                <RzBrowser Layout="typeof(PreviewLayout)">
+                    <div class="p-4 min-h-96">
+                        <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+                            <RzTable Border>
+                                <TableHeader>
+                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                        <TableRow>
+                                            <DataTableSelectionHeaderCell Scope="DataTableSelectionScope.Page" />
+
+                                            <template x-for="header in headerGroup.headers" :key="header.id">
+                                                <TableHeaderCell x-bind:colspan="header.colSpan"
+                                                                 x-bind:aria-sort="sort.ariaSort(header)">
+                                                    <template x-if="!header.isPlaceholder">
+                                                        <DataTableSortToggle HeaderExpr="header" />
+                                                    </template>
+                                                </TableHeaderCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableHeader>
+
+                                <TableBody>
+                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                        <TableRow>
+                                            <DataTableSelectionCell RowExpr="rowView.row" />
+
+                                            <template x-for="cell in rowView.cells" :key="cell.id">
+                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            </template>
+                                        </TableRow>
+                                    </template>
+                                </TableBody>
+                            </RzTable>
+                        </RzDataTable>
+                    </div>
+                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_rowSelectionColumnCode))
                 </RzCodeViewer>
@@ -617,64 +759,144 @@
 
     private const string _columnVisibilityCode =
 """
-<button type="button" @@click="toggleColumnVisibility('email')">
-    Toggle email
-</button>
+<RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+    <button type="button"
+            class="inline-flex items-center rounded border px-3 py-1.5 text-sm"
+            x-on:click="toggleColumnVisibility('email')">
+        Toggle email column
+    </button>
+
+    <RzTable Border>
+        <TableHeader>
+            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                <TableRow>
+                    <template x-for="header in headerGroup.headers" :key="header.id">
+                        <TableHeaderCell x-bind:colspan="header.colSpan">
+                            <template x-if="!header.isPlaceholder">
+                                <span x-flexrender="flex.header(header)"></span>
+                            </template>
+                        </TableHeaderCell>
+                    </template>
+                </TableRow>
+            </template>
+        </TableHeader>
+        <TableBody>
+            <template x-for="rowView in rowViews" :key="rowView.id">
+                <TableRow>
+                    <template x-for="cell in rowView.cells" :key="cell.id">
+                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    </template>
+                </TableRow>
+            </template>
+        </TableBody>
+    </RzTable>
+</RzDataTable>
 """;
 
     private const string _rowSelectionCode =
 """
-<p>Selected rows: <span x-text="selectedRowCount"></span></p>
+<RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+    <p class="text-sm text-muted-foreground">
+        Selected rows: <span x-text="selectedRowCount"></span>
+    </p>
+
+    <RzTable Border>
+        <TableHeader>
+            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                <TableRow>
+                    <template x-for="header in headerGroup.headers" :key="header.id">
+                        <TableHeaderCell x-bind:colspan="header.colSpan">
+                            <template x-if="!header.isPlaceholder">
+                                <span x-flexrender="flex.header(header)"></span>
+                            </template>
+                        </TableHeaderCell>
+                    </template>
+                </TableRow>
+            </template>
+        </TableHeader>
+        <TableBody>
+            <template x-for="rowView in rowViews" :key="rowView.id">
+                <TableRow>
+                    <template x-for="cell in rowView.cells" :key="cell.id">
+                        <TableCell>
+                            <div class="inline-flex items-center gap-2">
+                                <DataTableRowSelectCheckbox RowExpr="rowView.row" />
+                                <span x-flexrender="flex.cell(cell)"></span>
+                            </div>
+                        </TableCell>
+                    </template>
+                </TableRow>
+            </template>
+        </TableBody>
+    </RzTable>
+</RzDataTable>
 """;
 
     private const string _sortingHelpersCode =
 """
-<TableHeader>
-    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
-        <TableRow>
-            <template x-for="header in headerGroup.headers" :key="header.id">
-                <TableHeaderCell x-bind:colspan="header.colSpan"
-                                 x-bind:aria-sort="sort.ariaSort(header)">
-                    <template x-if="!header.isPlaceholder">
-                        <DataTableSortToggle HeaderExpr="header" />
+<RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+    <RzTable Border>
+        <TableHeader>
+            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                <TableRow>
+                    <template x-for="header in headerGroup.headers" :key="header.id">
+                        <TableHeaderCell x-bind:colspan="header.colSpan"
+                                         x-bind:aria-sort="sort.ariaSort(header)">
+                            <template x-if="!header.isPlaceholder">
+                                <DataTableSortToggle HeaderExpr="header" />
+                            </template>
+                        </TableHeaderCell>
                     </template>
-                </TableHeaderCell>
+                </TableRow>
             </template>
-        </TableRow>
-    </template>
-</TableHeader>
+        </TableHeader>
+        <TableBody>
+            <template x-for="rowView in rowViews" :key="rowView.id">
+                <TableRow>
+                    <template x-for="cell in rowView.cells" :key="cell.id">
+                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    </template>
+                </TableRow>
+            </template>
+        </TableBody>
+    </RzTable>
+</RzDataTable>
 """;
 
     private const string _rowSelectionColumnCode =
 """
-<TableHeader>
-    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
-        <TableRow>
-            <DataTableSelectionHeaderCell Scope="DataTableSelectionScope.Page" />
+<RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
+    <RzTable Border>
+        <TableHeader>
+            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                <TableRow>
+                    <DataTableSelectionHeaderCell Scope="DataTableSelectionScope.Page" />
 
-            <template x-for="header in headerGroup.headers" :key="header.id">
-                <TableHeaderCell x-bind:colspan="header.colSpan"
-                                 x-bind:aria-sort="sort.ariaSort(header)">
-                    <template x-if="!header.isPlaceholder">
-                        <DataTableSortToggle HeaderExpr="header" />
+                    <template x-for="header in headerGroup.headers" :key="header.id">
+                        <TableHeaderCell x-bind:colspan="header.colSpan"
+                                         x-bind:aria-sort="sort.ariaSort(header)">
+                            <template x-if="!header.isPlaceholder">
+                                <DataTableSortToggle HeaderExpr="header" />
+                            </template>
+                        </TableHeaderCell>
                     </template>
-                </TableHeaderCell>
+                </TableRow>
             </template>
-        </TableRow>
-    </template>
-</TableHeader>
+        </TableHeader>
 
-<TableBody>
-    <template x-for="rowView in rowViews" :key="rowView.id">
-        <TableRow>
-            <DataTableSelectionCell RowExpr="rowView.row" />
+        <TableBody>
+            <template x-for="rowView in rowViews" :key="rowView.id">
+                <TableRow>
+                    <DataTableSelectionCell RowExpr="rowView.row" />
 
-            <template x-for="cell in rowView.cells" :key="cell.id">
-                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in rowView.cells" :key="cell.id">
+                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    </template>
+                </TableRow>
             </template>
-        </TableRow>
-    </template>
-</TableBody>
+        </TableBody>
+    </RzTable>
+</RzDataTable>
 """;
 
     private sealed record UserRow(string Id, string Name, string Email);
