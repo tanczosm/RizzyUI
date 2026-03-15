@@ -1,0 +1,50 @@
+@page "/components/data-table"
+
+<PageTitle>Data Table</PageTitle>
+
+<RzArticle ProseWidth="ProseWidth.UltraWide">
+    <RzHeading Level="HeadingLevel.H1">Data Table</RzHeading>
+    <RzParagraph>
+        <code>RzDataTable&lt;TItem&gt;</code> is an SSR-first table that renders a usable initial page on the server,
+        then progressively enhances with Alpine + TanStack Table for client-memory sorting, search, pagination,
+        visibility, and selection.
+    </RzParagraph>
+
+    <RzHeading Level="HeadingLevel.H2">Key requirements</RzHeading>
+    <ul>
+        <li>Stable row key is mandatory via <code>RowKey</code>.</li>
+        <li>Use declarative <code>DataTableColumn&lt;TItem&gt;</code> children.</li>
+        <li>Global search only uses columns with <code>Searchable=&quot;true&quot;</code>.</li>
+        <li><code>InitialColumnVisibility</code> overrides per-column <code>Visible</code> for matching ids.</li>
+    </ul>
+
+    <RzHeading Level="HeadingLevel.H2">Events</RzHeading>
+    <RzParagraph>
+        Browser events are dispatched as <code>rz:datatable:*</code>: ready, sort-change, page-change,
+        search-change, column-visibility-change, selection-change, row-click, and state-change.
+    </RzParagraph>
+
+    <RzHeading Level="HeadingLevel.H2">Client templates</RzHeading>
+    <RzParagraph>
+        <code>ClientTemplate</code> content is emitted once as inert templates and cloned client-side.
+        Template scope provides <code>row</code>, <code>column</code>, and <code>cell</code>.
+        This is not a live server-side <code>RenderFragment&lt;TItem&gt;</code> rendering model.
+    </RzParagraph>
+
+    <RzHeading Level="HeadingLevel.H2">When not to use</RzHeading>
+    <RzParagraph>
+        For very large datasets, server paging, grouping, expansion, or virtualization workflows, use a dedicated
+        server-driven table experience instead of this v1 client-memory component.
+    </RzParagraph>
+
+    <RzCodeViewer Language="@CodeLanguage.Razor">
+&lt;RzDataTable TItem="UserRow"
+             Items="Users"
+             RowKey="u =&gt; u.Id"
+             Search="true"
+             SelectionMode="DataTableSelectionMode.Multiple"&gt;
+    &lt;DataTableColumn TItem="UserRow" Id="name" HeaderText="Name" Field="u =&gt; u.Name" Sortable="true" Searchable="true" /&gt;
+    &lt;DataTableColumn TItem="UserRow" Id="email" HeaderText="Email" Field="u =&gt; u.Email" Searchable="true" /&gt;
+&lt;/RzDataTable&gt;
+    </RzCodeViewer>
+</RzArticle>

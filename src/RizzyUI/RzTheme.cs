@@ -392,6 +392,7 @@ public partial class RzTheme
         TableRow = RizzyUI.TableRowStyles.DefaultDescriptor;
         TablePagination = RizzyUI.TablePaginationStyles.DefaultDescriptor;
         TableCaption = RizzyUI.TableCaptionStyles.DefaultDescriptor;
+        RzDataTable = RizzyUI.RzDataTableStyles.DefaultDescriptor;
 
         // RzTabs Family
         RzTabs = RizzyUI.RzTabs.DefaultDescriptor;

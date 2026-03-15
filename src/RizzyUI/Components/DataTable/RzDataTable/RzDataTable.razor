@@ -1,0 +1,161 @@
+@namespace RizzyUI
+@typeparam TItem
+@inherits RzComponent<RzDataTableSlots>
+
+<CascadingValue Value="this" IsFixed="true">
+    <HtmlElement Element="@EffectiveElement" id="@Id" @attributes="@AdditionalAttributes" class="@SlotClasses.GetBase()" data-slot="datatable">
+        <div class="hidden" aria-hidden="true">@ChildContent</div>
+
+        <div data-alpine-root="@Id"
+             x-data="rzDataTable"
+             x-load="@LoadStrategyOrNull"
+             data-assets="@_assets"
+             data-nonce="@Nonce"
+             data-config-selector="@ConfigScriptSelector"
+             data-slot="datatable">
+            @if (ShowToolbar)
+            {
+                <div class="@SlotClasses.GetToolbar()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.Toolbar)">
+                    @if (Search)
+                    {
+                        <input type="search"
+                               class="@SlotClasses.GetSearchBox()"
+                               data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.SearchBox)"
+                               placeholder="@SearchPlaceholder"
+                               x-model="search"
+                               x-on:input="onSearchInput"
+                               aria-label="@SearchPlaceholder" />
+                    }
+
+                    <div class="@SlotClasses.GetToolbarActions()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.ToolbarActions)">
+                        @ToolbarActions
+
+                        @if (ShowColumnVisibility)
+                        {
+                            <div class="@SlotClasses.GetColumnMenu()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.ColumnMenu)">
+                                <button type="button"
+                                        x-on:click="toggleColumnMenu"
+                                        x-on:keydown.escape="closeColumnMenu"
+                                        x-bind:aria-expanded="columnMenuOpen"
+                                        aria-haspopup="menu"
+                                        class="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 text-sm">
+                                    @Localizer["RzDataTable.ColumnMenuLabel"]
+                                </button>
+                                <div x-show="columnMenuOpen" x-cloak x-on:click.outside="closeColumnMenu" class="absolute right-0 z-20 mt-2 w-56 rounded-md border border-border bg-popover p-2 shadow-md" role="menu">
+                                    @foreach (var column in RegisteredColumns.Where(c => c.CanHide))
+                                    {
+                                        <label class="flex items-center gap-2 px-1 py-1 text-sm" role="menuitemcheckbox">
+                                            <input type="checkbox" x-bind:checked="isColumnVisible('@column.Id')" x-on:change="onColumnVisibilityToggle" data-column-id="@column.Id" />
+                                            <span>@column.HeaderText</span>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="@SlotClasses.GetTableShell()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.TableShell)">
+                <RzTable class="@TableClass">
+                    <TableHeader class="@SlotClasses.GetHeader()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.Header)">
+                        <TableRow>
+                            @if (SelectionMode == DataTableSelectionMode.Multiple)
+                            {
+                                <TableHeaderCell class="@($"w-10 {SlotClasses.GetHeaderCell()}")" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.HeaderCell)">
+                                    <input type="checkbox"
+                                           x-bind:checked="allPageRowsSelected"
+                                           x-bind:indeterminate="somePageRowsSelected"
+                                           x-on:change="onSelectAllPageRows"
+                                           aria-label="@Localizer["RzDataTable.SelectAllRows"]" />
+                                </TableHeaderCell>
+                            }
+                            @foreach (var column in RegisteredColumns.Where(ResolveInitialVisibility))
+                            {
+                                <TableHeaderCell class="@($"{SlotClasses.GetHeaderCell()} {GetTextAlignClass(column.Align)} {column.HeaderClass}")"
+                                                 data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.HeaderCell)"
+                                                 style="@(string.IsNullOrWhiteSpace(column.Width) ? null : $"width: {column.Width}")"
+                                                 data-column-id="@column.Id"
+                                                 aria-sort="none">
+                                    @if (column.Sortable)
+                                    {
+                                        <button type="button" class="inline-flex items-center gap-1" data-column-id="@column.Id" x-on:click="onSortClick">
+                                            <span>@column.HeaderText</span>
+                                            <span class="text-xs" x-text="sortGlyph('@column.Id')"></span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span>@column.HeaderText</span>
+                                    }
+                                </TableHeaderCell>
+                            }
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody class="@SlotClasses.GetBody()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.Body)">
+                        @if (!EffectiveItems.Any())
+                        {
+                            <TableRow class="@SlotClasses.GetBodyRow()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.BodyRow)">
+                                <TableCell Colspan="@FallbackColspan" class="@SlotClasses.GetEmpty()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.Empty)">
+                                    @if (EmptyTemplate is not null)
+                                    {
+                                        @EmptyTemplate
+                                    }
+                                    else
+                                    {
+                                        @Localizer["RzDataTable.NoResults"]
+                                    }
+                                </TableCell>
+                            </TableRow>
+                        }
+                        else
+                        {
+                            @foreach (var row in EffectiveItems.Take(Math.Max(PageSize, 1)))
+                            {
+                                var key = RowKey!.Compile()(row)?.ToString() ?? string.Empty;
+                                <TableRow class="@SlotClasses.GetBodyRow()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.BodyRow)" x-on:click="onRowClick" data-row-key="@key">
+                                    @if (SelectionMode == DataTableSelectionMode.Multiple)
+                                    {
+                                        <TableCell class="@($"w-10 {SlotClasses.GetBodyCell()}")" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.BodyCell)">
+                                            <input type="checkbox" x-bind:checked="isSelected('@key')" x-on:click.stop x-on:change="onRowCheckboxChange" data-row-key="@key" aria-label="@Localizer["RzDataTable.SelectRow"]" />
+                                        </TableCell>
+                                    }
+                                    @foreach (var column in RegisteredColumns.Where(ResolveInitialVisibility))
+                                    {
+                                        <TableCell class="@($"{SlotClasses.GetBodyCell()} {GetTextAlignClass(column.Align)} {column.CellClass}")" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.BodyCell)">
+                                            @RenderFallbackCell(column, row)
+                                        </TableCell>
+                                    }
+                                </TableRow>
+                            }
+                        }
+                    </TableBody>
+                </RzTable>
+            </div>
+
+            @if (EnablePagination)
+            {
+                <div class="@SlotClasses.GetPagination()" data-slot="@RzDataTableSlotNames.NameOf(RzDataTableSlotTypes.Pagination)">
+                    <div class="text-sm text-muted-foreground" x-text="paginationSummary"></div>
+                    <div class="flex items-center gap-2">
+                        <select class="h-9 rounded-md border border-input bg-background px-2 text-sm" x-model="pageSize" x-on:change="onPageSizeChange">
+                            @foreach (var option in PageSizeOptions)
+                            {
+                                <option value="@option">@option</option>
+                            }
+                        </select>
+                        <button type="button" class="h-9 rounded-md border border-input px-3 text-sm" x-on:click="prevPage" x-bind:disabled="!canPreviousPage">Prev</button>
+                        <button type="button" class="h-9 rounded-md border border-input px-3 text-sm" x-on:click="nextPage" x-bind:disabled="!canNextPage">Next</button>
+                    </div>
+                </div>
+            }
+
+            @foreach (var column in RegisteredColumns.Where(c => c.ClientTemplate is not null))
+            {
+                <template data-rz-datatable-template="@column.Id">@column.ClientTemplate</template>
+            }
+
+            <script type="application/json" data-rz-datatable-config="@Id" nonce="@Nonce">@((MarkupString)_serializedConfig)</script>
+        </div>
+    </HtmlElement>
+</CascadingValue>
