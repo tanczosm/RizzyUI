@@ -61,6 +61,8 @@ export const componentBundleManifest = Object.freeze({
     rzPopover: 'popover-tooltip-runtime',
     rzTooltip: 'popover-tooltip-runtime',
 
+    rzDataTable: 'table-runtime',
+
     rzBrowser: 'docs-runtime',
     rzCodeViewer: 'docs-runtime',
     rzEmbeddedPreview: 'docs-runtime',
