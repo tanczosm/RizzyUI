@@ -173,7 +173,7 @@ function validateRowIds(data, rowIdPath) {
     }
 }
 
-function buildHeaderGroupViews(table) {
+function buildHeaderGroups(table) {
     const groups = table?.getHeaderGroups?.() || [];
 
     return groups.map(group => ({
@@ -182,7 +182,7 @@ function buildHeaderGroupViews(table) {
     }));
 }
 
-function buildRowViews(table) {
+function buildRows(table) {
     const rows = table?.getRowModel?.().rows || [];
 
     return rows.map(row => ({
@@ -192,7 +192,7 @@ function buildRowViews(table) {
     }));
 }
 
-function buildFooterGroupViews(table) {
+function buildFooterGroups(table) {
     const groups = table?.getFooterGroups?.() || [];
 
     return groups.map(group => ({
@@ -585,9 +585,9 @@ export default function rzDataTable() {
 
         refreshDerivedState() {
             this._stateVersion += 1;
-            this.headerGroups = buildHeaderGroupViews(this.table);
-            this.rows = buildRowViews(this.table);
-            this.footerGroups = buildFooterGroupViews(this.table);
+            this.headerGroups = buildHeaderGroups(this.table);
+            this.rows = buildRows(this.table);
+            this.footerGroups = buildFooterGroups(this.table);
             this.hasRows = this.rows.length > 0;
             this.isEmpty = !this.hasRows;
             this.selectedRowCount = this.table?.getSelectedRowModel?.().rows.length || 0;
