@@ -41,7 +41,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic usage" class="scroll-mt-20">Basic usage</RzHeading>
-                    <div class="p-4">
+                    <div>
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
@@ -84,7 +84,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Global filter" class="scroll-mt-20">Global filter</RzHeading>
-                    <div class="p-4 space-y-3">
+                    <div>
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <label for="datatable-filter" class="text-sm font-medium">Filter users</label>
                             <input id="datatable-filter" class="border px-2 py-1 rounded" placeholder="Search name" x-on:input="setGlobalFilter($event.target.value)" />
@@ -127,7 +127,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Pagination with previous and next" class="scroll-mt-20">Pagination with previous and next</RzHeading>
-                    <div class="p-4 space-y-4">
+                    <div>
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
@@ -187,7 +187,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Pagination with page links" class="scroll-mt-20">Pagination with page links</RzHeading>
-                    <div class="p-4 space-y-4">
+                    <div>
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
@@ -263,7 +263,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Column visibility" class="scroll-mt-20">Column visibility</RzHeading>
-                    <div class="p-4 min-h-96 space-y-3">
+                    <div class="min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <button type="button"
                                     class="inline-flex items-center rounded border px-3 py-1.5 text-sm"
@@ -307,7 +307,7 @@
                 <RzParagraph>
                     <code>DataTableSortIcon</code> supports custom icons via <code>AscendingIcon</code>, <code>DescendingIcon</code>, and <code>UnsortedIcon</code>.
                 </RzParagraph>
-                    <div class="p-4 min-h-96">
+                    <div class="min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
@@ -343,7 +343,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection" class="scroll-mt-20">Row selection</RzHeading>
-                    <div class="p-4 min-h-96 space-y-3">
+                    <div class="min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <p class="text-sm text-muted-foreground">
                                 Selected rows: <span x-text="selectedRowCount"></span>
@@ -387,7 +387,7 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection column" class="scroll-mt-20">Row selection column</RzHeading>
-                    <div class="p-4 min-h-96">
+                    <div class="min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
