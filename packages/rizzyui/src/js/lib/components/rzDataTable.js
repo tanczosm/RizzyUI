@@ -78,18 +78,13 @@ function normalizeColumns(columns) {
             normalized.accessorFn = row => getByPath(row, column.accessorKey);
         }
 
-        if (column.cell) {
-            const rendererKey = column.cell;
+        if (column.cell === 'rowSelection') {
             normalized.cell = cellContext => {
-                if (rendererKey === 'rowSelection') {
-                    const row = cellContext.row;
-                    const isChecked = row.getIsSelected();
-                    return flex.html(`<input type="checkbox" aria-label="Select row ${row.id}" ${isChecked ? 'checked' : ''} />`);
-                }
-
-                return flex.text(cellContext.getValue?.() ?? '');
+                const row = cellContext.row;
+                const isChecked = row.getIsSelected();
+                return flex.html(`<input type="checkbox" aria-label="Select row ${row.id}" ${isChecked ? 'checked' : ''} />`);
             };
-        } else if (!normalized.cell) {
+        } else if (!column.cell) {
             normalized.cell = cellContext => flex.text(cellContext.getValue?.() ?? '');
         }
 
@@ -295,11 +290,16 @@ function resolveSortDirection(component, header) {
     return entry.desc ? 'desc' : 'asc';
 }
 
+
+function touchReactiveState(component) {
+    // eslint-disable-next-line no-unused-expressions
+    component._stateVersion;
+}
+
 function createSortApi(component) {
     return {
         can: header => {
-            // eslint-disable-next-line no-unused-expressions
-            component._stateVersion;
+            touchReactiveState(component);
             return !!header?.column?.getCanSort?.();
         },
 
@@ -351,11 +351,20 @@ function createSortApi(component) {
 }
 function createSelectionApi(component) {
     return {
-        canSelect: row => row?.getCanSelect?.() !== false,
+        canSelect: row => {
+            touchReactiveState(component);
+            return row?.getCanSelect?.() !== false;
+        },
 
-        isSelected: row => !!row?.getIsSelected?.(),
+        isSelected: row => {
+            touchReactiveState(component);
+            return !!row?.getIsSelected?.();
+        },
 
-        isSomeSelected: row => !!row?.getIsSomeSelected?.(),
+        isSomeSelected: row => {
+            touchReactiveState(component);
+            return !!row?.getIsSomeSelected?.();
+        },
 
         setRowSelected: (row, value) => {
             if (row?.getCanSelect?.() === false) {
@@ -373,9 +382,15 @@ function createSelectionApi(component) {
             row?.toggleSelected?.();
         },
 
-        allRowsSelected: () => !!component.table?.getIsAllRowsSelected?.(),
+        allRowsSelected: () => {
+            touchReactiveState(component);
+            return !!component.table?.getIsAllRowsSelected?.();
+        },
 
-        someRowsSelected: () => !!component.table?.getIsSomeRowsSelected?.(),
+        someRowsSelected: () => {
+            touchReactiveState(component);
+            return !!component.table?.getIsSomeRowsSelected?.();
+        },
 
         setAllRows: value => {
             component.table?.toggleAllRowsSelected?.(!!value);
@@ -385,9 +400,15 @@ function createSelectionApi(component) {
             component.table?.toggleAllRowsSelected?.();
         },
 
-        allPageRowsSelected: () => !!component.table?.getIsAllPageRowsSelected?.(),
+        allPageRowsSelected: () => {
+            touchReactiveState(component);
+            return !!component.table?.getIsAllPageRowsSelected?.();
+        },
 
-        somePageRowsSelected: () => !!component.table?.getIsSomePageRowsSelected?.(),
+        somePageRowsSelected: () => {
+            touchReactiveState(component);
+            return !!component.table?.getIsSomePageRowsSelected?.();
+        },
 
         setAllPageRows: value => {
             component.table?.toggleAllPageRowsSelected?.(!!value);
