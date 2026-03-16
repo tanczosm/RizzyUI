@@ -41,7 +41,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic usage" class="scroll-mt-20">Basic usage</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
@@ -70,7 +69,6 @@
                             </RzTable>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_basicUsageCode))
                 </RzCodeViewer>
@@ -86,7 +84,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Global filter" class="scroll-mt-20">Global filter</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 space-y-3">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <label for="datatable-filter" class="text-sm font-medium">Filter users</label>
@@ -123,7 +120,6 @@
                             </RzTable>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_globalFilterCode))
                 </RzCodeViewer>
@@ -131,7 +127,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Pagination with previous and next" class="scroll-mt-20">Pagination with previous and next</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 space-y-4">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
@@ -185,7 +180,6 @@
                             </div>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_paginationPreviousNextCode))
                 </RzCodeViewer>
@@ -193,7 +187,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Pagination with page links" class="scroll-mt-20">Pagination with page links</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 space-y-4">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
@@ -263,7 +256,6 @@
                             </div>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_paginationPageLinksCode))
                 </RzCodeViewer>
@@ -271,7 +263,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Column visibility" class="scroll-mt-20">Column visibility</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 min-h-96 space-y-3">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <button type="button"
@@ -306,7 +297,6 @@
                             </RzTable>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_columnVisibilityCode))
                 </RzCodeViewer>
@@ -317,7 +307,6 @@
                 <RzParagraph>
                     <code>DataTableSortIcon</code> supports custom icons via <code>AscendingIcon</code>, <code>DescendingIcon</code>, and <code>UnsortedIcon</code>.
                 </RzParagraph>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
@@ -347,7 +336,6 @@
                             </RzTable>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_sortingHelpersCode))
                 </RzCodeViewer>
@@ -355,7 +343,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection" class="scroll-mt-20">Row selection</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 min-h-96 space-y-3">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <p class="text-sm text-muted-foreground">
@@ -393,7 +380,6 @@
                             </RzTable>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_rowSelectionCode))
                 </RzCodeViewer>
@@ -401,7 +387,6 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Row selection column" class="scroll-mt-20">Row selection column</RzHeading>
-                <RzBrowser Layout="typeof(PreviewLayout)">
                     <div class="p-4 min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
@@ -436,7 +421,6 @@
                             </RzTable>
                         </RzDataTable>
                     </div>
-                </RzBrowser>
                 <RzCodeViewer Language="@CodeLanguage.Razor">
                     @((MarkupString)EncodeCode(_rowSelectionColumnCode))
                 </RzCodeViewer>
