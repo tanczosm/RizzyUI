@@ -43,7 +43,7 @@ public partial class DataTableSortToggle : RzComponent<DataTableSortToggle.Slots
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string HeaderFlexExpr => $"flex.header({HeaderExpr})";
+    private string HeaderFlexExpr => $"_flex.header({HeaderExpr})";
     private string DisabledExpr => $"!sort.can({HeaderExpr})";
     private string AriaLabelExpr => $"sort.nextLabel({HeaderExpr})";
     private string DirectionExpr => $"sort.direction({HeaderExpr}) || 'none'";

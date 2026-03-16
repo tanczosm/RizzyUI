@@ -333,7 +333,10 @@
                                                 <TableHeaderCell x-bind:colspan="header.colSpan"
                                                                  x-bind:aria-sort="sort.ariaSort(header)">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <DataTableSortToggle HeaderExpr="header" />
+                                                        <div class="inline-flex items-center gap-2">
+                                                            <span x-flexrender="_flex.header(header)"></span>
+                                                            <DataTableSortToggle HeaderExpr="header" RenderLabel="false" />
+                                                        </div>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -369,6 +372,9 @@
                                 <TableHeader>
                                     <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
+                                            <TableHeaderCell class="w-10 text-center">
+                                                <DataTableSelectAllCheckbox Scope="DataTableSelectionScope.Page" />
+                                            </TableHeaderCell>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
@@ -382,13 +388,11 @@
                                 <TableBody>
                                     <template x-for="row in rows" :key="row.id">
                                         <TableRow>
+                                            <TableCell class="w-10 text-center">
+                                                <DataTableRowSelectCheckbox RowExpr="row.row" />
+                                            </TableCell>
                                             <template x-for="cell in row.cells" :key="cell.id">
-                                                <TableCell>
-                                                    <div class="inline-flex items-center gap-2">
-                                                        <DataTableRowSelectCheckbox RowExpr="row.row" />
-                                                        <span x-flexrender="_flex.cell(cell)"></span>
-                                                    </div>
-                                                </TableCell>
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -415,7 +419,10 @@
                                                 <TableHeaderCell x-bind:colspan="header.colSpan"
                                                                  x-bind:aria-sort="sort.ariaSort(header)">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <DataTableSortToggle HeaderExpr="header" />
+                                                        <div class="inline-flex items-center gap-2">
+                                                            <span x-flexrender="_flex.header(header)"></span>
+                                                            <DataTableSortToggle HeaderExpr="header" RenderLabel="false" />
+                                                        </div>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -444,34 +451,70 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component parameters" class="scroll-mt-20">Component parameters</RzHeading>
-                <ul>
-                    <li><code>Items</code> (<code>IReadOnlyList&lt;TItem&gt;</code>, required)</li>
-                    <li><code>Config</code> (<code>RzDataTableConfig&lt;TItem&gt;</code>, required)</li>
-                    <li><code>RowIdSelector</code> (<code>Expression&lt;Func&lt;TItem, object?&gt;&gt;</code>, required)</li>
-                    <li><code>ChildContent</code> (<code>RenderFragment?</code>)</li>
-                </ul>
+                <RzParagraph>Think of <code>RzDataTable&lt;TItem&gt;</code> as a two-part setup: (1) data and stable ids, then (2) table behavior.</RzParagraph>
+                <ol class="list-decimal pl-6 space-y-3">
+                    <li>
+                        <strong>Items</strong> (<code>IReadOnlyList&lt;TItem&gt;</code>, required): the row data source used to build TanStack rows.
+                    </li>
+                    <li>
+                        <strong>RowIdSelector</strong> (<code>Expression&lt;Func&lt;TItem, object?&gt;&gt;</code>, required): maps each item to a stable non-empty unique id.
+                    </li>
+                    <li>
+                        <strong>Config</strong> (<code>RzDataTableConfig&lt;TItem&gt;</code>, required): full table configuration.
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li><code>Columns</code>: column definitions (accessor, header, and optional custom cell behavior).</li>
+                            <li><code>Features</code>: capability flags (sorting, filtering/global filter, pagination, row selection, column visibility/hiding, etc.).</li>
+                            <li><code>InitialState</code> (optional): initial TanStack state slices such as sorting, pagination, filters, selection, and column visibility.</li>
+                            <li><code>LoadStrategy</code> / runtime-oriented options (optional): how and when Alpine assets initialize.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>ChildContent</strong> (<code>RenderFragment?</code>): consumer-authored table markup, typically with <code>RzTable</code> + Alpine loops over <code>headerGroups</code> and <code>rows</code>.
+                    </li>
+                </ol>
             </section>
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
-                <RzParagraph>The recommended rendering surface is <code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code>, <code>hasRows</code>, <code>isEmpty</code>, and <code>selectedRowCount</code>.</RzParagraph>
-                <RzParagraph>Use namespaced helpers for behavior: <code>sort.*</code>, <code>selection.*</code>, <code>pagination.*</code>, <code>filter.*</code>, and <code>columns.*</code>.</RzParagraph>
-                <ul>
-                    <li><code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code></li>
-                    <li><code>hasRows</code>, <code>isEmpty</code>, <code>selectedRowCount</code></li>
-                    <li><code>sort.can(header)</code>, <code>sort.direction(header)</code>, <code>sort.toggle(header)</code>, <code>sort.ariaSort(header)</code>, <code>sort.nextLabel(header)</code></li>
-                    <li><code>selection.canSelect(row)</code>, <code>selection.isSelected(row)</code>, <code>selection.isSomeSelected(row)</code>, <code>selection.setRowSelected(row, value)</code>, <code>selection.allPageRowsSelected()</code>, <code>selection.somePageRowsSelected()</code>, <code>selection.setAllPageRows(value)</code>, <code>selection.allRowsSelected()</code>, <code>selection.someRowsSelected()</code>, <code>selection.setAllRows(value)</code></li>
-                    <li><code>pagination.pageIndex</code>, <code>pagination.pageSize</code>, <code>pagination.pageCount</code>, <code>pagination.canPreviousPage</code>, <code>pagination.canNextPage</code>, <code>pagination.totalRows</code>, <code>pagination.startRow</code>, <code>pagination.endRow</code>, <code>pagination.items</code></li>
-                    <li><code>pagination.previousPage()</code>, <code>pagination.nextPage()</code>, <code>pagination.firstPage()</code>, <code>pagination.lastPage()</code>, <code>pagination.setPageIndex(index)</code>, <code>pagination.setPageSize(size)</code></li>
-                    <li><code>filter.setGlobalFilter(value)</code> (and <code>filter.globalFilter</code>)</li>
-                    <li><code>columns.all</code>, <code>columns.leaf</code>, <code>columns.visibleLeaf</code>, <code>columns.columnVisibility</code></li>
-                    <li><code>columns.getColumn(id)</code>, <code>columns.getAllColumns()</code>, <code>columns.getAllLeafColumns()</code>, <code>columns.getVisibleLeafColumns()</code></li>
-                    <li><code>columns.setColumnVisibility(updater)</code>, <code>columns.resetColumnVisibility()</code>, <code>columns.toggleAllColumnsVisible(value)</code>, <code>columns.getIsAllColumnsVisible()</code>, <code>columns.getIsSomeColumnsVisible()</code></li>
-                    <li><code>columns.getCanHide(column)</code>, <code>columns.getIsVisible(column)</code>, <code>columns.toggleVisibility(column, value)</code></li>
-                </ul>
-                <RzParagraph><code>table</code> is still available for advanced TanStack scenarios, but normal column interactions should prefer <code>columns.*</code>. <code>_stateVersion</code> and <code>_flex</code> are internal implementation details and not recommended as primary API.</RzParagraph>
-            </section>
+                <RzParagraph><strong>Rendering state</strong>: <code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code>, <code>hasRows</code>, <code>isEmpty</code>, and <code>selectedRowCount</code>.</RzParagraph>
+                <RzParagraph><strong>Advanced/internal</strong>: <code>table</code> (escape hatch), <code>_stateVersion</code>, and <code>_flex</code>.</RzParagraph>
 
+                <RzHeading Level="HeadingLevel.H3">Sorting API (<code>sort.*</code>)</RzHeading>
+                <ul>
+                    <li><code>sort.can(header)</code> — whether a header can sort. <a href="https://tanstack.com/table/latest/docs/api/features/sorting#getcansort" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>sort.direction(header)</code> — current sort direction for the header.</li>
+                    <li><code>sort.toggle(header)</code> — toggles sorting for the header. <a href="https://tanstack.com/table/latest/docs/api/features/sorting#togglesorting" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>sort.ariaSort(header)</code> — mapped ARIA value from current sort state.</li>
+                    <li><code>sort.nextLabel(header)</code> — convenience label for the next sort action.</li>
+                </ul>
+
+                <RzHeading Level="HeadingLevel.H3">Selection API (<code>selection.*</code>)</RzHeading>
+                <ul>
+                    <li><code>selection.canSelect(row)</code> / <code>selection.isSelected(row)</code> / <code>selection.isSomeSelected(row)</code> — row-level selection queries. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#getcanselect" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>selection.setRowSelected(row, value)</code> — set row selection state. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#toggleselected" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>selection.allPageRowsSelected()</code>, <code>selection.somePageRowsSelected()</code>, <code>selection.setAllPageRows(value)</code> — page-scoped selection helpers. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#getisallpagerowsselected" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>selection.allRowsSelected()</code>, <code>selection.someRowsSelected()</code>, <code>selection.setAllRows(value)</code> — table-wide selection helpers. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#getisallrowsselected" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                </ul>
+
+                <RzHeading Level="HeadingLevel.H3">Pagination API (<code>pagination.*</code>)</RzHeading>
+                <ul>
+                    <li>State: <code>pagination.pageIndex</code>, <code>pagination.pageSize</code>, <code>pagination.pageCount</code>, <code>pagination.canPreviousPage</code>, <code>pagination.canNextPage</code>, <code>pagination.totalRows</code>, <code>pagination.startRow</code>, <code>pagination.endRow</code>, <code>pagination.items</code>.</li>
+                    <li>Actions: <code>pagination.previousPage()</code>, <code>pagination.nextPage()</code>, <code>pagination.firstPage()</code>, <code>pagination.lastPage()</code>, <code>pagination.setPageIndex(index)</code>, <code>pagination.setPageSize(size)</code>. <a href="https://tanstack.com/table/latest/docs/api/features/pagination#table-api" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                </ul>
+
+                <RzHeading Level="HeadingLevel.H3">Filtering API (<code>filter.*</code>)</RzHeading>
+                <ul>
+                    <li><code>filter.globalFilter</code> — reactive mirror of global filter state. <a href="https://tanstack.com/table/latest/docs/api/features/global-filtering#state" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>filter.setGlobalFilter(value)</code> — sets global filter text. <a href="https://tanstack.com/table/latest/docs/api/features/global-filtering#setglobalfilter" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                </ul>
+
+                <RzHeading Level="HeadingLevel.H3">Columns API (<code>columns.*</code>)</RzHeading>
+                <ul>
+                    <li>Reactive state: <code>columns.all</code>, <code>columns.leaf</code>, <code>columns.visibleLeaf</code>, <code>columns.columnVisibility</code>. <a href="https://tanstack.com/table/latest/docs/api/features/column-visibility#state" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li>Table-level methods: <code>columns.getColumn(id)</code>, <code>columns.getAllColumns()</code>, <code>columns.getAllLeafColumns()</code>, <code>columns.getVisibleLeafColumns()</code>, <code>columns.setColumnVisibility(updater)</code>, <code>columns.resetColumnVisibility()</code>, <code>columns.toggleAllColumnsVisible(value)</code>, <code>columns.getIsAllColumnsVisible()</code>, <code>columns.getIsSomeColumnsVisible()</code>. <a href="https://tanstack.com/table/latest/docs/api/features/column-visibility#table-api" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li>Column-level methods: <code>columns.getCanHide(column)</code>, <code>columns.getIsVisible(column)</code>, <code>columns.toggleVisibility(column, value)</code>. <a href="https://tanstack.com/table/latest/docs/api/features/column-visibility#column-api" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                </ul>
+            </section>
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Events" class="scroll-mt-20">Event names</RzHeading>
                 <ul>
@@ -805,6 +848,9 @@
         <TableHeader>
             <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
+                    <TableHeaderCell class="w-10 text-center">
+                        <DataTableSelectAllCheckbox Scope="DataTableSelectionScope.Page" />
+                    </TableHeaderCell>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
@@ -818,13 +864,11 @@
         <TableBody>
             <template x-for="row in rows" :key="row.id">
                 <TableRow>
+                    <TableCell class="w-10 text-center">
+                        <DataTableRowSelectCheckbox RowExpr="row.row" />
+                    </TableCell>
                     <template x-for="cell in row.cells" :key="cell.id">
-                        <TableCell>
-                            <div class="inline-flex items-center gap-2">
-                                <DataTableRowSelectCheckbox RowExpr="row.row" />
-                                <span x-flexrender="_flex.cell(cell)"></span>
-                            </div>
-                        </TableCell>
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -844,7 +888,10 @@
                         <TableHeaderCell x-bind:colspan="header.colSpan"
                                          x-bind:aria-sort="sort.ariaSort(header)">
                             <template x-if="!header.isPlaceholder">
-                                <DataTableSortToggle HeaderExpr="header" />
+                                <div class="inline-flex items-center gap-2">
+                                    <span x-flexrender="_flex.header(header)"></span>
+                                    <DataTableSortToggle HeaderExpr="header" RenderLabel="false" />
+                                </div>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -877,7 +924,10 @@
                         <TableHeaderCell x-bind:colspan="header.colSpan"
                                          x-bind:aria-sort="sort.ariaSort(header)">
                             <template x-if="!header.isPlaceholder">
-                                <DataTableSortToggle HeaderExpr="header" />
+                                <div class="inline-flex items-center gap-2">
+                                    <span x-flexrender="_flex.header(header)"></span>
+                                    <DataTableSortToggle HeaderExpr="header" RenderLabel="false" />
+                                </div>
                             </template>
                         </TableHeaderCell>
                     </template>
