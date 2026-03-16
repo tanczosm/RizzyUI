@@ -273,19 +273,39 @@ function buildPaginationItems(pageIndex, pageCount) {
     return items;
 }
 
+
+function resolveSortDirection(component, header) {
+    if (!header?.column) {
+        return false;
+    }
+
+    // Read a reactive value so Alpine re-evaluates sort helper expressions when table state changes.
+    // This keeps bindings like x-show="sort.direction(header) === 'asc'" in sync.
+    // eslint-disable-next-line no-unused-expressions
+    component.stateVersion;
+
+    const columnId = header.column.id;
+    const sorting = component.table?.getState?.()?.sorting || [];
+    const entry = sorting.find(x => x?.id === columnId);
+
+    if (!entry) {
+        return false;
+    }
+
+    return entry.desc ? 'desc' : 'asc';
+}
+
 function createSortApi(component) {
     return {
-        can: header => !!header?.column?.getCanSort?.(),
-
-        direction: header => {
-            const value = header?.column?.getIsSorted?.();
-            return value === 'asc' || value === 'desc' ? value : false;
+        can: header => {
+            // eslint-disable-next-line no-unused-expressions
+            component.stateVersion;
+            return !!header?.column?.getCanSort?.();
         },
 
-        isSorted: header => {
-            const value = header?.column?.getIsSorted?.();
-            return value === 'asc' || value === 'desc';
-        },
+        direction: header => resolveSortDirection(component, header),
+
+        isSorted: header => resolveSortDirection(component, header) !== false,
 
         toggle: header => {
             if (!header?.column?.getCanSort?.()) {
@@ -296,7 +316,7 @@ function createSortApi(component) {
         },
 
         ariaSort: header => {
-            const value = header?.column?.getIsSorted?.();
+            const value = resolveSortDirection(component, header);
 
             if (value === 'asc') {
                 return 'ascending';
@@ -314,7 +334,7 @@ function createSortApi(component) {
                 return 'Sorting unavailable';
             }
 
-            const value = header?.column?.getIsSorted?.();
+            const value = resolveSortDirection(component, header);
             const enableSortingRemoval = component.table?.options?.enableSortingRemoval !== false;
 
             if (value === 'asc') {
@@ -329,7 +349,6 @@ function createSortApi(component) {
         },
     };
 }
-
 function createSelectionApi(component) {
     return {
         canSelect: row => row?.getCanSelect?.() !== false,
@@ -391,6 +410,7 @@ export default function rzDataTable() {
         hasRows: false,
         isEmpty: true,
         selectedRowCount: 0,
+        stateVersion: 0,
         flex,
         sort: null,
         selection: null,
@@ -527,6 +547,7 @@ export default function rzDataTable() {
         },
 
         refreshDerivedState() {
+            this.stateVersion += 1;
             this.headerGroupViews = buildHeaderGroupViews(this.table);
             this.rowViews = buildRowViews(this.table);
             this.footerGroupViews = buildFooterGroupViews(this.table);
