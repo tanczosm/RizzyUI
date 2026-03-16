@@ -1,3 +1,4 @@
+using Blazicons;
 using Microsoft.AspNetCore.Components;
 using TailwindVariants.NET;
 
@@ -26,6 +27,24 @@ public partial class DataTableSortIcon : RzComponent<DataTableSortIcon.Slots>
     /// </summary>
     [Parameter, EditorRequired]
     public string HeaderExpr { get; set; } = default!;
+
+    /// <summary>
+    /// Gets or sets the icon rendered when sorting direction is ascending.
+    /// </summary>
+    [Parameter]
+    public SvgIcon AscendingIcon { get; set; } = Lucide.ArrowUp;
+
+    /// <summary>
+    /// Gets or sets the icon rendered when sorting direction is descending.
+    /// </summary>
+    [Parameter]
+    public SvgIcon DescendingIcon { get; set; } = Lucide.ArrowDown;
+
+    /// <summary>
+    /// Gets or sets the icon rendered when no sort direction is active.
+    /// </summary>
+    [Parameter]
+    public SvgIcon UnsortedIcon { get; set; } = Lucide.ArrowUpDown;
 
     private string CanExpr => $"sort.can({HeaderExpr})";
     private string AscExpr => $"sort.direction({HeaderExpr}) === 'asc'";
