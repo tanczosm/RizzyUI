@@ -265,11 +265,27 @@
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Column visibility" class="scroll-mt-20">Column visibility</RzHeading>
                     <div class="min-h-96">
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
-                            <button type="button"
-                                    class="inline-flex items-center rounded border px-3 py-1.5 text-sm"
-                                    x-on:click="toggleColumnVisibility('email')">
-                                Toggle email column
-                            </button>
+                            <div class="flex flex-col gap-2">
+                                <label class="inline-flex items-center gap-2 text-sm font-medium">
+                                    <input type="checkbox"
+                                           x-bind:checked="columns.getIsAllColumnsVisible()"
+                                           x-effect="$el.indeterminate = columns.getIsSomeColumnsVisible() && !columns.getIsAllColumnsVisible()"
+                                           x-on:change="columns.toggleAllColumnsVisible($event.target.checked)" />
+                                    Toggle all columns
+                                </label>
+
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <template x-for="column in columns.leaf" :key="column.id">
+                                        <label class="inline-flex items-center gap-2 text-sm">
+                                            <input type="checkbox"
+                                                   x-bind:checked="columns.getIsVisible(column)"
+                                                   x-bind:disabled="!columns.getCanHide(column)"
+                                                   x-on:change="columns.toggleVisibility(column, $event.target.checked)" />
+                                            <span x-text="column.id"></span>
+                                        </label>
+                                    </template>
+                                </div>
+                            </div>
 
                             <RzTable Border>
                                 <TableHeader>
@@ -439,7 +455,7 @@
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
                 <RzParagraph>The recommended rendering surface is <code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code>, <code>hasRows</code>, <code>isEmpty</code>, and <code>selectedRowCount</code>.</RzParagraph>
-                <RzParagraph>Use namespaced helpers for behavior: <code>sort.*</code>, <code>selection.*</code>, <code>pagination.*</code>, and <code>filter.*</code>.</RzParagraph>
+                <RzParagraph>Use namespaced helpers for behavior: <code>sort.*</code>, <code>selection.*</code>, <code>pagination.*</code>, <code>filter.*</code>, and <code>columns.*</code>.</RzParagraph>
                 <ul>
                     <li><code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code></li>
                     <li><code>hasRows</code>, <code>isEmpty</code>, <code>selectedRowCount</code></li>
@@ -448,9 +464,12 @@
                     <li><code>pagination.pageIndex</code>, <code>pagination.pageSize</code>, <code>pagination.pageCount</code>, <code>pagination.canPreviousPage</code>, <code>pagination.canNextPage</code>, <code>pagination.totalRows</code>, <code>pagination.startRow</code>, <code>pagination.endRow</code>, <code>pagination.items</code></li>
                     <li><code>pagination.previousPage()</code>, <code>pagination.nextPage()</code>, <code>pagination.firstPage()</code>, <code>pagination.lastPage()</code>, <code>pagination.setPageIndex(index)</code>, <code>pagination.setPageSize(size)</code></li>
                     <li><code>filter.setGlobalFilter(value)</code> (and <code>filter.globalFilter</code>)</li>
-                    <li><code>toggleColumnVisibility(id)</code></li>
+                    <li><code>columns.all</code>, <code>columns.leaf</code>, <code>columns.visibleLeaf</code>, <code>columns.columnVisibility</code></li>
+                    <li><code>columns.getColumn(id)</code>, <code>columns.getAllColumns()</code>, <code>columns.getAllLeafColumns()</code>, <code>columns.getVisibleLeafColumns()</code></li>
+                    <li><code>columns.setColumnVisibility(updater)</code>, <code>columns.resetColumnVisibility()</code>, <code>columns.toggleAllColumnsVisible(value)</code>, <code>columns.getIsAllColumnsVisible()</code>, <code>columns.getIsSomeColumnsVisible()</code></li>
+                    <li><code>columns.getCanHide(column)</code>, <code>columns.getIsVisible(column)</code>, <code>columns.toggleVisibility(column, value)</code></li>
                 </ul>
-                <RzParagraph><code>table</code> is still available for advanced TanStack scenarios, while <code>_stateVersion</code> and <code>_flex</code> are internal implementation details and not recommended as primary API.</RzParagraph>
+                <RzParagraph><code>table</code> is still available for advanced TanStack scenarios, but normal column interactions should prefer <code>columns.*</code>. <code>_stateVersion</code> and <code>_flex</code> are internal implementation details and not recommended as primary API.</RzParagraph>
             </section>
 
             <section class="my-8 py-2">
@@ -726,11 +745,27 @@
     private const string _columnVisibilityCode =
 """
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
-    <button type="button"
-            class="inline-flex items-center rounded border px-3 py-1.5 text-sm"
-            x-on:click="toggleColumnVisibility('email')">
-        Toggle email column
-    </button>
+    <div class="flex flex-col gap-2">
+        <label class="inline-flex items-center gap-2 text-sm font-medium">
+            <input type="checkbox"
+                   x-bind:checked="columns.getIsAllColumnsVisible()"
+                   x-effect="$el.indeterminate = columns.getIsSomeColumnsVisible() && !columns.getIsAllColumnsVisible()"
+                   x-on:change="columns.toggleAllColumnsVisible($event.target.checked)" />
+            Toggle all columns
+        </label>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <template x-for="column in columns.leaf" :key="column.id">
+                <label class="inline-flex items-center gap-2 text-sm">
+                    <input type="checkbox"
+                           x-bind:checked="columns.getIsVisible(column)"
+                           x-bind:disabled="!columns.getCanHide(column)"
+                           x-on:change="columns.toggleVisibility(column, $event.target.checked)" />
+                    <span x-text="column.id"></span>
+                </label>
+            </template>
+        </div>
+    </div>
 
     <RzTable Border>
         <TableHeader>

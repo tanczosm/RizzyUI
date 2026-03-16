@@ -500,6 +500,70 @@ function createFilterApi(component) {
     };
 }
 
+function createColumnsApi(component) {
+    return {
+        all: [],
+        leaf: [],
+        visibleLeaf: [],
+        columnVisibility: {},
+
+        getColumn(id) {
+            return component.table?.getColumn?.(id);
+        },
+
+        getAllColumns() {
+            touchReactiveState(component);
+            return this.all;
+        },
+
+        getAllLeafColumns() {
+            touchReactiveState(component);
+            return this.leaf;
+        },
+
+        getVisibleLeafColumns() {
+            touchReactiveState(component);
+            return this.visibleLeaf;
+        },
+
+        setColumnVisibility(updater) {
+            component.table?.setColumnVisibility?.(updater);
+        },
+
+        resetColumnVisibility() {
+            component.table?.resetColumnVisibility?.();
+        },
+
+        toggleAllColumnsVisible(value) {
+            component.table?.toggleAllColumnsVisible?.(value);
+        },
+
+        getIsAllColumnsVisible() {
+            touchReactiveState(component);
+            return !!component.table?.getIsAllColumnsVisible?.();
+        },
+
+        getIsSomeColumnsVisible() {
+            touchReactiveState(component);
+            return !!component.table?.getIsSomeColumnsVisible?.();
+        },
+
+        getCanHide(column) {
+            touchReactiveState(component);
+            return !!column?.getCanHide?.();
+        },
+
+        getIsVisible(column) {
+            touchReactiveState(component);
+            return !!column?.getIsVisible?.();
+        },
+
+        toggleVisibility(column, value) {
+            column?.toggleVisibility?.(value);
+        },
+    };
+}
+
 export default function rzDataTable() {
     return {
         table: null,
@@ -515,6 +579,7 @@ export default function rzDataTable() {
         selection: null,
         pagination: null,
         filter: null,
+        columns: null,
 
         init() {
             const root = this.$el;
@@ -566,6 +631,7 @@ export default function rzDataTable() {
             this.selection = createSelectionApi(this);
             this.pagination = createPaginationApi(this);
             this.filter = createFilterApi(this);
+            this.columns = createColumnsApi(this);
 
             this.refreshDerivedState();
 
@@ -575,12 +641,12 @@ export default function rzDataTable() {
         },
 
         toggleColumnVisibility(id) {
-            const column = this.table?.getColumn(id);
+            const column = this.columns?.getColumn(id);
             if (!column) {
                 return;
             }
 
-            column.toggleVisibility();
+            this.columns.toggleVisibility(column);
         },
 
         refreshDerivedState() {
@@ -593,6 +659,12 @@ export default function rzDataTable() {
             this.selectedRowCount = this.table?.getSelectedRowModel?.().rows.length || 0;
             if (this.filter) {
                 this.filter.globalFilter = this.table?.getState?.().globalFilter ?? '';
+            }
+            if (this.columns) {
+                this.columns.all = this.table?.getAllColumns?.() ?? [];
+                this.columns.leaf = this.table?.getAllLeafColumns?.() ?? [];
+                this.columns.visibleLeaf = this.table?.getVisibleLeafColumns?.() ?? [];
+                this.columns.columnVisibility = this.table?.getState?.().columnVisibility ?? {};
             }
 
             this.refreshPaginationState();
