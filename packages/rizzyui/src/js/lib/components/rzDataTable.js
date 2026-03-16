@@ -206,7 +206,7 @@ function buildFooterGroupViews(table) {
     }));
 }
 
-function createEmptyPaginationView() {
+function createEmptyPaginationState() {
     return {
         pageIndex: 0,
         pageSize: 10,
@@ -282,7 +282,7 @@ function resolveSortDirection(component, header) {
     // Read a reactive value so Alpine re-evaluates sort helper expressions when table state changes.
     // This keeps bindings like x-show="sort.direction(header) === 'asc'" in sync.
     // eslint-disable-next-line no-unused-expressions
-    component.stateVersion;
+    component._stateVersion;
 
     const columnId = header.column.id;
     const sorting = component.table?.getState?.()?.sorting || [];
@@ -299,7 +299,7 @@ function createSortApi(component) {
     return {
         can: header => {
             // eslint-disable-next-line no-unused-expressions
-            component.stateVersion;
+            component._stateVersion;
             return !!header?.column?.getCanSort?.();
         },
 
@@ -399,21 +399,101 @@ function createSelectionApi(component) {
     };
 }
 
+
+function createPaginationApi(component) {
+    return {
+        ...createEmptyPaginationState(),
+        items: [],
+
+        previousPage() {
+            if (!component.table || !component.table.getCanPreviousPage()) {
+                return;
+            }
+
+            component.table.previousPage();
+        },
+
+        nextPage() {
+            if (!component.table || !component.table.getCanNextPage()) {
+                return;
+            }
+
+            component.table.nextPage();
+        },
+
+        firstPage() {
+            if (!component.table || !component.table.getCanPreviousPage()) {
+                return;
+            }
+
+            component.table.firstPage();
+        },
+
+        lastPage() {
+            if (!component.table || !component.table.getCanNextPage()) {
+                return;
+            }
+
+            component.table.lastPage();
+        },
+
+        setPageIndex(index) {
+            if (!component.table) {
+                return;
+            }
+
+            const parsedIndex = Number(index);
+            if (!Number.isInteger(parsedIndex) || parsedIndex < 0) {
+                return;
+            }
+
+            component.table.setPageIndex(parsedIndex);
+        },
+
+        setPageSize(size) {
+            if (!component.table) {
+                return;
+            }
+
+            const parsedSize = Number(size);
+            if (!Number.isInteger(parsedSize) || parsedSize <= 0) {
+                return;
+            }
+
+            component.table.setPageSize(parsedSize);
+        },
+    };
+}
+
+function createFilterApi(component) {
+    return {
+        globalFilter: '',
+
+        setGlobalFilter(value) {
+            if (!component.table) {
+                return;
+            }
+
+            component.table.setGlobalFilter(value);
+        },
+    };
+}
+
 export default function rzDataTable() {
     return {
         table: null,
-        headerGroupViews: [],
-        rowViews: [],
-        footerGroupViews: [],
-        paginationView: createEmptyPaginationView(),
-        paginationItems: [],
+        headerGroups: [],
+        rows: [],
+        footerGroups: [],
         hasRows: false,
         isEmpty: true,
         selectedRowCount: 0,
-        stateVersion: 0,
-        flex,
+        _stateVersion: 0,
+        _flex: flex,
         sort: null,
         selection: null,
+        pagination: null,
+        filter: null,
 
         init() {
             const root = this.$el;
@@ -463,6 +543,8 @@ export default function rzDataTable() {
             this.table = table;
             this.sort = createSortApi(this);
             this.selection = createSelectionApi(this);
+            this.pagination = createPaginationApi(this);
+            this.filter = createFilterApi(this);
 
             this.refreshDerivedState();
 
@@ -480,88 +562,23 @@ export default function rzDataTable() {
             column.toggleVisibility();
         },
 
-        setGlobalFilter(value) {
-            if (!this.table) {
-                return;
-            }
-
-            this.table.setGlobalFilter(value);
-        },
-
-        previousPage() {
-            if (!this.table || !this.table.getCanPreviousPage()) {
-                return;
-            }
-
-            this.table.previousPage();
-        },
-
-        nextPage() {
-            if (!this.table || !this.table.getCanNextPage()) {
-                return;
-            }
-
-            this.table.nextPage();
-        },
-
-        firstPage() {
-            if (!this.table || !this.table.getCanPreviousPage()) {
-                return;
-            }
-
-            this.table.firstPage();
-        },
-
-        lastPage() {
-            if (!this.table || !this.table.getCanNextPage()) {
-                return;
-            }
-
-            this.table.lastPage();
-        },
-
-        setPageIndex(index) {
-            if (!this.table) {
-                return;
-            }
-
-            const parsedIndex = Number(index);
-            if (!Number.isInteger(parsedIndex) || parsedIndex < 0) {
-                return;
-            }
-
-            this.table.setPageIndex(parsedIndex);
-        },
-
-        setPageSize(size) {
-            if (!this.table) {
-                return;
-            }
-
-            const parsedSize = Number(size);
-            if (!Number.isInteger(parsedSize) || parsedSize <= 0) {
-                return;
-            }
-
-            this.table.setPageSize(parsedSize);
-        },
-
         refreshDerivedState() {
-            this.stateVersion += 1;
-            this.headerGroupViews = buildHeaderGroupViews(this.table);
-            this.rowViews = buildRowViews(this.table);
-            this.footerGroupViews = buildFooterGroupViews(this.table);
-            this.hasRows = this.rowViews.length > 0;
+            this._stateVersion += 1;
+            this.headerGroups = buildHeaderGroupViews(this.table);
+            this.rows = buildRowViews(this.table);
+            this.footerGroups = buildFooterGroupViews(this.table);
+            this.hasRows = this.rows.length > 0;
             this.isEmpty = !this.hasRows;
             this.selectedRowCount = this.table?.getSelectedRowModel?.().rows.length || 0;
+            if (this.filter) {
+                this.filter.globalFilter = this.table?.getState?.().globalFilter ?? '';
+            }
 
             this.refreshPaginationState();
         },
 
         refreshPaginationState() {
-            if (!this.table) {
-                this.paginationView = createEmptyPaginationView();
-                this.paginationItems = [];
+            if (!this.table || !this.pagination) {
                 return;
             }
 
@@ -570,25 +587,22 @@ export default function rzDataTable() {
             const pageSize = state.pagination?.pageSize ?? 10;
             const pageCount = this.table.getPageCount();
             const totalRows = this.table.getPrePaginationRowModel().rows.length;
-            const visibleRows = this.rowViews.length;
+            const visibleRows = this.rows.length;
 
             const startRow = totalRows === 0 ? 0 : (pageIndex * pageSize) + 1;
             const endRow = totalRows === 0 || visibleRows === 0
                 ? 0
                 : startRow + visibleRows - 1;
 
-            this.paginationView = {
-                pageIndex,
-                pageSize,
-                pageCount,
-                canPreviousPage: this.table.getCanPreviousPage(),
-                canNextPage: this.table.getCanNextPage(),
-                totalRows,
-                startRow,
-                endRow,
-            };
-
-            this.paginationItems = buildPaginationItems(pageIndex, pageCount);
+            this.pagination.pageIndex = pageIndex;
+            this.pagination.pageSize = pageSize;
+            this.pagination.pageCount = pageCount;
+            this.pagination.canPreviousPage = this.table.getCanPreviousPage();
+            this.pagination.canNextPage = this.table.getCanNextPage();
+            this.pagination.totalRows = totalRows;
+            this.pagination.startRow = startRow;
+            this.pagination.endRow = endRow;
+            this.pagination.items = buildPaginationItems(pageIndex, pageCount);
         },
 
         dispatchStateEvents(componentId) {

@@ -27,7 +27,7 @@
             </RzParagraph>
 
             <RzParagraph>
-                Render loops should target reactive projections such as <code>headerGroupViews</code>, <code>rowViews</code>, <code>footerGroupViews</code>, <code>paginationView</code>, and <code>paginationItems</code>.
+                Render loops should target reactive projections such as <code>headerGroups</code>, <code>rows</code>, and <code>footerGroups</code> plus namespaced helpers such as <code>pagination.*</code>.
                 TanStack Table remains the source of truth for behavior and state, while Alpine consumes synchronized render projections.
             </RzParagraph>
 
@@ -45,12 +45,12 @@
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <span x-flexrender="flex.header(header)"></span>
+                                                        <span x-flexrender="_flex.header(header)"></span>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -58,10 +58,10 @@
                                     </template>
                                 </TableHeader>
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -87,16 +87,16 @@
                     <div>
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <label for="datatable-filter" class="text-sm font-medium">Filter users</label>
-                            <input id="datatable-filter" class="border px-2 py-1 rounded" placeholder="Search name" x-on:input="setGlobalFilter($event.target.value)" />
+                            <input id="datatable-filter" class="border px-2 py-1 rounded" placeholder="Search name" x-on:input="filter.setGlobalFilter($event.target.value)" />
 
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <span x-flexrender="flex.header(header)"></span>
+                                                        <span x-flexrender="_flex.header(header)"></span>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -109,10 +109,10 @@
                                             <TableCell colspan="2" class="text-center">No results found.</TableCell>
                                         </TableRow>
                                     </template>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -131,12 +131,12 @@
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <span x-flexrender="flex.header(header)"></span>
+                                                        <span x-flexrender="_flex.header(header)"></span>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -144,10 +144,10 @@
                                     </template>
                                 </TableHeader>
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -156,24 +156,24 @@
 
                             <div class="flex items-center justify-between gap-4">
                                 <p class="text-sm text-muted-foreground">
-                                    Page <span x-text="paginationView.pageIndex + 1"></span> of <span x-text="paginationView.pageCount"></span>
+                                    Page <span x-text="pagination.pageIndex + 1"></span> of <span x-text="pagination.pageCount"></span>
                                 </p>
 
-                                <RzPagination x-show="paginationView.pageCount > 1">
+                                <RzPagination x-show="pagination.pageCount > 1">
                                     <PaginationList>
                                         <PaginationItem>
                                             <PaginationPrevious Href="#"
-                                                                x-on:click.prevent="previousPage()"
-                                                                x-bind:aria-disabled="!paginationView.canPreviousPage"
-                                                                x-bind:tabindex="paginationView.canPreviousPage ? null : -1"
-                                                                x-bind:class="!paginationView.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
+                                                                x-on:click.prevent="pagination.previousPage()"
+                                                                x-bind:aria-disabled="!pagination.canPreviousPage"
+                                                                x-bind:tabindex="pagination.canPreviousPage ? null : -1"
+                                                                x-bind:class="!pagination.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
                                         </PaginationItem>
                                         <PaginationItem>
                                             <PaginationNext Href="#"
-                                                            x-on:click.prevent="nextPage()"
-                                                            x-bind:aria-disabled="!paginationView.canNextPage"
-                                                            x-bind:tabindex="paginationView.canNextPage ? null : -1"
-                                                            x-bind:class="!paginationView.canNextPage ? 'pointer-events-none opacity-50' : ''" />
+                                                            x-on:click.prevent="pagination.nextPage()"
+                                                            x-bind:aria-disabled="!pagination.canNextPage"
+                                                            x-bind:tabindex="pagination.canNextPage ? null : -1"
+                                                            x-bind:class="!pagination.canNextPage ? 'pointer-events-none opacity-50' : ''" />
                                         </PaginationItem>
                                     </PaginationList>
                                 </RzPagination>
@@ -191,12 +191,12 @@
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <span x-flexrender="flex.header(header)"></span>
+                                                        <span x-flexrender="_flex.header(header)"></span>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -204,10 +204,10 @@
                                     </template>
                                 </TableHeader>
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -216,25 +216,25 @@
 
                             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <p class="text-sm text-muted-foreground">
-                                    Showing <span x-text="paginationView.startRow"></span> to <span x-text="paginationView.endRow"></span> of <span x-text="paginationView.totalRows"></span> results
+                                    Showing <span x-text="pagination.startRow"></span> to <span x-text="pagination.endRow"></span> of <span x-text="pagination.totalRows"></span> results
                                 </p>
 
-                                <RzPagination x-show="paginationView.pageCount > 1">
+                                <RzPagination x-show="pagination.pageCount > 1">
                                     <PaginationList>
                                         <PaginationItem>
                                             <PaginationPrevious Href="#"
-                                                                x-on:click.prevent="previousPage()"
-                                                                x-bind:aria-disabled="!paginationView.canPreviousPage"
-                                                                x-bind:tabindex="paginationView.canPreviousPage ? null : -1"
-                                                                x-bind:class="!paginationView.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
+                                                                x-on:click.prevent="pagination.previousPage()"
+                                                                x-bind:aria-disabled="!pagination.canPreviousPage"
+                                                                x-bind:tabindex="pagination.canPreviousPage ? null : -1"
+                                                                x-bind:class="!pagination.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
                                         </PaginationItem>
 
-                                        <template x-for="item in paginationItems" :key="item.id">
+                                        <template x-for="item in pagination.items" :key="item.id">
                                             <PaginationItem>
                                                 <template x-if="item.kind === 'page'">
                                                     <PaginationLink Href="#"
                                                                     x-text="item.label"
-                                                                    x-on:click.prevent="setPageIndex(item.pageIndex)"
+                                                                    x-on:click.prevent="pagination.setPageIndex(item.pageIndex)"
                                                                     x-bind:aria-current="item.isActive ? 'page' : null"
                                                                     x-bind:class="item.isActive ? 'pointer-events-none bg-accent text-accent-foreground' : ''" />
                                                 </template>
@@ -246,10 +246,10 @@
 
                                         <PaginationItem>
                                             <PaginationNext Href="#"
-                                                            x-on:click.prevent="nextPage()"
-                                                            x-bind:aria-disabled="!paginationView.canNextPage"
-                                                            x-bind:tabindex="paginationView.canNextPage ? null : -1"
-                                                            x-bind:class="!paginationView.canNextPage ? 'pointer-events-none opacity-50' : ''" />
+                                                            x-on:click.prevent="pagination.nextPage()"
+                                                            x-bind:aria-disabled="!pagination.canNextPage"
+                                                            x-bind:tabindex="pagination.canNextPage ? null : -1"
+                                                            x-bind:class="!pagination.canNextPage ? 'pointer-events-none opacity-50' : ''" />
                                         </PaginationItem>
                                     </PaginationList>
                                 </RzPagination>
@@ -273,12 +273,12 @@
 
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <span x-flexrender="flex.header(header)"></span>
+                                                        <span x-flexrender="_flex.header(header)"></span>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -286,10 +286,10 @@
                                     </template>
                                 </TableHeader>
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -311,7 +311,7 @@
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan"
@@ -325,10 +325,10 @@
                                     </template>
                                 </TableHeader>
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -351,12 +351,12 @@
 
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <template x-for="header in headerGroup.headers" :key="header.id">
                                                 <TableHeaderCell x-bind:colspan="header.colSpan">
                                                     <template x-if="!header.isPlaceholder">
-                                                        <span x-flexrender="flex.header(header)"></span>
+                                                        <span x-flexrender="_flex.header(header)"></span>
                                                     </template>
                                                 </TableHeaderCell>
                                             </template>
@@ -364,13 +364,13 @@
                                     </template>
                                 </TableHeader>
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
+                                            <template x-for="cell in row.cells" :key="cell.id">
                                                 <TableCell>
                                                     <div class="inline-flex items-center gap-2">
-                                                        <DataTableRowSelectCheckbox RowExpr="rowView.row" />
-                                                        <span x-flexrender="flex.cell(cell)"></span>
+                                                        <DataTableRowSelectCheckbox RowExpr="row.row" />
+                                                        <span x-flexrender="_flex.cell(cell)"></span>
                                                     </div>
                                                 </TableCell>
                                             </template>
@@ -391,7 +391,7 @@
                         <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
                             <RzTable Border>
                                 <TableHeader>
-                                    <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+                                    <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                                         <TableRow>
                                             <DataTableSelectionHeaderCell Scope="DataTableSelectionScope.Page" />
 
@@ -408,12 +408,12 @@
                                 </TableHeader>
 
                                 <TableBody>
-                                    <template x-for="rowView in rowViews" :key="rowView.id">
+                                    <template x-for="row in rows" :key="row.id">
                                         <TableRow>
-                                            <DataTableSelectionCell RowExpr="rowView.row" />
+                                            <DataTableSelectionCell RowExpr="row.row" />
 
-                                            <template x-for="cell in rowView.cells" :key="cell.id">
-                                                <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                                            <template x-for="cell in row.cells" :key="cell.id">
+                                                <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                                             </template>
                                         </TableRow>
                                     </template>
@@ -438,40 +438,19 @@
 
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
+                <RzParagraph>The recommended rendering surface is <code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code>, <code>hasRows</code>, <code>isEmpty</code>, and <code>selectedRowCount</code>.</RzParagraph>
+                <RzParagraph>Use namespaced helpers for behavior: <code>sort.*</code>, <code>selection.*</code>, <code>pagination.*</code>, and <code>filter.*</code>.</RzParagraph>
                 <ul>
-                    <li><code>table</code></li>
-                    <li><code>headerGroupViews</code></li>
-                    <li><code>rowViews</code></li>
-                    <li><code>footerGroupViews</code></li>
-                    <li><code>paginationView</code></li>
-                    <li><code>paginationItems</code></li>
-                    <li><code>hasRows</code></li>
-                    <li><code>isEmpty</code></li>
-                    <li><code>selectedRowCount</code></li>
-                    <li><code>sort.can(header)</code></li>
-                    <li><code>sort.direction(header)</code></li>
-                    <li><code>sort.toggle(header)</code></li>
-                    <li><code>sort.ariaSort(header)</code></li>
-                    <li><code>sort.nextLabel(header)</code></li>
-                    <li><code>selection.canSelect(row)</code></li>
-                    <li><code>selection.isSelected(row)</code></li>
-                    <li><code>selection.isSomeSelected(row)</code></li>
-                    <li><code>selection.setRowSelected(row, value)</code></li>
-                    <li><code>selection.allPageRowsSelected()</code></li>
-                    <li><code>selection.somePageRowsSelected()</code></li>
-                    <li><code>selection.setAllPageRows(value)</code></li>
-                    <li><code>selection.allRowsSelected()</code></li>
-                    <li><code>selection.someRowsSelected()</code></li>
-                    <li><code>selection.setAllRows(value)</code></li>
+                    <li><code>headerGroups</code>, <code>rows</code>, <code>footerGroups</code></li>
+                    <li><code>hasRows</code>, <code>isEmpty</code>, <code>selectedRowCount</code></li>
+                    <li><code>sort.can(header)</code>, <code>sort.direction(header)</code>, <code>sort.toggle(header)</code>, <code>sort.ariaSort(header)</code>, <code>sort.nextLabel(header)</code></li>
+                    <li><code>selection.canSelect(row)</code>, <code>selection.isSelected(row)</code>, <code>selection.isSomeSelected(row)</code>, <code>selection.setRowSelected(row, value)</code>, <code>selection.allPageRowsSelected()</code>, <code>selection.somePageRowsSelected()</code>, <code>selection.setAllPageRows(value)</code>, <code>selection.allRowsSelected()</code>, <code>selection.someRowsSelected()</code>, <code>selection.setAllRows(value)</code></li>
+                    <li><code>pagination.pageIndex</code>, <code>pagination.pageSize</code>, <code>pagination.pageCount</code>, <code>pagination.canPreviousPage</code>, <code>pagination.canNextPage</code>, <code>pagination.totalRows</code>, <code>pagination.startRow</code>, <code>pagination.endRow</code>, <code>pagination.items</code></li>
+                    <li><code>pagination.previousPage()</code>, <code>pagination.nextPage()</code>, <code>pagination.firstPage()</code>, <code>pagination.lastPage()</code>, <code>pagination.setPageIndex(index)</code>, <code>pagination.setPageSize(size)</code></li>
+                    <li><code>filter.setGlobalFilter(value)</code> (and <code>filter.globalFilter</code>)</li>
                     <li><code>toggleColumnVisibility(id)</code></li>
-                    <li><code>setGlobalFilter(value)</code></li>
-                    <li><code>previousPage()</code></li>
-                    <li><code>nextPage()</code></li>
-                    <li><code>firstPage()</code></li>
-                    <li><code>lastPage()</code></li>
-                    <li><code>setPageIndex(index)</code></li>
-                    <li><code>setPageSize(size)</code></li>
                 </ul>
+                <RzParagraph><code>table</code> is still available for advanced TanStack scenarios, while <code>_stateVersion</code> and <code>_flex</code> are internal implementation details and not recommended as primary API.</RzParagraph>
             </section>
 
             <section class="my-8 py-2">
@@ -544,12 +523,12 @@
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
-                                <span x-flexrender="flex.header(header)"></span>
+                                <span x-flexrender="_flex.header(header)"></span>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -557,10 +536,10 @@
             </template>
         </TableHeader>
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -584,16 +563,16 @@
 """
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
     <label for="datatable-filter" class="text-sm font-medium">Filter users</label>
-    <input id="datatable-filter" class="border px-2 py-1 rounded" placeholder="Search name" x-on:input="setGlobalFilter($event.target.value)" />
+    <input id="datatable-filter" class="border px-2 py-1 rounded" placeholder="Search name" x-on:input="filter.setGlobalFilter($event.target.value)" />
 
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
-                                <span x-flexrender="flex.header(header)"></span>
+                                <span x-flexrender="_flex.header(header)"></span>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -606,10 +585,10 @@
                     <TableCell colspan="2" class="text-center">No results found.</TableCell>
                 </TableRow>
             </template>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -623,12 +602,12 @@
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
-                                <span x-flexrender="flex.header(header)"></span>
+                                <span x-flexrender="_flex.header(header)"></span>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -636,10 +615,10 @@
             </template>
         </TableHeader>
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -648,24 +627,24 @@
 
     <div class="flex items-center justify-between gap-4">
         <p class="text-sm text-muted-foreground">
-            Page <span x-text="paginationView.pageIndex + 1"></span> of <span x-text="paginationView.pageCount"></span>
+            Page <span x-text="pagination.pageIndex + 1"></span> of <span x-text="pagination.pageCount"></span>
         </p>
 
-        <RzPagination x-show="paginationView.pageCount > 1">
+        <RzPagination x-show="pagination.pageCount > 1">
             <PaginationList>
                 <PaginationItem>
                     <PaginationPrevious Href="#"
-                                        x-on:click.prevent="previousPage()"
-                                        x-bind:aria-disabled="!paginationView.canPreviousPage"
-                                        x-bind:tabindex="paginationView.canPreviousPage ? null : -1"
-                                        x-bind:class="!paginationView.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
+                                        x-on:click.prevent="pagination.previousPage()"
+                                        x-bind:aria-disabled="!pagination.canPreviousPage"
+                                        x-bind:tabindex="pagination.canPreviousPage ? null : -1"
+                                        x-bind:class="!pagination.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationNext Href="#"
-                                    x-on:click.prevent="nextPage()"
-                                    x-bind:aria-disabled="!paginationView.canNextPage"
-                                    x-bind:tabindex="paginationView.canNextPage ? null : -1"
-                                    x-bind:class="!paginationView.canNextPage ? 'pointer-events-none opacity-50' : ''" />
+                                    x-on:click.prevent="pagination.nextPage()"
+                                    x-bind:aria-disabled="!pagination.canNextPage"
+                                    x-bind:tabindex="pagination.canNextPage ? null : -1"
+                                    x-bind:class="!pagination.canNextPage ? 'pointer-events-none opacity-50' : ''" />
                 </PaginationItem>
             </PaginationList>
         </RzPagination>
@@ -678,12 +657,12 @@
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
-                                <span x-flexrender="flex.header(header)"></span>
+                                <span x-flexrender="_flex.header(header)"></span>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -691,10 +670,10 @@
             </template>
         </TableHeader>
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -703,25 +682,25 @@
 
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm text-muted-foreground">
-            Showing <span x-text="paginationView.startRow"></span> to <span x-text="paginationView.endRow"></span> of <span x-text="paginationView.totalRows"></span> results
+            Showing <span x-text="pagination.startRow"></span> to <span x-text="pagination.endRow"></span> of <span x-text="pagination.totalRows"></span> results
         </p>
 
-        <RzPagination x-show="paginationView.pageCount > 1">
+        <RzPagination x-show="pagination.pageCount > 1">
             <PaginationList>
                 <PaginationItem>
                     <PaginationPrevious Href="#"
-                                        x-on:click.prevent="previousPage()"
-                                        x-bind:aria-disabled="!paginationView.canPreviousPage"
-                                        x-bind:tabindex="paginationView.canPreviousPage ? null : -1"
-                                        x-bind:class="!paginationView.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
+                                        x-on:click.prevent="pagination.previousPage()"
+                                        x-bind:aria-disabled="!pagination.canPreviousPage"
+                                        x-bind:tabindex="pagination.canPreviousPage ? null : -1"
+                                        x-bind:class="!pagination.canPreviousPage ? 'pointer-events-none opacity-50' : ''" />
                 </PaginationItem>
 
-                <template x-for="item in paginationItems" :key="item.id">
+                <template x-for="item in pagination.items" :key="item.id">
                     <PaginationItem>
                         <template x-if="item.kind === 'page'">
                             <PaginationLink Href="#"
                                             x-text="item.label"
-                                            x-on:click.prevent="setPageIndex(item.pageIndex)"
+                                            x-on:click.prevent="pagination.setPageIndex(item.pageIndex)"
                                             x-bind:aria-current="item.isActive ? 'page' : null"
                                             x-bind:class="item.isActive ? 'pointer-events-none bg-accent text-accent-foreground' : ''" />
                         </template>
@@ -733,10 +712,10 @@
 
                 <PaginationItem>
                     <PaginationNext Href="#"
-                                    x-on:click.prevent="nextPage()"
-                                    x-bind:aria-disabled="!paginationView.canNextPage"
-                                    x-bind:tabindex="paginationView.canNextPage ? null : -1"
-                                    x-bind:class="!paginationView.canNextPage ? 'pointer-events-none opacity-50' : ''" />
+                                    x-on:click.prevent="pagination.nextPage()"
+                                    x-bind:aria-disabled="!pagination.canNextPage"
+                                    x-bind:tabindex="pagination.canNextPage ? null : -1"
+                                    x-bind:class="!pagination.canNextPage ? 'pointer-events-none opacity-50' : ''" />
                 </PaginationItem>
             </PaginationList>
         </RzPagination>
@@ -755,12 +734,12 @@
 
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
-                                <span x-flexrender="flex.header(header)"></span>
+                                <span x-flexrender="_flex.header(header)"></span>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -768,10 +747,10 @@
             </template>
         </TableHeader>
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -789,12 +768,12 @@
 
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan">
                             <template x-if="!header.isPlaceholder">
-                                <span x-flexrender="flex.header(header)"></span>
+                                <span x-flexrender="_flex.header(header)"></span>
                             </template>
                         </TableHeaderCell>
                     </template>
@@ -802,13 +781,13 @@
             </template>
         </TableHeader>
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
+                    <template x-for="cell in row.cells" :key="cell.id">
                         <TableCell>
                             <div class="inline-flex items-center gap-2">
-                                <DataTableRowSelectCheckbox RowExpr="rowView.row" />
-                                <span x-flexrender="flex.cell(cell)"></span>
+                                <DataTableRowSelectCheckbox RowExpr="row.row" />
+                                <span x-flexrender="_flex.cell(cell)"></span>
                             </div>
                         </TableCell>
                     </template>
@@ -824,7 +803,7 @@
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <template x-for="header in headerGroup.headers" :key="header.id">
                         <TableHeaderCell x-bind:colspan="header.colSpan"
@@ -838,10 +817,10 @@
             </template>
         </TableHeader>
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
@@ -855,7 +834,7 @@
 <RzDataTable Items="_users" Config="_config" RowIdSelector="x => x.Id">
     <RzTable Border>
         <TableHeader>
-            <template x-for="headerGroup in headerGroupViews" :key="headerGroup.id">
+            <template x-for="headerGroup in headerGroups" :key="headerGroup.id">
                 <TableRow>
                     <DataTableSelectionHeaderCell Scope="DataTableSelectionScope.Page" />
 
@@ -872,12 +851,12 @@
         </TableHeader>
 
         <TableBody>
-            <template x-for="rowView in rowViews" :key="rowView.id">
+            <template x-for="row in rows" :key="row.id">
                 <TableRow>
-                    <DataTableSelectionCell RowExpr="rowView.row" />
+                    <DataTableSelectionCell RowExpr="row.row" />
 
-                    <template x-for="cell in rowView.cells" :key="cell.id">
-                        <TableCell x-flexrender="flex.cell(cell)"></TableCell>
+                    <template x-for="cell in row.cells" :key="cell.id">
+                        <TableCell x-flexrender="_flex.cell(cell)"></TableCell>
                     </template>
                 </TableRow>
             </template>
