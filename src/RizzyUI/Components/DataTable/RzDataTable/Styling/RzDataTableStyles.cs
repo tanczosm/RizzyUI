@@ -30,6 +30,6 @@ public static class RzDataTableStyles
     /// Default descriptor for the unstyled DataTable shell.
     /// </summary>
     public static readonly TvDescriptor<RzComponent<RzDataTableSlots>, RzDataTableSlots> DefaultDescriptor = new(
-        @base: string.Empty
+        @base: "not-prose"
     );
 }
