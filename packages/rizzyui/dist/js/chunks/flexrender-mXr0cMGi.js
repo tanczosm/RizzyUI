@@ -1,4 +1,4 @@
-//#region src/js/lib/directives/x-flexrender.js
+//#region src/js/lib/directives/flexrender.js
 function isObject(value) {
 	return typeof value === "object" && value !== null;
 }
@@ -176,4 +176,4 @@ var flex = {
 //#endregion
 export { flex as n, createFlexRenderPlugin as t };
 
-//# sourceMappingURL=x-flexrender-CbDtWOn6.js.map
+//# sourceMappingURL=flexrender-mXr0cMGi.js.map

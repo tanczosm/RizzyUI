@@ -1,5 +1,5 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./advanced-input-runtime-BDyGSZ2H.js","./rizzyRequire-C5t2y41V.js","./calendar-runtime-Cm3N2jpl.js","./table-runtime-DJ4xee8A.js","./x-flexrender-CbDtWOn6.js","./color-runtime-BQbdJmIl.js","./content-visual-runtime-D8_-8dNm.js","./menu-runtime-BuI5Xb2l.js","./floating-ui.dom-X8hpx-Bo.js","./popover-tooltip-runtime-DigvC58R.js","./docs-runtime-BRm2T1Og.js","./effects-runtime-EekiH7OU.js"])))=>i.map(i=>d[i]);
-import { t as createFlexRenderPlugin } from "./x-flexrender-CbDtWOn6.js";
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./advanced-input-runtime-BDyGSZ2H.js","./rizzyRequire-C5t2y41V.js","./calendar-runtime-Cm3N2jpl.js","./table-runtime-BcasLp2I.js","./flexrender-mXr0cMGi.js","./color-runtime-BQbdJmIl.js","./content-visual-runtime-D8_-8dNm.js","./menu-runtime-BuI5Xb2l.js","./floating-ui.dom-X8hpx-Bo.js","./popover-tooltip-runtime-DigvC58R.js","./docs-runtime-BRm2T1Og.js","./effects-runtime-EekiH7OU.js"])))=>i.map(i=>d[i]);
+import { t as createFlexRenderPlugin } from "./flexrender-mXr0cMGi.js";
 import { t as rizzyRequire } from "./rizzyRequire-C5t2y41V.js";
 //#region node_modules/@alpinejs/collapse/dist/module.esm.js
 function src_default$2(Alpine) {
@@ -2082,7 +2082,7 @@ var bundleLoaderRegistry = Object.freeze({
 	"command-runtime": () => __vitePreload(() => import("./command-runtime-DAov6mma.js"), [], import.meta.url),
 	"advanced-input-runtime": () => __vitePreload(() => import("./advanced-input-runtime-BDyGSZ2H.js"), __vite__mapDeps([0,1]), import.meta.url),
 	"calendar-runtime": () => __vitePreload(() => import("./calendar-runtime-Cm3N2jpl.js"), __vite__mapDeps([2,1]), import.meta.url),
-	"table-runtime": () => __vitePreload(() => import("./table-runtime-DJ4xee8A.js"), __vite__mapDeps([3,4]), import.meta.url),
+	"table-runtime": () => __vitePreload(() => import("./table-runtime-BcasLp2I.js"), __vite__mapDeps([3,4]), import.meta.url),
 	"color-runtime": () => __vitePreload(() => import("./color-runtime-BQbdJmIl.js"), __vite__mapDeps([5,1]), import.meta.url),
 	"content-visual-runtime": () => __vitePreload(() => import("./content-visual-runtime-D8_-8dNm.js"), __vite__mapDeps([6,1]), import.meta.url),
 	"dialogs-panels-runtime": () => __vitePreload(() => import("./dialogs-panels-runtime-Dq6uhPYF.js"), [], import.meta.url),
@@ -2296,4 +2296,4 @@ function bootstrapRizzyUI(Alpine) {
 //#endregion
 export { bootstrapRizzyUI as t };
 
-//# sourceMappingURL=bootstrap-BK9OXOB0.js.map
+//# sourceMappingURL=bootstrap-C5eha7yf.js.map

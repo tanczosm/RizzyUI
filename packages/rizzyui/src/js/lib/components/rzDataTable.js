@@ -6,7 +6,7 @@ import {
     getPaginationRowModel,
     functionalUpdate,
 } from '@tanstack/table-core';
-import { flex } from '../directives/x-flexrender.js';
+import { flex } from '../directives/flexrender.js';
 
 function readJsonConfig(rootEl) {
     const configId = rootEl?.dataset?.configId;
