@@ -8,7 +8,7 @@ import props from './alpineProps.js';
 import registerMobileDirective from './directives/mobile.js';
 import registerSyncDirective from './directives/sync-prop.js';
 import registerValidateDirective, { initializeValidation } from './directives/validate.js';
-import { createFlexRenderPlugin } from './directives/x-flexrender.js';
+import { createFlexRenderPlugin } from './directives/flexrender.js';
 import { themeController } from './theme.js';
 import { registerStores } from './stores.js';
 import {
