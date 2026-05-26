@@ -166,3 +166,9 @@ Every H2 section should follow this mini-template:
 *   Any new component must be added to the side navigation in `src/RizzyUI.Docs/Components/Layout/ComponentList.razor`.
 *   This ensures the new documentation page is discoverable.
 
+
+### 12.9 Accessibility Documentation Template
+
+*   Use `docs/templates/component-accessibility-template.md` when adding or updating accessibility contract sections in component docs.
+*   Preserve the template heading structure so accessibility coverage remains consistent across components.
+*   Ensure documented claims map to implemented SSR behavior and corresponding automated/manual validation evidence.
