@@ -25,3 +25,15 @@ This folder centralizes shared, SSR-safe accessibility runtime primitives used b
 - `ariaAnnouncer.js`: Shared live-region announcement scheduling and verbosity control.
 
 These primitives are intentionally placeholders in this step and will be implemented in follow-up prompts.
+
+- `focusable.js`: Shared helpers to evaluate focusable/tabbable elements and move focus to first/last valid target.
+
+## focusable.js API
+
+- `getFocusableElements(root)`: Returns focusable descendants within `root` only; skips hidden, disabled, inert, and `aria-hidden` nodes.
+- `isFocusable(element)`: True when an element can receive focus programmatically (including `tabindex="-1"`).
+- `isTabbable(element)`: True when an element is included in sequential Tab order (`tabindex >= 0` when set).
+- `focusFirst(root)`: Focuses and returns the first focusable descendant.
+- `focusLast(root)`: Focuses and returns the last focusable descendant.
+
+Caveat: Browser-specific edge cases around details/summary and SVG focus behavior can vary slightly by engine, so these helpers intentionally enforce a conservative, cross-browser baseline.
