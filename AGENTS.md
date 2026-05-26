@@ -33,6 +33,20 @@
    * Never emit full `TItem` instances or server object graphs in browser event payloads.
    * For table-like stateful primitives, emit granular events and a table-level aggregate state event when useful (for example `rz:table:on-state-change`).
 
+5. **Accessibility contract for root-level interactive components (mandatory)**
+
+   * Must treat accessibility behavior as a public API contract for every root-level interactive component.
+   * Must document keyboard behavior in component documentation, including supported keys and the exact effect of each key.
+   * Must define explicit ARIA semantics in SSR-safe HTML, including required roles, states, properties, and ID-based relationships (`aria-controls`, `aria-labelledby`, `aria-activedescendant`, etc.) when applicable.
+   * Must implement predictable focus management for initial focus, roving focus patterns, focus traps (when applicable), and focus restoration after dismiss/close flows.
+   * Must document and implement a screen-reader announcement strategy, including when announcements occur, when they are `polite` versus `assertive`, and when announcements should be suppressed to avoid noise.
+   * Must include component tests that prove keyboard behavior, ARIA semantics, focus management, and announcement behavior for every interactive component.
+   * Must document known accessibility limitations and assistive technology quirks when discovered, including temporary mitigations where available.
+   * For APG-derived widgets, must name the adopted WAI-ARIA Authoring Practices Guide (APG) pattern and explain any intentional deviations.
+   * Must not implement accessibility logic with Blazor interactive runtime features such as `EventCallback`, `@onclick`, `@onchange`, `@onsubmit`, or `@bind`.
+   * Must implement client interactions using SSR-safe HTML plus shared Alpine/JavaScript primitives defined for RizzyUI Phase 1, while preserving CSP-safe constraints.
+   * Must always preserve SSR-only and CSP requirements for accessibility behavior and event handling.
+
 ---
 
 ## Precedence (Mandatory)
