@@ -134,3 +134,43 @@ dialogElement.addEventListener('rz:dismiss', (event) => {
   }
 });
 ```
+
+## rovingFocusGroup.js API
+
+- `createRovingFocusGroup(container, options?)`: Creates a roving tabindex manager for a composite widget.
+- Returned controller:
+  - `updateItems()`: Recomputes managed items (for dynamic DOM changes).
+  - `setActiveIndex(index, { focus? })`: Updates the active roving item by index.
+  - `setActiveItem(item, { focus? })`: Updates the active item by element reference.
+  - `getItems()`, `getActiveIndex()`, `getActiveItem()`: State inspection helpers.
+  - `destroy()`: Removes event listeners.
+
+### Options
+
+- `orientation`: `'horizontal' | 'vertical' | 'both'` (default `'horizontal'`).
+- `loop`: Whether arrow navigation wraps at edges (default `true`).
+- `disabledItemPolicy`: `'skip' | 'stop'` (default `'skip'`).
+- `activeIndex`: Initial active index (default `0`).
+- `getItems(container)`: Optional item resolver override (default uses `getFocusableElements`).
+- `isItemDisabled(item)`: Optional disabled predicate override (`disabled` and `aria-disabled="true"` by default).
+
+### Keyboard and pointer behavior
+
+- Exactly one item has `tabindex="0"`; all peers are forced to `tabindex="-1"`.
+- Arrow keys move according to orientation.
+- `Home` and `End` move to first and last enabled items.
+- Disabled-item handling follows `disabledItemPolicy`:
+  - `skip`: continue searching for next enabled item.
+  - `stop`: cancel movement when next candidate is disabled.
+- Pointer interaction (`pointerdown` and `click`) updates roving active index so keyboard users keep context after clicking.
+
+### Integration guidance
+
+This primitive is intended for APG-style composite widgets where focus remains within a list of peers:
+
+- Tabs (`tablist > tab`)
+- Accordion headers (optional roving header focus mode)
+- Menus and menubars
+- Toolbar-like command strips
+
+Keep activation/selection logic in each component. The roving primitive only manages focus and tabindex state.
