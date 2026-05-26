@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node ./tests/accessibility/scripts/run-playwright.mjs",
     "build:css": "npx @tailwindcss/cli -i ./Assets/css/app.css -o ./wwwroot/css/app.css",
-    "test:a11y": "node ./tests/accessibility/scripts/run-playwright.mjs tests/accessibility"
+    "test:a11y": "node ./tests/accessibility/scripts/run-playwright.mjs tests/accessibility",
+    "prebuild:css": "npm install --prefix ../../packages/rizzyui"
   },
   "keywords": [],
   "author": "",
