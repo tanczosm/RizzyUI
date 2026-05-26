@@ -58,6 +58,11 @@ jobs:
       working-directory: ./src/RizzyUI
       run: npm ci
 
+    - name: Accessibility inventory check (non-blocking)
+      working-directory: ./src/RizzyUI
+      continue-on-error: true
+      run: npm run check-accessibility-inventory
+
     - name: Link tailwindcss (RizzyUI)
       working-directory: ./src/RizzyUI
       run: npm link tailwindcss
