@@ -22,7 +22,8 @@ This folder centralizes shared, SSR-safe accessibility runtime primitives used b
 - `dismissableLayer.js`: Outside interaction + escape-key dismissal orchestration.
 - `rovingFocusGroup.js`: Keyboard roving tabindex/focus movement helpers.
 - `typeaheadNavigator.js`: Typeahead matching and active-item navigation.
-- `ariaAnnouncer.js`: Shared live-region announcement scheduling and verbosity control.
+- `liveAnnouncer.js`: Shared live-region announcement scheduling, queueing, and deduplication.
+- `ariaAnnouncer.js`: Compatibility wrapper around `liveAnnouncer.js`.
 
 - `focusable.js`: Shared helpers to evaluate focusable/tabbable elements and move focus to first/last valid target.
 
@@ -233,3 +234,24 @@ This primitive is intended for APG-style composite widgets where focus remains w
 - Toolbar-like command strips
 
 Keep activation/selection logic in each component. The roving primitive only manages focus and tabindex state.
+
+
+## liveAnnouncer.js API
+
+- `announce(message, politeness?, options?)`: Announces `message` via the polite or assertive live region.
+  - `politeness`: `polite` (default) or `assertive`.
+  - `options.queue`: Defaults to `true` for polite and `false` for assertive.
+  - `options.tag`: Optional metadata string stored in announcement history.
+  - `options.dedupe`: Suppresses back-to-back duplicate announcements when `true` (default).
+  - `options.dedupeWindowMs`: Duplicate suppression window (default `1500`).
+  - `options.clearDelayMs`: Milliseconds before region text is cleared (default `1000`).
+  - `options.politeIntervalMs`: Delay between queued polite announcements (default `120`).
+- `ensureLiveRegions()`: Creates/reuses the hidden polite (`role="status"`) and assertive (`role="alert"`) live regions.
+- `clearLiveRegions()`: Clears the current text content from both live regions.
+- `getAnnouncementHistory()`: Returns an array of previously announced entries (`message`, `politeness`, `tag`, `timestamp`).
+- `clearAnnouncementHistory()`: Clears the in-memory history buffer.
+- `destroyLiveAnnouncer()`: Tears down live regions and queue timers.
+
+### Usage guidance
+
+Use this helper for short status updates such as asynchronous completion notices, loading state changes, and command outcomes. Avoid using it for inline field validation text that is already represented by native form semantics and error associations.
