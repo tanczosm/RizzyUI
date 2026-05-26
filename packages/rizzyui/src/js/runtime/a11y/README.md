@@ -16,6 +16,22 @@ This folder centralizes shared, SSR-safe accessibility runtime primitives used b
 - Keep primitives framework-agnostic and dependency-free.
 - Keep APIs serializable and stable where events are involved.
 
+
+## Extended documentation
+
+Detailed primitive guides now live in `docs/internal/runtime-primitives/`:
+
+- `README.md` (index + accessibility contract reminder)
+- `focusable.md`
+- `focusScope.md`
+- `dismissableLayer.md`
+- `rovingFocusGroup.md`
+- `activeDescendant.md`
+- `typeahead.md`
+- `liveAnnouncer.md`
+
+These guides include API references, focused examples, caveats, and cross-primitive integration advice for SSR/CSP-safe component authoring.
+
 ## Planned primitives
 
 - `focusScope.js`: Focus containment, initial focus, and focus restore helpers.

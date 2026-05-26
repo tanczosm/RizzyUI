@@ -44,3 +44,8 @@ node ../../tools/accessibility-inventory/check-accessibility-inventory.mjs \
 This check is intentionally **non-blocking** in Phase 0.5. It always exits successfully and prints warnings for missing docs/tests.
 
 In **Phase 5**, this check will be changed to fail the build when gaps are detected.
+
+
+## Runtime primitive docs
+
+For runtime accessibility primitive API guidance, examples, and caveats, see `docs/internal/runtime-primitives/README.md` and the per-primitive markdown files in that same directory.
