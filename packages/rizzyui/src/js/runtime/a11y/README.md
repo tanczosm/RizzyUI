@@ -135,6 +135,33 @@ dialogElement.addEventListener('rz:dismiss', (event) => {
 });
 ```
 
+
+## activeDescendant.js API
+
+- `createActiveDescendant(controller, options, config?)`: Creates an APG-style active-descendant controller for input-driven composites (combobox, command palette, listbox).
+- Returned controller:
+  - `updateOptions(options)`: Replaces the active option collection after filtering and clears stale `aria-activedescendant` ids.
+  - `setActiveIndex(index)`, `setActiveOption(option)`: Directly set the active option.
+  - `move(step)`, `first()`, `last()`: Keyboard-friendly navigation helpers.
+  - `clear()`/`reset()`: Clears active option state and removes `aria-activedescendant`.
+  - `onKeydown(event)`: Handles Arrow, Home, End navigation while keeping DOM focus on the controlling element.
+  - `getOptions()`, `getActiveIndex()`, `getActiveOption()`: State inspection helpers for host components.
+
+### Options
+
+- `wrap` (default `false`): Wraps navigation at list boundaries.
+- `orientation` (default `vertical`): Supports `vertical`, `horizontal`, or `both` arrow-key models.
+- `container`: Element that receives keydown handling; defaults to a detected listbox/container ancestor.
+- `typeahead`: Optional function hook for character-key lookup (integrates with a dedicated typeahead primitive).
+
+### Integration guidance
+
+- Use this primitive when APG guidance requires focus to remain on an input/trigger while visually highlighting options via `aria-activedescendant`.
+- Option elements **must** have unique `id` values; initialization/update throws when ids are missing or duplicated.
+- Keep list open/close and selection logic in the host component. This primitive only tracks active descendant state and viewport visibility.
+- For filtering flows, call `updateOptions(filteredOptions)` immediately after DOM updates; if the current active id no longer exists, the helper clears it automatically.
+- Pair this primitive with a dedicated `typeahead` helper by providing the `typeahead` callback; this keeps text search separate from active-descendant bookkeeping.
+
 ## rovingFocusGroup.js API
 
 - `createRovingFocusGroup(container, options?)`: Creates a roving tabindex manager for a composite widget.
