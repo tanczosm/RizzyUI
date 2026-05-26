@@ -162,6 +162,38 @@ dialogElement.addEventListener('rz:dismiss', (event) => {
 - For filtering flows, call `updateOptions(filteredOptions)` immediately after DOM updates; if the current active id no longer exists, the helper clears it automatically.
 - Pair this primitive with a dedicated `typeahead` helper by providing the `typeahead` callback; this keeps text search separate from active-descendant bookkeeping.
 
+
+## typeahead.js API
+
+- `createTypeahead(options?)`: Creates a buffered typeahead matcher for menus, lists, and listboxes.
+- Returned controller:
+  - `search(key, items, { activeIndex? }?)`: Appends a typed character to the current buffer and returns the matched index.
+  - `handleKey(event, items, { activeIndex? }?)`: Event-oriented wrapper around `search`.
+  - `reset()`: Clears the buffered text immediately.
+  - `getBuffer()`: Returns the current normalized buffered query.
+
+### Options
+
+- `getItems(items)`: Optional item resolver before matching.
+- `getText(item, index)`: Returns the searchable label for each item (defaults to `textContent`, `label`, then `text`).
+- `timeoutMs`: Buffer reset timeout in milliseconds (default `500`).
+- `cycle`: Enables repeated-key cycling (`true` by default).
+- `getActiveIndex()`: Supplies the current active index for wrap/cycle behavior.
+- `onMatch(index)`: Callback invoked when a match is found (for focus/selection updates).
+
+### Behavior notes
+
+- Matching is case-insensitive and diacritic-tolerant by normalizing text to lower-case and stripping combining marks.
+- Rapid multi-character typing narrows results by prefix.
+- Repeating a single key quickly (for example `a`, `a`, `a`) cycles across items beginning with that key.
+- Timeout expiry resets the buffer so the next key starts a fresh search.
+
+### Integration guidance
+
+- For roving focus: call `search` inside key handling and then pass the returned index into `setActiveIndex(index, { focus: true })` on `createRovingFocusGroup`.
+- For active descendant widgets: use `createActiveDescendantTypeahead(activeDescendant, options?)` to automatically call `activeDescendant.setActiveIndex(index)` on matches.
+- Keep container focus ownership in the host primitive/component (typeahead only resolves indices).
+
 ## rovingFocusGroup.js API
 
 - `createRovingFocusGroup(container, options?)`: Creates a roving tabindex manager for a composite widget.
