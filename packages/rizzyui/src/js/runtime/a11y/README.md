@@ -66,3 +66,71 @@ scope.deactivate();
 - Tab/Shift+Tab navigation is trapped inside the container.
 - Nested scopes are supported; only the most recently activated scope traps keyboard tabbing.
 - On deactivation, focus restores to the opener when possible, then falls back to `fallbackFocus`, then `document.body`.
+
+
+## dismissableLayer.js API
+
+- `registerDismissableLayer(options)`: Registers a layer and returns `unregister()`.
+- `options.root`: Required root element for the overlay.
+- `options.onDismiss(context)`: Required callback fired when dismissal is confirmed.
+- `options.onEscape(event)`: Optional hook invoked before escape-driven dismissal.
+- `options.onOutsidePointer(event)`: Optional hook invoked before outside pointer dismissal.
+- `options.onOutsideFocus(event)`: Optional hook invoked before outside focus dismissal.
+- `options.dismissOnOutsideFocus`: Set `true` to dismiss on `focusin` transitions outside the root.
+- `createDismissableLayer()`: Returns `{ registerLayer }` for consumers that want a tiny manager object.
+
+### Public event contract
+
+When dismissal is attempted on the active top layer, the runtime dispatches:
+
+- `rz:dismiss` (cancelable, bubbles) on the layer root.
+- `detail.reason`: one of `escape`, `outside-pointer`, or `outside-focus`.
+- `detail.layerId`: the registered layer id.
+- `detail.originalEvent`: the source DOM event.
+
+Any listener can call `event.preventDefault()` on `rz:dismiss` to cancel dismissal (for example unsaved changes checks).
+
+### Example: basic layer registration
+
+```js
+import { registerDismissableLayer } from './dismissableLayer.js';
+
+const unregister = registerDismissableLayer({
+  root: dialogElement,
+  onDismiss: ({ reason }) => {
+    if (reason === 'escape' || reason === 'outside-pointer') {
+      closeDialog();
+    }
+  }
+});
+
+// when closed/disposed
+unregister();
+```
+
+### Example: nested overlays
+
+```js
+const unregisterDialog = registerDismissableLayer({
+  root: dialogEl,
+  onDismiss: () => closeDialog()
+});
+
+const unregisterMenu = registerDismissableLayer({
+  root: menuEl,
+  onDismiss: () => closeMenu()
+});
+
+// Escape now dismisses menu first because it is topmost.
+// After menu unregisters, Escape dismisses dialog.
+```
+
+### Example: prevent dismissal
+
+```js
+dialogElement.addEventListener('rz:dismiss', (event) => {
+  if (hasUnsavedChanges()) {
+    event.preventDefault();
+  }
+});
+```
