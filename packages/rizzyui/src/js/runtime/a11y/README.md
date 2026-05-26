@@ -24,8 +24,6 @@ This folder centralizes shared, SSR-safe accessibility runtime primitives used b
 - `typeaheadNavigator.js`: Typeahead matching and active-item navigation.
 - `ariaAnnouncer.js`: Shared live-region announcement scheduling and verbosity control.
 
-These primitives are intentionally placeholders in this step and will be implemented in follow-up prompts.
-
 - `focusable.js`: Shared helpers to evaluate focusable/tabbable elements and move focus to first/last valid target.
 
 ## focusable.js API
@@ -37,3 +35,34 @@ These primitives are intentionally placeholders in this step and will be impleme
 - `focusLast(root)`: Focuses and returns the last focusable descendant.
 
 Caveat: Browser-specific edge cases around details/summary and SVG focus behavior can vary slightly by engine, so these helpers intentionally enforce a conservative, cross-browser baseline.
+
+
+## focusScope.js API
+
+- `createFocusScope(container, options?)`: Creates a scope with `activate()`, `deactivate()`, and `isActive()` methods.
+- `options.initialFocus`: Selector or element that receives initial focus when the scope is activated.
+- `options.fallbackFocus`: Selector or element used when no focusable descendants exist or when restore target is unavailable.
+- `options.throwOnNoFocusable`: When `true`, activation throws if no focusable descendants are available.
+
+### Usage
+
+```js
+import { createFocusScope } from './focusScope.js';
+
+const scope = createFocusScope(dialogElement, {
+  initialFocus: '[data-autofocus]',
+  fallbackFocus: '[data-close-button]',
+});
+
+scope.activate();
+
+// ...later, when closing
+scope.deactivate();
+```
+
+### Behavior notes
+
+- On activation, the scope captures `document.activeElement` so focus can be restored on close.
+- Tab/Shift+Tab navigation is trapped inside the container.
+- Nested scopes are supported; only the most recently activated scope traps keyboard tabbing.
+- On deactivation, focus restores to the opener when possible, then falls back to `fallbackFocus`, then `document.body`.
