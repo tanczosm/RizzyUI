@@ -166,6 +166,19 @@
                 </RzCodeViewer>
             </section>
 
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Modal and Non-Modal Accessibility" class="scroll-mt-20">
+                    Modal and Non-Modal Accessibility
+                </RzHeading>
+                <RzParagraph>
+                    <code>RzSheet</code> supports both modal and non-modal semantics. Set <code>Modal="true"</code> (default) to render <code>role="dialog"</code> with <code>aria-modal="true"</code>, trap focus, close on Escape, and restore focus to the trigger. Set <code>Modal="false"</code> to render a complementary landmark without focus trapping.
+                </RzParagraph>
+                <RzParagraph>
+                    For accessible naming, either provide a <code>SheetTitle</code> (wired via <code>aria-labelledby</code>) or pass <code>AriaLabel</code> to <code>SheetContent</code>. Optionally set <code>AriaDescribedBy</code> when supplemental context is needed.
+                </RzParagraph>
+            </section>
+
             <!-- Component Parameters -->
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">
@@ -199,6 +212,21 @@
                                 <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td>
                                 <td class="px-4 py-4 text-zinc-500"><code class="font-mono">false</code></td>
                             </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Modal</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Controls sheet semantics and focus behavior. When <code>true</code>, the sheet behaves as a modal dialog with focus trapping.</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">true</code></td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">DismissOnOutsideClick</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">When <code>true</code>, pointer interactions outside the sheet dismiss it.</td>
+                                <td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td>
+                                <td class="px-4 py-4 text-zinc-500"><code class="font-mono">true</code></td>
+                            </tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">AriaLabel</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Accessible name fallback when no <code>SheetTitle</code> is rendered.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string?</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">null</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">AriaLabelledBy</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Explicit ID reference for <code>aria-labelledby</code>.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string?</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">auto from SheetTitle</code></td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">AriaDescribedBy</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Explicit ID reference for <code>aria-describedby</code>.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string?</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">auto from SheetDescription</code></td></tr>
                         </tbody>
                     </table>
                 </div>
