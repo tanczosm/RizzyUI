@@ -331,6 +331,26 @@ public IResult CloseDialogAction()
                 </RzCodeViewer>
             </section>
 
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Accessibility" class="scroll-mt-20">Accessibility</RzHeading>
+                <RzParagraph>
+                    Pattern: WAI-ARIA modal dialog. <code>DialogContent</code> renders <code>role="dialog"</code> and modal dialogs render <code>aria-modal="true"</code>. Provide an accessible name with <code>DialogTitle</code> (via <code>aria-labelledby</code>) or <code>DialogContent.AriaLabel</code> when no visible title is rendered.
+                </RzParagraph>
+                <RzParagraph>
+                    Keyboard: <code>Tab</code> and <code>Shift+Tab</code> are trapped within the topmost dialog, <code>Escape</code> dismisses only the topmost dismissable layer, and the close button is a native <code>&lt;button type="button"&gt;</code>. Focus is moved into the dialog on open, restored to the trigger on close, and falls back to the dialog container if the trigger is gone.
+                </RzParagraph>
+                <RzParagraph>
+                    Dismissal and nested overlays are coordinated by shared runtime primitives (<code>focusScope</code> and <code>dismissableLayer</code>), so nested overlays close before their parent dialog. No live announcer is used for normal open/close because semantic naming and focus transitions provide announcement context.
+                </RzParagraph>
+                <RzParagraph>
+                    SSR/enhanced navigation: initialization is idempotent and teardown unregisters listeners/layers, which keeps behavior stable across Alpine re-inits and partial swaps. Known limitation: this component documents modal behavior only; non-modal dialog mode is not currently exposed.
+                </RzParagraph>
+                <RzParagraph>
+                    Test coverage reference: see <code>RzDialogTests</code> plus runtime primitive tests under <code>packages/rizzyui/src/js/runtime/a11y/__tests__</code>.
+                </RzParagraph>
+            </section>
+
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">Component Parameters</RzHeading>
                 <RzParagraph>The following tables summarize primary dialog component parameters.</RzParagraph>
@@ -349,6 +369,7 @@ public IResult CloseDialogAction()
                 <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">ChildContent</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Content displayed inside the dialog surface.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">RenderFragment</code></td><td class="px-4 py-4"><span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20">Required</span></td></tr>
                 <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">ShowCloseButton</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Toggles the built-in close button.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">bool</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">true</code></td></tr>
                 <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Size</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Controls dialog width preset.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">ModalSize</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">ModalSize.Large</code></td></tr>
+                <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">AriaLabel</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Optional explicit accessible name used when no <code>DialogTitle</code> is rendered.</td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string?</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">null</code></td></tr>
                 </tbody></table></div>
             </section>
 
