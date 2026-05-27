@@ -3,6 +3,8 @@
 @using Blazicons
 @inherits RzComponent<CommandList.Slots>
 
+<p id="rz-command-instructions-@ParentCommand?.Id" class="sr-only">Use up and down arrow keys to navigate commands, press Enter to select, and Escape to close.</p>
+
 <div @attributes="AdditionalAttributes"
      id="rz-command-list-@ParentCommand?.Id"
      class="@SlotClasses.GetBase()"

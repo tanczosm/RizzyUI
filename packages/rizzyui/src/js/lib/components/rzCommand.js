@@ -1,4 +1,9 @@
 // packages/rizzyui/src/js/lib/components/rzCommand.js
+import { createActiveDescendant } from '../../runtime/a11y/activeDescendant.js';
+import { createActiveDescendantTypeahead } from '../../runtime/a11y/typeahead.js';
+import { createDismissableLayer } from '../../runtime/a11y/dismissableLayer.js';
+import { announce } from '../../runtime/a11y/liveAnnouncer.js';
+
 export default function rzCommand() {
     return {
         // --- STATE ---
@@ -29,6 +34,11 @@ export default function rzCommand() {
         _lastSearch: '',
         _lastMatchedItems: [],
         _listInstance: null,
+        _activeDescendant: null,
+        _typeahead: null,
+        _dismissableLayer: null,
+        _previousResultCount: null,
+        _unregisterDismissLayer: null,
 
         /**
          * Computes a deterministic 32-bit hash for a string.
@@ -194,11 +204,16 @@ export default function rzCommand() {
             this.$watch('filteredItems', (items) => {
                 this.isOpen = items.length > 0 || this.isLoading;
                 this.isEmpty = items.length === 0;
+                this.announceResultCount(items.length);
 
                 if (this._listInstance) {
                     this._listInstance.renderList();
                 }
+
+                this.syncActiveDescendantOptions();
             });
+
+            this.setupA11yPrimitives();
         },
 
         // --- METHODS ---
@@ -509,6 +524,10 @@ export default function rzCommand() {
          * @returns {void}
          */
         handleKeydown(e) {
+            if (this.search === '' && this._activeDescendant?.handleKeydown?.(e)) {
+                return;
+            }
+
             switch (e.key) {
                 case 'ArrowDown':
                     e.preventDefault();
@@ -531,9 +550,14 @@ export default function rzCommand() {
                     const item = this.filteredItems[this.selectedIndex];
                     if (item && !item.disabled) {
                         this.$dispatch('rz:command:execute', { value: item.value });
+                        this.closePalette();
                     }
                     break;
                 }
+                case 'Escape':
+                    e.preventDefault();
+                    this.closePalette();
+                    break;
             }
         },
 
@@ -589,6 +613,78 @@ export default function rzCommand() {
                 const lastEnabledIndex = this.filteredItems.map(item => item.disabled).lastIndexOf(false);
                 if (lastEnabledIndex > -1) this.selectedIndex = lastEnabledIndex;
             }
-        }
+        },
+
+        setupA11yPrimitives() {
+            const input = this.$el.querySelector('[data-slot="command-input"]');
+            const list = this.$el.querySelector('[data-slot="command-list"]');
+            if (!input || !list) return;
+
+            this._activeDescendant = createActiveDescendant(input, [], {
+                wrap: this.loop,
+                container: input,
+                typeahead: (search) => this._typeahead?.search(search, this.getEnabledOptionElements()) ?? -1
+            });
+
+            this._typeahead = createActiveDescendantTypeahead(this._activeDescendant, {
+                getText: (element) => element?.textContent ?? ''
+            });
+
+            const layer = createDismissableLayer();
+            this.$watch('isOpen', (open) => {
+                if (open) {
+                    this._unregisterDismissLayer?.();
+                    this._unregisterDismissLayer = layer.registerLayer({
+                        root: this.$el,
+                        onDismiss: () => this.closePalette(),
+                        onEscape: (event) => event.preventDefault()
+                    });
+                } else {
+                    this._unregisterDismissLayer?.();
+                    this._unregisterDismissLayer = null;
+                    this.activeDescendantId = null;
+                }
+            });
+        },
+
+        getEnabledOptionElements() {
+            return Array.from(this.$el.querySelectorAll('[data-slot="command-list"] [role="option"]')).filter((el) => el.getAttribute('aria-disabled') !== 'true');
+        },
+
+        syncActiveDescendantOptions() {
+            this.$nextTick(() => {
+                const options = this.getEnabledOptionElements();
+                this._activeDescendant?.updateOptions?.(options);
+                if (options.length > 0 && this.selectedIndex > -1) {
+                    this._activeDescendant?.setActiveIndex?.(this.selectedIndex);
+                }
+            });
+        },
+
+        announceResultCount(count) {
+            if (this._previousResultCount === null) {
+                this._previousResultCount = count;
+                return;
+            }
+
+            const prev = this._previousResultCount;
+            this._previousResultCount = count;
+
+            if ((prev === 0 && count > 0) || (prev > 0 && count === 0)) {
+                announce(`${count} commands found`, { politeness: 'polite' });
+            }
+        },
+
+        closePalette() {
+            this.isOpen = false;
+            this.activeDescendantId = null;
+        },
+
+        destroy() {
+            this._unregisterDismissLayer?.();
+            this._activeDescendant?.destroy?.();
+            this._typeahead?.reset?.();
+        },
+
     };
 }
