@@ -46,6 +46,54 @@ public class RzNativeSelectTests : BunitAlbaContext, IClassFixture<WebAppFixture
         Assert.NotNull(cut.Find("select[data-slot='native-select']"));
     }
 
+
+    [Fact]
+    public void SelectForwardsAccessibleAttributesAndMergesAriaDescribedBy()
+    {
+        var model = new SelectModel();
+
+        var cut = Render<CascadingValue<EditContext>>(ps => ps
+            .Add(p => p.Value, new EditContext(model))
+            .AddChildContent<global::RizzyUI.RzNativeSelect<string>>(sp => sp
+                .Add(p => p.For, () => model.Value)
+                .Add(p => p.Id, "fruit-select")
+                .Add(p => p.AriaDescribedBy, "field-hint field-error")
+                .AddUnmatched("aria-label", "Fruit")
+                .AddUnmatched("aria-labelledby", "fruit-label")
+                .AddUnmatched("aria-describedby", "external-description")
+                .AddChildContent<global::RizzyUI.RzNativeSelectOption>(op => op
+                    .Add(o => o.Value, "one")
+                    .AddChildContent("One"))));
+
+        var select = cut.Find("select[data-slot='native-select']");
+        Assert.Equal("fruit-select", select.Id);
+        Assert.Equal("Fruit", select.GetAttribute("aria-label"));
+        Assert.Equal("fruit-label", select.GetAttribute("aria-labelledby"));
+        Assert.Equal("external-description field-hint field-error", select.GetAttribute("aria-describedby"));
+    }
+
+    [Fact]
+    public void SelectPreservesDisabledAndSupportsOptGroupRendering()
+    {
+        var model = new SelectModel();
+
+        var cut = Render<CascadingValue<EditContext>>(ps => ps
+            .Add(p => p.Value, new EditContext(model))
+            .AddChildContent<global::RizzyUI.RzNativeSelect<string>>(sp => sp
+                .Add(p => p.For, () => model.Value)
+                .AddUnmatched("disabled", "disabled")
+                .AddChildContent<global::RizzyUI.RzNativeSelectOptGroup>(group => group
+                    .Add(g => g.Label, "Popular")
+                    .AddChildContent<global::RizzyUI.RzNativeSelectOption>(option => option
+                        .Add(o => o.Value, "one")
+                        .AddChildContent("One")))));
+
+        var select = cut.Find("select[data-slot='native-select']");
+        Assert.Equal("disabled", select.GetAttribute("disabled"));
+        Assert.NotNull(cut.Find("optgroup[data-slot='native-select-optgroup'][label='Popular']"));
+        Assert.NotNull(cut.Find("option[data-slot='native-select-option'][value='one']"));
+    }
+
     [Fact]
     public void ThrowsOutsideEditForm()
     {

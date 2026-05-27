@@ -124,6 +124,25 @@
                 </RzCodeViewer>
             </section>
 
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Accessibility" class="scroll-mt-20">
+                    Accessibility
+                </RzHeading>
+                <RzParagraph>
+                    <code>RzNativeSelect&lt;TValue&gt;</code> renders a real native <code>&lt;select&gt;</code> through <code>InputSelect&lt;TValue&gt;</code>, so it keeps browser and assistive-technology semantics for labels, values, disabled state, required state, and validation.
+                </RzParagraph>
+                <RzParagraph>
+                    Prefer a visible <code>&lt;label for="..."&gt;</code> association through <code>RzField</code> and <code>FieldLabel</code>. If you provide explicit <code>aria-label</code>, <code>aria-labelledby</code>, or <code>aria-describedby</code>, those attributes are forwarded to the inner select. Use <code>AriaDescribedBy</code> to append component-specific hint or error ids without replacing existing description ids.
+                </RzParagraph>
+                <RzParagraph>
+                    Keyboard interaction remains fully native and is not intercepted: Arrow keys move through options, Home/End jump, Enter/Space commit according to browser behavior, Escape closes an open list in supporting UAs, and typeahead follows platform-native rules.
+                </RzParagraph>
+                <RzParagraph>
+                    Use <code>RzNativeSelect</code> when native select behavior is preferred. Use <code>RzCombobox</code> when you need custom filtering, async loading, or advanced popup/list behaviors beyond native select capabilities.
+                </RzParagraph>
+            </section>
+
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">
                     Component Parameters
@@ -137,6 +156,7 @@
                             <tr class="align-top"><td class="p-4"><code>For</code></td><td class="p-4"><code>Expression&lt;Func&lt;TValue&gt;&gt;</code></td><td class="p-4">Required</td><td class="p-4">An expression that identifies the bound value.</td></tr>
                             <tr class="align-top"><td class="p-4"><code>Value</code></td><td class="p-4"><code>TValue?</code></td><td class="p-4"><code>default</code></td><td class="p-4">The current value of the select.</td></tr>
                             <tr class="align-top"><td class="p-4"><code>ChildContent</code></td><td class="p-4"><code>RenderFragment</code></td><td class="p-4"><code>null</code></td><td class="p-4">The options to display within the select element.</td></tr>
+                            <tr class="align-top"><td class="p-4"><code>AriaDescribedBy</code></td><td class="p-4"><code>string?</code></td><td class="p-4"><code>null</code></td><td class="p-4">Appends additional description ids to the inner select's <code>aria-describedby</code> without removing consumer-provided values.</td></tr>
                         </tbody>
                     </table>
                 </div>
