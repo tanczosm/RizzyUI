@@ -6,7 +6,6 @@
 <template x-teleport="body">
 	<div x-show="open" x-cloak>
 		<div class="@SlotClasses.GetOverlay()" 
-             x-show="modal && open"
              x-on:click="close" 
              x-bind:data-state="state"
              data-slot="sheet-overlay"
