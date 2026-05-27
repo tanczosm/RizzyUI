@@ -1,44 +1,109 @@
 import { expect, test } from '@playwright/test';
-import { expectActiveElement, expectRoleAndAccessibleName, pressKey, pressShiftTab, pressTab, runAxeScan } from './helpers/accessibility-helpers';
+import {
+  expectActiveElement,
+  expectAriaRelationship,
+  expectRoleAndAccessibleName,
+  pressKey,
+  pressShiftTab,
+  pressTab,
+  runAxeScan,
+} from './helpers/accessibility-helpers';
 
 test.describe('Sheet accessibility contract', () => {
-  test('modal sheet traps focus and restores focus on escape close', async ({ page }) => {
-    await page.goto('/accessibility-sheet.html');
-    const trigger = page.locator('#modal-trigger');
-    await trigger.click();
+  test.describe('modal mode', () => {
+    test('moves focus inside, wraps tab order, closes on escape, restores trigger focus', async ({ page }) => {
+      await page.goto('/accessibility-sheet.html');
 
-    const modal = await expectRoleAndAccessibleName(page, 'dialog', 'Profile settings');
-    await expect(modal).toHaveAttribute('aria-modal', 'true');
-    await expect(modal).toHaveAttribute('aria-labelledby', 'modal-title');
+      const trigger = page.getByRole('button', { name: 'Open modal sheet' });
+      await trigger.click();
 
-    await expectActiveElement(page, page.locator('#modal-first'));
-    await pressTab(page);
-    await expectActiveElement(page, page.locator('#modal-last'));
-    await pressTab(page);
-    await expectActiveElement(page, page.locator('#modal-close'));
-    await pressTab(page);
-    await expectActiveElement(page, page.locator('#modal-first'));
-    await pressShiftTab(page);
-    await expectActiveElement(page, page.locator('#modal-close'));
+      const sheet = await expectRoleAndAccessibleName(page, 'dialog', 'Profile settings');
+      await expect(sheet).toHaveAttribute('aria-modal', 'true');
+      await expectAriaRelationship(sheet, 'aria-labelledby', 'modal-title');
 
-    await pressKey(page, 'Escape');
-    await expect(modal).toBeHidden();
-    await expectActiveElement(page, trigger);
+      await expectActiveElement(page, page.locator('#modal-first'));
+
+      await pressTab(page);
+      await expectActiveElement(page, page.locator('#modal-last'));
+
+      await pressTab(page);
+      await expectActiveElement(page, page.getByRole('button', { name: 'Close modal sheet' }));
+
+      await pressTab(page);
+      await expectActiveElement(page, page.locator('#modal-first'));
+
+      await pressShiftTab(page);
+      await expectActiveElement(page, page.getByRole('button', { name: 'Close modal sheet' }));
+
+      await pressKey(page, 'Escape');
+      await expect(sheet).toBeHidden();
+      await expectActiveElement(page, trigger);
+    });
+
+    test('supports outside click dismissal and keyboard close button activation', async ({ page }) => {
+      await page.goto('/accessibility-sheet.html');
+
+      await page.getByRole('button', { name: 'Open modal sheet' }).click();
+      const sheet = await expectRoleAndAccessibleName(page, 'dialog', 'Profile settings');
+      const closeButton = page.getByRole('button', { name: 'Close modal sheet' });
+
+      await closeButton.focus();
+      await pressKey(page, 'Enter');
+      await expect(sheet).toBeHidden();
+
+      await page.getByRole('button', { name: 'Open modal sheet' }).click();
+      await page.mouse.click(5, 5);
+      await expect(sheet).toBeHidden();
+    });
+
+    test('preserves semantics when side changes', async ({ page }) => {
+      await page.goto('/accessibility-sheet.html');
+
+      for (const sideTrigger of ['Open left modal sheet', 'Open right modal sheet']) {
+        await page.getByRole('button', { name: sideTrigger }).click();
+        const sheet = await expectRoleAndAccessibleName(page, 'dialog', 'Profile settings');
+        await expect(sheet).toHaveAttribute('aria-modal', 'true');
+        await pressKey(page, 'Escape');
+        await expect(sheet).toBeHidden();
+      }
+    });
   });
 
-  test('non-modal sheet does not trap focus and supports close controls', async ({ page }) => {
-    await page.goto('/accessibility-sheet.html');
-    await page.locator('#nonmodal-trigger').click();
-    const nonModal = await expectRoleAndAccessibleName(page, 'complementary', 'Navigation drawer');
-    await expect(nonModal).not.toHaveAttribute('aria-modal', 'true');
+  test.describe('non-modal mode', () => {
+    test('does not trap focus, omits aria-modal, and closes on escape when configured', async ({ page }) => {
+      await page.goto('/accessibility-sheet.html');
 
-    await pressTab(page);
-    await expectActiveElement(page, page.locator('#outside-target'));
-    await page.locator('#nonmodal-close').click();
-    await expect(nonModal).toBeHidden();
+      const trigger = page.getByRole('button', { name: 'Open non-modal sheet' });
+      await trigger.click();
+
+      const sheet = await expectRoleAndAccessibleName(page, 'complementary', 'Navigation drawer');
+      await expect(sheet).not.toHaveAttribute('aria-modal', 'true');
+      await expectAriaRelationship(sheet, 'aria-labelledby', 'nonmodal-title');
+
+      await pressTab(page);
+      await expectActiveElement(page, page.getByRole('button', { name: 'Open non-modal label-only sheet' }));
+      await pressTab(page);
+      await expectActiveElement(page, page.getByRole('button', { name: 'Outside target' }));
+
+      await pressKey(page, 'Escape');
+      await expect(sheet).toBeHidden();
+      await expectActiveElement(page, trigger);
+    });
+
+    test('supports aria-label naming fallback', async ({ page }) => {
+      await page.goto('/accessibility-sheet.html');
+
+      await page.getByRole('button', { name: 'Open non-modal label-only sheet' }).click();
+      const sheet = await expectRoleAndAccessibleName(page, 'complementary', 'Quick links');
+      await expect(sheet).toHaveAttribute('aria-label', 'Quick links');
+      await expect(sheet).toBeVisible();
+
+      await page.getByRole('button', { name: 'Close quick links sheet' }).click();
+      await expect(sheet).toBeHidden();
+    });
   });
 
-  test('sheet fixture has no axe violations', async ({ page }) => {
+  test('has no axe violations', async ({ page }) => {
     await page.goto('/accessibility-sheet.html');
     await runAxeScan(page);
   });
