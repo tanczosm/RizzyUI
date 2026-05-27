@@ -19,6 +19,11 @@
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
          x-trap="trapActive"
+         x-on:click.outside="handleOutsideClick"
+         x-on:keydown.down.prevent="focusNextItem"
+         x-on:keydown.up.prevent="focusPreviousItem"
+         x-on:keydown.home.prevent="focusFirstItem"
+         x-on:keydown.end.prevent="focusLastItem"
          x-on:keydown.tab.prevent="handleContentTabKey"
          class="@SlotClasses.GetBase()"
          data-slot="dropdown-menu-content">
