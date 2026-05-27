@@ -36,8 +36,9 @@
                 Dropdown menus provide a user-friendly and space-efficient way to display a list of options or actions.
                 When the trigger element is activated (via click or keyboard events), the dropdown menu appears with a smooth transition.
                 The component supports any renderable trigger (such as a Button, RzAvatar, etc.), multiple menu groups, labels, separators, and nested sub-menus.
-                Dynamic alignment is handled via the <code>Anchor</code> property on <code>RzDropdownMenu</code> and <code>DropdownMenuSub</code>. Full keyboard accessibility is supported.
-                All interactivity is handled via Alpine.js (using the <code>rzDropdownMenu</code> and <code>rzDropdownSubmenu</code> data objects), ensuring a CSP-compliant, accessible experience.
+                Dynamic alignment is handled via the <code>Anchor</code> property on <code>RzDropdownMenu</code> and <code>DropdownMenuSub</code>. This component follows the <strong>menu widget</strong> accessibility pattern (command/action menu), not a disclosure-navigation list.
+                The trigger exposes <code>aria-haspopup="menu"</code>, <code>aria-expanded</code>, and <code>aria-controls</code>; the content uses <code>role="menu"</code>; and items use menuitem semantics with roving focus keyboard navigation (Arrow keys, Home, End) while skipping disabled items.
+                Dismissal behavior (Escape and outside pointer interaction) is coordinated through the shared <code>dismissableLayer</code> primitive so only the top-most open layer closes. All interactivity is handled via Alpine.js (using the <code>rzDropdownMenu</code> and <code>rzDropdownSubmenu</code> data objects), ensuring a CSP-compliant, accessible experience.
             </RzParagraph>
 
             <!-- Example 1: Dropdown with RzAvatar Trigger -->
