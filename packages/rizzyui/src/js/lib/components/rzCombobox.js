@@ -80,6 +80,46 @@ export default function rzCombobox() {
                 render: render,
                 onInitialize: function() {
                     this.sync();
+                    const controlInput = this.control_input;
+                    const control = this.control;
+                    const dropdown = this.dropdown;
+
+                    if (controlInput) {
+                        const selectId = selectEl.id || this.inputId || this.$input?.id || '';
+                        if (selectId) {
+                            controlInput.id = `${selectId}-ts-input`;
+                        }
+                        const ariaLabel = selectEl.getAttribute('aria-label');
+                        if (ariaLabel) {
+                            controlInput.setAttribute('aria-label', ariaLabel);
+                        }
+                        const ariaLabelledBy = selectEl.getAttribute('aria-labelledby');
+                        if (ariaLabelledBy) {
+                            controlInput.setAttribute('aria-labelledby', ariaLabelledBy);
+                        }
+                        const ariaDescribedBy = selectEl.getAttribute('aria-describedby');
+                        if (ariaDescribedBy) {
+                            controlInput.setAttribute('aria-describedby', ariaDescribedBy);
+                        }
+                        const ariaInvalid = selectEl.getAttribute('aria-invalid');
+                        if (ariaInvalid) {
+                            controlInput.setAttribute('aria-invalid', ariaInvalid);
+                        }
+                        if (selectEl.disabled) {
+                            controlInput.setAttribute('aria-disabled', 'true');
+                        }
+                    }
+
+                    if (control) {
+                        const describedBy = selectEl.getAttribute('aria-describedby');
+                        if (describedBy) {
+                            control.setAttribute('aria-describedby', describedBy);
+                        }
+                    }
+
+                    if (dropdown && this.dropdown_content?.id) {
+                        dropdown.setAttribute('aria-controls', this.dropdown_content.id);
+                    }
                 }
             });
         },

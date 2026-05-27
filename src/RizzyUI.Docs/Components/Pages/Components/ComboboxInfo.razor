@@ -35,7 +35,12 @@
             <RzParagraph>
                 The <code>RzCombobox</code> is a robust, autocomplete-enabled select component powered by <strong>Tom Select</strong>.
                 It supports single and multiple selections, asynchronous loading, option grouping, rich templating, and plugin extensibility,
-                all while maintaining native form compatibility.
+                all while maintaining native form compatibility through a server-rendered native <code>&lt;select&gt;</code> fallback that remains the form-post source of truth.
+            </RzParagraph>
+            <RzParagraph>
+                Accessibility contract: the component renders a labeled native select in SSR output and then enhances it in-place with Tom Select.
+                Label, description, and validation relationships are preserved on the enhanced control, keyboard behavior follows Tom Select defaults
+                (Arrow keys, Enter, Escape, Backspace, and typeahead), and CSP-safe inert JSON configuration is used for initialization.
             </RzParagraph>
 
             <!-- 1. Basic Single Select -->

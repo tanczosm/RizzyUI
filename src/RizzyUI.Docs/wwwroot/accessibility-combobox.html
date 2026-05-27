@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Combobox Accessibility Fixture</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" />
+</head>
+<body>
+  <label id="fruit-label" for="fruit-select">Favorite Fruit</label>
+  <p id="fruit-help">Use arrow keys to move through options and enter to commit selection.</p>
+  <select id="fruit-select" aria-labelledby="fruit-label" aria-describedby="fruit-help">
+    <option value="">Pick a fruit...</option>
+    <option value="apple">Apple</option>
+    <option value="banana">Banana</option>
+    <option value="cherry" disabled>Cherry (disabled)</option>
+    <optgroup label="Citrus">
+      <option value="orange">Orange</option>
+      <option value="lemon">Lemon</option>
+    </optgroup>
+  </select>
+
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
+  <script>
+    const select = document.getElementById('fruit-select');
+    const ts = new TomSelect(select, {});
+    ts.control_input.setAttribute('aria-labelledby', select.getAttribute('aria-labelledby'));
+    ts.control_input.setAttribute('aria-describedby', select.getAttribute('aria-describedby'));
+    window.__ts = ts;
+
+    function replaceControl() {
+      ts.destroy();
+      const next = new TomSelect(select, {});
+      next.control_input.setAttribute('aria-labelledby', select.getAttribute('aria-labelledby'));
+      next.control_input.setAttribute('aria-describedby', select.getAttribute('aria-describedby'));
+      window.__ts = next;
+    }
+    window.replaceComboboxControl = replaceControl;
+  </script>
+</body>
+</html>
