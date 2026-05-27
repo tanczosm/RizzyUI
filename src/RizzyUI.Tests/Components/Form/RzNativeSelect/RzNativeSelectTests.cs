@@ -94,6 +94,46 @@ public class RzNativeSelectTests : BunitAlbaContext, IClassFixture<WebAppFixture
         Assert.NotNull(cut.Find("option[data-slot='native-select-option'][value='one']"));
     }
 
+
+    [Fact]
+    public void SelectDoesNotRenderAlpineRuntimeOrCustomPopupMarkup()
+    {
+        var model = new SelectModel();
+
+        var cut = Render<CascadingValue<EditContext>>(ps => ps
+            .Add(p => p.Value, new EditContext(model))
+            .AddChildContent<global::RizzyUI.RzNativeSelect<string>>(sp => sp
+                .Add(p => p.For, () => model.Value)
+                .AddChildContent<global::RizzyUI.RzNativeSelectOption>(op => op
+                    .Add(o => o.Value, "one")
+                    .AddChildContent("One"))));
+
+        Assert.Empty(cut.FindAll("[data-alpine-root]"));
+        Assert.Empty(cut.FindAll("[x-data]"));
+        Assert.Empty(cut.FindAll("[role='listbox']"));
+        Assert.Empty(cut.FindAll("[aria-activedescendant]"));
+    }
+
+    [Fact]
+    public void SelectUsesStableWrapperAndSelectIds()
+    {
+        var model = new SelectModel();
+
+        var cut = Render<CascadingValue<EditContext>>(ps => ps
+            .Add(p => p.Value, new EditContext(model))
+            .AddChildContent<global::RizzyUI.RzNativeSelect<string>>(sp => sp
+                .Add(p => p.For, () => model.Value)
+                .Add(p => p.Id, "vehicle-select")
+                .AddChildContent<global::RizzyUI.RzNativeSelectOption>(op => op
+                    .Add(o => o.Value, "one")
+                    .AddChildContent("One"))));
+
+        var wrapper = cut.Find("div[id='vehicle-select-wrapper']");
+        var select = cut.Find("select[data-slot='native-select']");
+        Assert.NotNull(wrapper);
+        Assert.Equal("vehicle-select", select.Id);
+    }
+
     [Fact]
     public void ThrowsOutsideEditForm()
     {
