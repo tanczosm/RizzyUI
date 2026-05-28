@@ -53,7 +53,10 @@
                 </RzParagraph>
 
                 <RzBrowser Layout="typeof(PreviewLayout)">
-                    <div class="mx-auto mb-5 w-full max-w-md p-8 min-h-[300px]">
+                    <div class="mx-auto mb-5 w-full max-w-md p-8 min-h-[300px]"
+                         x-data="comboboxBasicDemo"
+                         data-initial-selected="@(_model.Fruit ?? "None")"
+                         x-on:rz:combobox:change="handleComboboxChange">
                         <EditForm Model="@_model">
                             <Field>
                                 <Label>Favorite Fruit</Label>
@@ -64,22 +67,31 @@
                                             Placeholder="Pick a fruit..." />
                             </Field>
                             <div class="mt-4 text-sm text-muted-foreground">
-                                Selected: <strong>@(_model.Fruit ?? "None")</strong>
+                                Selected: <strong x-text="selectedFruit">@(_model.Fruit ?? "None")</strong>
                             </div>
                         </EditForm>
                     </div>
                 </RzBrowser>
 
                 <RzCodeViewer Language="@CodeLanguage.Razor" class="mb-10">
-&lt;RzCombobox TItem="string" TValue="string"
-            Items="@@_fruits"
-            @@bind-Value="_model.Fruit"
-            For="@@(() => _model.Fruit)"
-            Placeholder="Pick a fruit..." /&gt;
+&lt;div x-data="comboboxBasicDemo"
+     data-initial-selected="@@(_model.Fruit ?? "None")"
+     x-on:rz:combobox:change="handleComboboxChange"&gt;
+    &lt;RzCombobox TItem="string" TValue="string"
+                Items="@@_fruits"
+                @@bind-Value="_model.Fruit"
+                For="@@(() =&gt; _model.Fruit)"
+                Placeholder="Pick a fruit..." /&gt;
 
-@@code {
-    private List&lt;string&gt; _fruits = ["Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig"];
-}
+    &lt;div class="mt-4 text-sm text-muted-foreground"&gt;
+        Selected: &lt;strong x-text="selectedFruit"&gt;@@(_model.Fruit ?? "None")&lt;/strong&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    // site.js controller:
+    // handleComboboxChange(event) { this.selectedFruit = event.detail?.text || 'None'; }
+&lt;/script&gt;
                 </RzCodeViewer>
             </section>
 
@@ -440,8 +452,26 @@ private ComboboxOptions _clearButtonOptions = new()
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">Alpine API</RzHeading>
                 <RzParagraph>
-                    The combobox client behavior is provided by Alpine <code>x-data</code> component <code>rzCombobox</code>.
+                    The combobox client behavior is provided by Alpine <code>x-data</code> component <code>rzCombobox</code> and exposes state + events for SSR-safe browser integration.
                 </RzParagraph>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Alpine State" class="scroll-mt-20">Alpine State</RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr><th scope="col" class="w-1/5 px-4 py-3">Property</th><th scope="col" class="w-1/5 px-4 py-3">Type</th><th scope="col" class="px-4 py-3">Description</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">value</code></td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string | string[]</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Current selected value for single-select comboboxes, or the selected values array for multiple-select comboboxes.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">values</code></td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string[]</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Current selected values as an array of strings.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">text</code></td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Current selected display text for single-select comboboxes, or comma-separated selected display text for multiple-select comboboxes.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">texts</code></td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">string[]</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Current selected display texts as an array of strings.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">tomSelect</code></td><td class="px-4 py-4"><code class="font-mono text-violet-600 dark:text-violet-400">TomSelect | null</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">The underlying Tom Select instance after initialization.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Alpine Methods" class="scroll-mt-20">Alpine Methods</RzHeading>
                 <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
                     <table class="w-full text-sm">
                         <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
@@ -449,9 +479,19 @@ private ComboboxOptions _clearButtonOptions = new()
                         </thead>
                         <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
                             <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">initTomSelect</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">None</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Creates and configures the Tom Select instance.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">syncSelectedState</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">emit = true</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Synchronizes <code>value</code>, <code>values</code>, <code>text</code>, and <code>texts</code> from Tom Select/native select state and dispatches change event when enabled.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">getOptionText</code></td><td class="px-4 py-4 text-zinc-500"><code class="font-mono">value</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Resolves display text from Tom Select options, with native select fallback.</td></tr>
                         </tbody>
                     </table>
                 </div>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Browser Event" class="scroll-mt-20">Browser Event</RzHeading>
+                <RzParagraph>
+                    <code>rz:combobox:change</code> is the supported SSR/browser-side integration point for reacting to combobox changes without Blazor interactivity.
+                </RzParagraph>
+                <RzCodeViewer Language="@CodeLanguage.JavaScript" class="mb-10">
+{ id, selectId, name, multiple, value, values, text, texts }
+                </RzCodeViewer>
             </section>
         </MainContent>
     </RzArticle>
