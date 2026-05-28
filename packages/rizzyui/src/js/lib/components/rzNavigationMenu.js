@@ -116,7 +116,10 @@ export default function rzNavigationMenu() {
       // --- Handle outgoing content ---
       if (this.open && this.activeItemId && this.activeItemId !== id) {
         const oldTrig = this.$refs[`trigger_${this.activeItemId}`];
-        if (oldTrig) delete oldTrig.dataset.state;
+        if (oldTrig) {
+          oldTrig.setAttribute('aria-expanded', 'false');
+          oldTrig.dataset.state = 'closed';
+        }
 
         const oldEl = this._contentEl(this.activeItemId);
         if (oldEl) {
@@ -165,13 +168,15 @@ export default function rzNavigationMenu() {
      * Executes the `closeMenu` operation.
      * @returns {any} Returns the result of `closeMenu` when applicable.
      */
-    closeMenu() {
+    closeMenu(e = null) {
       if (!this.open || this.isClosing) return;
 
       this.isClosing = true;
       this.cancelClose();
 
       const activeId = this.activeItemId;
+
+      const shouldRestoreFocus = !!(e && e.type === 'keydown' && e.key === 'Escape');
       if (!activeId) {
         this.isClosing = false;
         return;
@@ -180,7 +185,7 @@ export default function rzNavigationMenu() {
       const trig = this.$refs[`trigger_${activeId}`];
       if (trig) {
         trig.setAttribute('aria-expanded', 'false');
-        delete trig.dataset.state;
+        trig.dataset.state = 'closed';
       }
 
       const contentEl = this._contentEl(activeId);
@@ -189,6 +194,10 @@ export default function rzNavigationMenu() {
         setTimeout(() => {
           contentEl.style.display = 'none';
         }, 150); // Match animation duration
+      }
+
+      if (shouldRestoreFocus && trig && document.activeElement && contentEl && contentEl.contains(document.activeElement)) {
+        trig.focus();
       }
 
       this.open = false;

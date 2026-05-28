@@ -292,6 +292,24 @@
             </section>
             
             <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Accessibility" class="scroll-mt-20">
+                    Accessibility
+                </RzHeading>
+                <RzParagraph>
+                    <strong>Pattern:</strong> <code>RzNavigationMenu</code> implements a disclosure/popover-style site navigation pattern (not an application <code>role=&quot;menu&quot;</code> pattern).
+                    Top-level triggers control associated popover content panels while preserving normal page tab order.
+                </RzParagraph>
+                <ul>
+                    <li><strong>Semantics:</strong> the root renders as <code>&lt;nav&gt;</code> with an accessible name via <code>aria-label</code>. Triggers expose <code>aria-expanded</code> and <code>aria-controls</code> bound to panel IDs.</li>
+                    <li><strong>Keyboard:</strong> triggers are buttons, so <kbd>Enter</kbd>/<kbd>Space</kbd> activate by default; <kbd>Escape</kbd> closes an open panel from anywhere in the window.</li>
+                    <li><strong>Focus behavior:</strong> focus is never trapped. When <kbd>Escape</kbd> closes an open panel while focus is inside that panel, focus is restored to the controlling trigger.</li>
+                    <li><strong>Screen readers:</strong> expanded/collapsed state is announced through <code>aria-expanded</code>, and control relationships are announced through <code>aria-controls</code>.</li>
+                    <li><strong>SSR/CSP:</strong> all behavior is SSR-rendered HTML plus Alpine runtime hooks; no Blazor interactive event callbacks are required.</li>
+                    <li><strong>Known limitations:</strong> this component does not implement full APG menubar arrow-key roving focus semantics and intentionally avoids <code>role=&quot;menu&quot;</code>/<code>role=&quot;menuitem&quot;</code>.</li>
+                </ul>
+            </section>
+
+            <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">
                     Component Parameters
                 </RzHeading>
