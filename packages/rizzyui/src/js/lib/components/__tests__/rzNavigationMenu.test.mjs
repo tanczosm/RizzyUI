@@ -188,6 +188,28 @@ test('ArrowLeft moves among top-level controls and skips content links', () => {
   assert.notEqual(doc.activeElement, internalLink);
 });
 
+test('ArrowRight moves among top-level controls and skips content links', () => {
+  const { doc, menu, triggerOne, triggerTwo, topLink, internalLink } = createMenuFixture();
+  globalThis.document = doc;
+
+  triggerOne.focus();
+  const firstRight = keyEvent('ArrowRight', triggerOne);
+  menu.handleKeydown(firstRight);
+  assert.equal(firstRight.prevented, true);
+  assert.equal(doc.activeElement, triggerTwo);
+
+  const secondRight = keyEvent('ArrowRight', triggerTwo);
+  menu.handleKeydown(secondRight);
+  assert.equal(secondRight.prevented, true);
+  assert.equal(doc.activeElement, topLink);
+
+  const wrapRight = keyEvent('ArrowRight', topLink);
+  menu.handleKeydown(wrapRight);
+  assert.equal(wrapRight.prevented, true);
+  assert.equal(doc.activeElement, triggerOne);
+  assert.notEqual(doc.activeElement, internalLink);
+});
+
 test('ArrowDown opens associated content and focuses first focusable descendant', () => {
   const { doc, menu, triggerOne, internalLink } = createMenuFixture();
   globalThis.document = doc;

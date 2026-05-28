@@ -108,16 +108,17 @@ export default function rzNavigationMenu() {
     },
 
     handleKeydown(e) {
-      if (!e || (e.key !== 'ArrowLeft' && e.key !== 'ArrowDown')) return;
+      if (!e || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'ArrowDown')) return;
 
       const target = e.target ?? document.activeElement;
       const context = this._contextFromTarget(target);
       if (!context) return;
 
-      if (e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         e.preventDefault();
-        const previousIndex = (context.index - 1 + context.controls.length) % context.controls.length;
-        context.controls[previousIndex]?.focus?.();
+        const direction = e.key === 'ArrowLeft' ? -1 : 1;
+        const nextIndex = (context.index + direction + context.controls.length) % context.controls.length;
+        context.controls[nextIndex]?.focus?.();
         return;
       }
 

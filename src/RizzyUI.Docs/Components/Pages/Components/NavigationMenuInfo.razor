@@ -301,12 +301,12 @@
                 </RzParagraph>
                 <ul>
                     <li><strong>Semantics:</strong> the root renders as <code>&lt;nav&gt;</code> with an accessible name via <code>aria-label</code>. Triggers expose <code>aria-expanded</code> and <code>aria-controls</code> bound to panel IDs.</li>
-                    <li><strong>Keyboard:</strong> triggers are buttons, so <kbd>Enter</kbd>/<kbd>Space</kbd> activate by default. <kbd>ArrowLeft</kbd> moves between top-level triggers and links, and <kbd>ArrowDown</kbd> moves into associated content when content exists.</li>
+                    <li><strong>Keyboard:</strong> triggers are buttons, so <kbd>Enter</kbd>/<kbd>Space</kbd> activate by default. <kbd>ArrowLeft</kbd>/<kbd>ArrowRight</kbd> move between top-level triggers and links, and <kbd>ArrowDown</kbd> moves into associated content when content exists.</li>
                     <li><strong>Focus behavior:</strong> focus is never trapped. <kbd>ArrowDown</kbd> focuses the first focusable descendant in the active content, or the content container when no focusable descendant exists. When <kbd>Escape</kbd> closes an open panel while focus is inside that panel, focus is restored to the controlling trigger.</li>
                     <li><strong>Screen readers:</strong> expanded/collapsed state is announced through <code>aria-expanded</code>, and control relationships are announced through <code>aria-controls</code>.</li>
                     <li><strong>SSR/CSP:</strong> all behavior is SSR-rendered HTML plus Alpine runtime hooks; no Blazor interactive event callbacks are required.</li>
                     <li><strong>Current-link guidance:</strong> set <code>aria-current=&quot;page&quot;</code> on the active <code>NavigationMenuLink</code> target to expose the current page to assistive technologies.</li>
-                    <li><strong>Known limitations:</strong> this component does not implement full APG menubar arrow-key roving focus semantics and intentionally avoids <code>role=&quot;menu&quot;</code>/<code>role=&quot;menuitem&quot;</code>. <kbd>ArrowRight</kbd>, <kbd>ArrowUp</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> are not special navigation keys for this disclosure pattern.</li>
+                    <li><strong>Known limitations:</strong> this component does not implement full APG menubar arrow-key roving focus semantics and intentionally avoids <code>role=&quot;menu&quot;</code>/<code>role=&quot;menuitem&quot;</code>. <kbd>ArrowUp</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> are not special navigation keys for this disclosure pattern.</li>
                 </ul>
 
                 <div class="not-prose mt-6 mb-4 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
@@ -328,6 +328,11 @@
                                 <td class="px-4 py-4"><kbd>ArrowLeft</kbd></td>
                                 <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Top-level <code>NavigationMenuTrigger</code> or top-level <code>NavigationMenuLink</code></td>
                                 <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves focus to the previous top-level trigger/link; wraps to the last top-level item from the first.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><kbd>ArrowRight</kbd></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Top-level <code>NavigationMenuTrigger</code> or top-level <code>NavigationMenuLink</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves focus to the next top-level trigger/link; wraps to the first top-level item from the last.</td>
                             </tr>
                             <tr class="align-top">
                                 <td class="px-4 py-4"><kbd>ArrowDown</kbd></td>

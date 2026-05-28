@@ -129,6 +129,19 @@ test.describe('RzNavigationMenu browser accessibility contract', () => {
     await expect(page.locator('#products-internal-link')).not.toBeFocused();
   });
 
+  test('ArrowRight traverses only top-level controls and wraps from last to first', async ({ page }) => {
+    await page.locator('#products-trigger').focus();
+    await pressKey(page, 'ArrowRight');
+    await expectActiveElementId(page, 'guides-trigger');
+
+    await page.locator('#docs-link').focus();
+    await pressKey(page, 'ArrowRight');
+    await expectActiveElementId(page, 'products-trigger');
+
+    await expect(page.locator('#products-overview-link')).not.toBeFocused();
+    await expect(page.locator('#products-internal-link')).not.toBeFocused();
+  });
+
   test('ArrowDown opens associated content and focuses the first descendant in the correct panel', async ({ page }) => {
     await page.locator('#products-trigger').focus();
     await pressKey(page, 'ArrowDown');
