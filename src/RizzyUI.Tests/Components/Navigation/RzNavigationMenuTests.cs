@@ -84,4 +84,49 @@ public class RzNavigationMenuTests : BunitAlbaContext, IClassFixture<WebAppFixtu
         Assert.Equal(content.Id, trigger.GetAttribute("aria-controls"));
         Assert.Equal("false", trigger.GetAttribute("aria-expanded"));
     }
+
+    [Fact]
+    public void RzNavigationMenu_TriggerUsesButtonKeyboardActivationContract()
+    {
+        var cut = Render<RzNavigationMenu>(p => p
+            .AddChildContent<NavigationMenuList>(list => list
+                .AddChildContent<NavigationMenuItem>(item => item
+                    .AddChildContent<NavigationMenuTrigger>(t => t.AddChildContent("Products"))
+                    .AddChildContent<NavigationMenuContent>(c => c.AddChildContent("Panel")))));
+
+        var trigger = cut.Find("[data-slot='navigation-menu-trigger']");
+        Assert.Equal("button", trigger.TagName.ToLowerInvariant());
+        Assert.Equal("button", trigger.GetAttribute("type"));
+        Assert.Equal("toggleActive", trigger.GetAttribute("x-on:click.prevent"));
+        Assert.Equal("handleTriggerEnter", trigger.GetAttribute("x-on:focus"));
+    }
+
+    [Fact]
+    public void RzNavigationMenu_PreservesPredictableTabOrderForTriggers()
+    {
+        var cut = Render<RzNavigationMenu>(p => p
+            .AddChildContent<NavigationMenuList>(list => list
+                .AddChildContent<NavigationMenuItem>(item => item
+                    .AddChildContent<NavigationMenuTrigger>(t => t.AddChildContent("Products"))
+                    .AddChildContent<NavigationMenuContent>(c => c.AddChildContent("Panel")))
+                .AddChildContent<NavigationMenuItem>(item => item
+                    .AddChildContent<NavigationMenuTrigger>(t => t.AddChildContent("Guides"))
+                    .AddChildContent<NavigationMenuContent>(c => c.AddChildContent("Panel 2")))));
+
+        var triggers = cut.FindAll("[data-slot='navigation-menu-trigger']");
+        Assert.Equal(2, triggers.Count);
+        Assert.All(triggers, trigger => Assert.False(trigger.HasAttribute("tabindex")));
+    }
+
+    [Fact]
+    public void RzNavigationMenu_CspAndBundleHooksArePresentInMarkup()
+    {
+        var cut = Render<RzNavigationMenu>(p => p.AddChildContent("Items"));
+        var root = cut.Find("[data-slot='navigation-menu']");
+
+        Assert.Equal("rzNavigationMenu", root.GetAttribute("x-data"));
+        Assert.NotNull(root.GetAttribute("x-load"));
+        Assert.Equal(root.Id, root.GetAttribute("data-alpine-root"));
+    }
+
 }

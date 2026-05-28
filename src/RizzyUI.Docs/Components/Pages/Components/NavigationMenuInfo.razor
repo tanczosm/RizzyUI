@@ -305,8 +305,33 @@
                     <li><strong>Focus behavior:</strong> focus is never trapped. When <kbd>Escape</kbd> closes an open panel while focus is inside that panel, focus is restored to the controlling trigger.</li>
                     <li><strong>Screen readers:</strong> expanded/collapsed state is announced through <code>aria-expanded</code>, and control relationships are announced through <code>aria-controls</code>.</li>
                     <li><strong>SSR/CSP:</strong> all behavior is SSR-rendered HTML plus Alpine runtime hooks; no Blazor interactive event callbacks are required.</li>
-                    <li><strong>Known limitations:</strong> this component does not implement full APG menubar arrow-key roving focus semantics and intentionally avoids <code>role=&quot;menu&quot;</code>/<code>role=&quot;menuitem&quot;</code>.</li>
+                    <li><strong>Current-link guidance:</strong> set <code>aria-current=&quot;page&quot;</code> on the active <code>NavigationMenuLink</code> target to expose the current page to assistive technologies.</li>
                 </ul>
+
+                <div class="not-prose mt-6 mb-4 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/4 px-4 py-3">Key</th>
+                                <th scope="col" class="px-4 py-3">Behavior</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><kbd>Enter</kbd> / <kbd>Space</kbd></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Activates a trigger button and toggles its associated content panel.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><kbd>Escape</kbd></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Closes the active panel and restores focus to the controlling trigger when focus was inside panel content.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Uses normal document tab order; focus is not trapped within the navigation menu.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <section class="my-8 py-2">
