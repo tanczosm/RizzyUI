@@ -426,35 +426,47 @@ function rzTabs() {
 		_observer: null,
 		init() {
 			const defaultValue = this.$el.dataset.defaultValue;
-			this._observer = new MutationObserver(() => this.refreshTriggers());
+			this._observer = new MutationObserver(() => {
+				this.refreshTriggers();
+				this._ensureSelectedTab();
+			});
 			this._observer.observe(this.$el, {
 				childList: true,
 				subtree: true
 			});
 			this.refreshTriggers();
-			if (defaultValue && this._triggers.some((t) => t.dataset.value === defaultValue)) this.selectedTab = defaultValue;
-			else if (this._triggers.length > 0) this.selectedTab = this._triggers[0].dataset.value;
+			if (defaultValue && this._triggers.some((t) => t.dataset.value === defaultValue && !this._isDisabled(t))) this.selectedTab = defaultValue;
+			else this.selectedTab = this._enabledTriggers()[0]?.dataset.value ?? "";
 		},
 		destroy() {
-			if (this._observer) this._observer.disconnect();
+			if (this._observer) {
+				this._observer.disconnect();
+				this._observer = null;
+			}
 		},
 		refreshTriggers() {
 			this._triggers = Array.from(this.$el.querySelectorAll("[role=\"tab\"]"));
 		},
+		activateTrigger(trigger, focusTrigger = false) {
+			if (!trigger || this._isDisabled(trigger)) return;
+			const value = trigger.dataset.value;
+			if (!value) return;
+			if (this.selectedTab !== value) {
+				this.selectedTab = value;
+				this.$dispatch("rz:tabs-change", { value: this.selectedTab });
+			}
+			if (focusTrigger) this.$nextTick(() => trigger.focus());
+		},
 		onTriggerClick(e) {
-			const value = e.currentTarget?.dataset?.value;
-			if (!value || e.currentTarget.getAttribute("aria-disabled") === "true") return;
-			this.selectedTab = value;
-			this.$dispatch("rz:tabs-change", { value: this.selectedTab });
+			this.activateTrigger(e.currentTarget, false);
 		},
 		isSelected(value) {
 			return this.selectedTab === value;
 		},
 		bindTrigger() {
-			this.selectedTab;
 			const value = this.$el.dataset.value;
 			const active = this.isSelected(value);
-			const disabled = this.$el.getAttribute("aria-disabled") === "true";
+			const disabled = this._isDisabled(this.$el);
 			return {
 				"aria-selected": String(active),
 				"tabindex": active ? "0" : "-1",
@@ -463,10 +475,10 @@ function rzTabs() {
 			};
 		},
 		_attrDisabled() {
-			return this.$el.getAttribute("aria-disabled") === "true" ? "true" : null;
+			return this._isDisabled(this.$el) ? "true" : null;
 		},
 		_attrAriaSelected() {
-			return String(this.$el.dataset.value === this.selectedTab);
+			return String(this.$el.dataset.value === this.selectedTab && !this._isDisabled(this.$el));
 		},
 		_attrHidden() {
 			return this.$el.dataset.value === this.selectedTab ? null : "true";
@@ -475,49 +487,56 @@ function rzTabs() {
 			return String(this.selectedTab !== this.$el.dataset.value);
 		},
 		_attrDataState() {
-			return this.selectedTab === this.$el.dataset.value ? "active" : "inactive";
+			return this.selectedTab === this.$el.dataset.value && !this._isDisabled(this.$el) ? "active" : "inactive";
 		},
 		_attrTabIndex() {
-			return this.selectedTab === this.$el.dataset.value ? "0" : "-1";
+			return this.selectedTab === this.$el.dataset.value && !this._isDisabled(this.$el) ? "0" : "-1";
 		},
 		onListKeydown(e) {
-			if ([
+			if (![
 				"ArrowLeft",
 				"ArrowRight",
 				"ArrowUp",
 				"ArrowDown",
 				"Home",
 				"End"
-			].includes(e.key)) {
-				e.preventDefault();
-				const availableTriggers = this._triggers.filter((t) => t.getAttribute("aria-disabled") !== "true");
-				if (availableTriggers.length === 0) return;
-				const activeIndex = availableTriggers.findIndex((t) => t.dataset.value === this.selectedTab);
-				if (activeIndex === -1) return;
-				const isVertical = e.currentTarget?.getAttribute("aria-orientation") === "vertical";
-				const prevKey = isVertical ? "ArrowUp" : "ArrowLeft";
-				const nextKey = isVertical ? "ArrowDown" : "ArrowRight";
-				let newIndex = activeIndex;
-				switch (e.key) {
-					case prevKey:
-						newIndex = activeIndex - 1 < 0 ? availableTriggers.length - 1 : activeIndex - 1;
-						break;
-					case nextKey:
-						newIndex = (activeIndex + 1) % availableTriggers.length;
-						break;
-					case "Home":
-						newIndex = 0;
-						break;
-					case "End":
-						newIndex = availableTriggers.length - 1;
-						break;
-				}
-				if (newIndex >= 0 && newIndex < availableTriggers.length) {
-					const newTrigger = availableTriggers[newIndex];
-					this.selectedTab = newTrigger.dataset.value;
-					this.$nextTick(() => newTrigger.focus());
-				}
+			].includes(e.key)) return;
+			const isVertical = e.currentTarget?.getAttribute("aria-orientation") === "vertical";
+			if (!(e.key === "Home" || e.key === "End" || isVertical && ["ArrowUp", "ArrowDown"].includes(e.key) || !isVertical && ["ArrowLeft", "ArrowRight"].includes(e.key))) return;
+			const availableTriggers = this._enabledTriggers();
+			if (availableTriggers.length === 0) return;
+			const currentTrigger = this._isDisabled(e.target) || e.target?.getAttribute?.("role") !== "tab" ? availableTriggers.find((t) => t.dataset.value === this.selectedTab) : e.target;
+			let activeIndex = availableTriggers.indexOf(currentTrigger);
+			if (activeIndex === -1) activeIndex = Math.max(availableTriggers.findIndex((t) => t.dataset.value === this.selectedTab), 0);
+			const prevKey = isVertical ? "ArrowUp" : "ArrowLeft";
+			const nextKey = isVertical ? "ArrowDown" : "ArrowRight";
+			let newIndex = activeIndex;
+			switch (e.key) {
+				case prevKey:
+					newIndex = activeIndex - 1 < 0 ? availableTriggers.length - 1 : activeIndex - 1;
+					break;
+				case nextKey:
+					newIndex = (activeIndex + 1) % availableTriggers.length;
+					break;
+				case "Home":
+					newIndex = 0;
+					break;
+				case "End":
+					newIndex = availableTriggers.length - 1;
+					break;
 			}
+			e.preventDefault();
+			this.activateTrigger(availableTriggers[newIndex], true);
+		},
+		_enabledTriggers() {
+			return this._triggers.filter((t) => !this._isDisabled(t));
+		},
+		_isDisabled(element) {
+			return element?.getAttribute?.("aria-disabled") === "true" || element?.hasAttribute?.("disabled") === true || element?.disabled === true;
+		},
+		_ensureSelectedTab() {
+			if (this.selectedTab && this._triggers.some((t) => t.dataset.value === this.selectedTab && !this._isDisabled(t))) return;
+			this.selectedTab = this._enabledTriggers()[0]?.dataset.value ?? "";
 		}
 	};
 }
@@ -557,4 +576,4 @@ function rzToggle() {
 //#endregion
 export { accordionItem, rzAccordion, rzAlert, rzAspectRatio, rzBackToTop, rzClipboard, rzCollapsible, rzDarkModeToggle, rzHeading, rzIndicator, rzInputGroupAddon, rzPrependInput, rzProgress, rzTabs, rzToggle };
 
-//# sourceMappingURL=core-common-zuVvxg2l.js.map
+//# sourceMappingURL=core-common-COls6eRg.js.map
