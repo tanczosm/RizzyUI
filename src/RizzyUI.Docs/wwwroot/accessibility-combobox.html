@@ -22,20 +22,27 @@
 
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
   <script>
-    const select = document.getElementById('fruit-select');
-    const ts = new TomSelect(select, {});
-    ts.control_input.setAttribute('aria-labelledby', select.getAttribute('aria-labelledby'));
-    ts.control_input.setAttribute('aria-describedby', select.getAttribute('aria-describedby'));
-    window.__ts = ts;
-
-    function replaceControl() {
-      ts.destroy();
-      const next = new TomSelect(select, {});
-      next.control_input.setAttribute('aria-labelledby', select.getAttribute('aria-labelledby'));
-      next.control_input.setAttribute('aria-describedby', select.getAttribute('aria-describedby'));
-      window.__ts = next;
+    function initCombobox() {
+      const select = document.getElementById('fruit-select');
+      const ts = new TomSelect(select, {});
+      ts.control_input.setAttribute('aria-labelledby', select.getAttribute('aria-labelledby'));
+      ts.control_input.setAttribute('aria-describedby', select.getAttribute('aria-describedby'));
+      window.__ts = ts;
+      return ts;
     }
-    window.replaceComboboxControl = replaceControl;
+
+    window.replaceComboboxControl = () => {
+      if (window.__ts) {
+        window.__ts.destroy();
+      }
+      initCombobox();
+    };
+
+    window.addEventListener('load', () => {
+      if (window.TomSelect) {
+        initCombobox();
+      }
+    });
   </script>
 </body>
 </html>

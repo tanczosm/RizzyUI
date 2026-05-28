@@ -356,6 +356,55 @@ private ComboboxOptions _clearButtonOptions = new()
                 </RzBrowser>
             </section>
 
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Accessibility" class="scroll-mt-20">
+                    Accessibility
+                </RzHeading>
+                <RzParagraph>
+                    <code>RzCombobox&lt;TItem, TValue&gt;</code> uses an SSR-first strategy: the server renders a native
+                    <code>&lt;select&gt;</code> that carries label, description, validation, and disabled semantics; Tom Select then enhances
+                    the control in place. This preserves form posting behavior while providing richer keyboard and search UX.
+                </RzParagraph>
+                <RzParagraph>
+                    Template guidance: keep <code>OptionTemplate</code> and <code>ItemTemplate</code> content text-inclusive and avoid icon-only
+                    rows so screen readers announce meaningful option names. Disabled options remain non-selectable in both fallback and
+                    enhanced modes.
+                </RzParagraph>
+                <RzParagraph>
+                    CSP note: the component initializes from inert JSON in a <code>script type="application/json"</code> block and loads assets
+                    through RizzyUI's CSP-safe loader, so no inline executable script is required.
+                </RzParagraph>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/4 px-4 py-3">Key</th>
+                                <th scope="col" class="px-4 py-3">Behavior</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono">ArrowDown / ArrowUp</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Move through filtered options in the open list.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono">Enter</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Commit the active option to the underlying select value.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono">Escape</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Closes the open dropdown without forcing focus away from the control.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono">Backspace</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">In multi-select mode, removes prior selected tokens when the search box is empty.</td></tr>
+                            <tr class="align-top"><td class="px-4 py-4"><code class="font-mono">Typeahead</code></td><td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Filters available options using Tom Select's search behavior.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <RzAlert class="mb-6">
+                    <AlertTitle>Known limitations</AlertTitle>
+                    <AlertDescription>
+                        Some assistive technology/browser combinations can announce Tom Select's generated markup with slight phrasing differences
+                        compared to the native select fallback. Validate critical flows with your target screen-reader stack.
+                    </AlertDescription>
+                </RzAlert>
+                <RzParagraph>
+                    Automated coverage lives in <code>RzComboboxTests</code> (SSR fallback/configuration) and
+                    <code>tests/accessibility/combobox.a11y.spec.ts</code> (enhanced keyboard/search/re-init behavior).
+                </RzParagraph>
+            </section>
+
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">
                     Component Parameters
