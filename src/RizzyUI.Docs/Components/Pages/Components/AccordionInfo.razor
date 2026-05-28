@@ -34,7 +34,6 @@
 	            RzAccordions allow you to organize a stack of items that can be expanded or collapsed, revealing or hiding additional content. RzAccordion examples use the Alpine JS's collapse plugin, which provides a smooth collapse/expand animation. If you prefer not to use this plugin, you can remove the "x-collapse" directive from each item, but you will lose this animation.
             </RzParagraph>
 
-            <!-- Default RzAccordion (Multiple sections open) -->
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Default RzAccordion" class="scroll-mt-20">
                     Default RzAccordion (Multiple Open)
@@ -110,7 +109,6 @@
                 </RzCodeViewer>
             </section>
 
-            <!-- Single Open RzAccordion (Only one section open) -->
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Single Open RzAccordion" class="scroll-mt-20">
                     Single Open RzAccordion
@@ -186,7 +184,6 @@
                 </RzCodeViewer>
             </section>
 
-            <!-- Parameters Table -->
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Component Parameters" class="scroll-mt-20">
                     RzAccordion Component Parameters
@@ -228,7 +225,6 @@
                 </div>
             </section>
 
-            <!-- AccordionItem Parameters Table -->
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="AccordionItem Parameters" class="scroll-mt-20">
                     AccordionItem Component Parameters
@@ -278,12 +274,85 @@
             </section>
 
 
+
+            <section class="my-8 py-2">
+                <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Accessibility" class="scroll-mt-20">
+                    Accessibility
+                </RzHeading>
+                <RzParagraph>
+                    RzAccordion follows the WAI-ARIA Authoring Practices Guide accordion pattern. Each item exposes a real <code>button</code> inside a semantic heading, and the button controls a panel with stable ID-based relationships.
+                </RzParagraph>
+                <ul>
+                    <li>Each trigger uses <code>aria-expanded</code> to reflect the current open state.</li>
+                    <li>Each trigger uses <code>aria-controls</code> to reference its panel ID.</li>
+                    <li>Each panel uses <code>role=&quot;region&quot;</code> and <code>aria-labelledby</code> to reference its trigger ID.</li>
+                    <li>The accordion container does not add a composite widget role, so Tab order remains the browser's natural button order.</li>
+                </ul>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Keyboard behavior" class="scroll-mt-20">
+                    Keyboard behavior
+                </RzHeading>
+                <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <table class="w-full text-sm">
+                        <thead class="text-left bg-zinc-100/75 font-semibold text-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-300">
+                            <tr>
+                                <th scope="col" class="w-1/4 px-4 py-3">Key</th>
+                                <th scope="col" class="px-4 py-3">Effect</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Enter</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Activates the focused trigger button and toggles its panel through native button behavior.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Space</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Activates the focused trigger button and toggles its panel through native button behavior.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">ArrowDown</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves focus to the next enabled accordion trigger, wrapping to the first trigger.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">ArrowUp</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves focus to the previous enabled accordion trigger, wrapping to the last trigger.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Home</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves focus to the first enabled accordion trigger.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">End</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves focus to the last enabled accordion trigger.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="px-4 py-4"><code class="font-mono font-medium text-sky-600 dark:text-sky-400">Tab</code></td>
+                                <td class="px-4 py-4 text-zinc-600 dark:text-zinc-400">Moves through triggers and focusable panel content in normal document order.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <RzHeading Level="HeadingLevel.H3" QuickReferenceTitle="Focus, announcements, and SSR" class="scroll-mt-20">
+                    Focus, announcements, and SSR
+                </RzHeading>
+                <RzParagraph>
+                    Opening or closing a panel preserves focus on the trigger that was activated. Arrow, Home, and End keys only move focus between triggers and do not change the open state. No live region announcements are emitted because the trigger's <code>aria-expanded</code> state and panel relationship provide the state change to assistive technologies without additional noise.
+                </RzParagraph>
+                <RzParagraph>
+                    RzAccordion is SSR-only and CSP-compatible. The initial <code>aria-expanded</code> value is rendered in HTML from the <code>Collapsed</code> parameter, and Alpine updates the same attribute after hydration. The default and CSP runtimes keep the existing <code>rzAccordion</code> and <code>accordionItem</code> component names in the <code>core-common</code> bundle.
+                </RzParagraph>
+                <RzParagraph>
+                    Known limitation: the optional arrow-key navigation only moves between enabled triggers rendered inside the same accordion root. Custom trigger content should not place additional interactive controls inside the trigger button, because nested interactive controls are invalid HTML and can produce inconsistent assistive technology behavior.
+                </RzParagraph>
+            </section>
+
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Alpine API" class="scroll-mt-20">
                     Alpine API
                 </RzHeading>
                 <RzParagraph>
-                    This page uses the <code>rzAccordion</code> Alpine <code>x-data</code> component.
+                    This page uses the <code>rzAccordion</code> parent Alpine <code>x-data</code> component and the <code>accordionItem</code> item-level Alpine component. The item runtime manages toggle state, keeps the existing single or multiple behavior, updates <code>aria-expanded</code>, and handles optional arrow-key focus movement.
                 </RzParagraph>
                 <div class="not-prose mt-6 mb-10 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
                     <table class="w-full text-sm">
