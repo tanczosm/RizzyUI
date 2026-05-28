@@ -76,7 +76,17 @@ function getFocusableElements(root) {
 	if (!root || typeof root.querySelectorAll !== "function") return [];
 	return Array.from(root.querySelectorAll(FOCUSABLE_SELECTOR)).filter((element) => root.contains?.(element) && isFocusable(element));
 }
+/**
+* Focuses the first focusable element inside root.
+* @param {Element | DocumentFragment | null | undefined} root root container.
+* @returns {Element | null} the focused element, or null when none were found.
+*/
+function focusFirst(root) {
+	const first = getFocusableElements(root)[0] ?? null;
+	first?.focus?.();
+	return first;
+}
 //#endregion
-export { isFocusable as n, getFocusableElements as t };
+export { getFocusableElements as n, isFocusable as r, focusFirst as t };
 
-//# sourceMappingURL=focusable-xBqTg35e.js.map
+//# sourceMappingURL=focusable-BNFX31oP.js.map

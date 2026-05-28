@@ -3,6 +3,10 @@ import { t as rizzyRequire } from "./rizzyRequire-C5t2y41V.js";
 function rzCombobox() {
 	return {
 		tomSelect: null,
+		value: "",
+		values: [],
+		text: "",
+		texts: [],
 		init() {
 			const assets = JSON.parse(this.$el.dataset.assets || "[]");
 			const nonce = this.$el.dataset.nonce;
@@ -37,13 +41,72 @@ function rzCombobox() {
 			if (this.$refs.optionTemplate) render.option = (data, escape) => createAlpineRow(this.$refs.optionTemplate, data);
 			if (this.$refs.itemTemplate) render.item = (data, escape) => createAlpineRow(this.$refs.itemTemplate, data);
 			config.dataAttr = "data-item";
+			const alpine = this;
 			this.tomSelect = new TomSelect(selectEl, {
 				...config,
 				render,
 				onInitialize: function() {
 					this.sync();
+					alpine.syncSelectedState(false);
+					const controlInput = this.control_input;
+					const control = this.control;
+					const dropdown = this.dropdown;
+					if (controlInput) {
+						const selectId = selectEl.id || this.inputId || this.$input?.id || "";
+						if (selectId) controlInput.id = `${selectId}-ts-input`;
+						const ariaLabel = selectEl.getAttribute("aria-label");
+						if (ariaLabel) controlInput.setAttribute("aria-label", ariaLabel);
+						const ariaLabelledBy = selectEl.getAttribute("aria-labelledby");
+						if (ariaLabelledBy) controlInput.setAttribute("aria-labelledby", ariaLabelledBy);
+						const ariaDescribedBy = selectEl.getAttribute("aria-describedby");
+						if (ariaDescribedBy) controlInput.setAttribute("aria-describedby", ariaDescribedBy);
+						const ariaInvalid = selectEl.getAttribute("aria-invalid");
+						if (ariaInvalid) controlInput.setAttribute("aria-invalid", ariaInvalid);
+						if (selectEl.disabled) controlInput.setAttribute("aria-disabled", "true");
+					}
+					if (control) {
+						const describedBy = selectEl.getAttribute("aria-describedby");
+						if (describedBy) control.setAttribute("aria-describedby", describedBy);
+					}
+					if (dropdown && this.dropdown_content?.id) dropdown.setAttribute("aria-controls", this.dropdown_content.id);
+				},
+				onChange: function() {
+					this.sync();
+					alpine.syncSelectedState(true);
 				}
 			});
+		},
+		syncSelectedState(emit = true) {
+			const selectEl = this.$refs.selectInput;
+			if (!selectEl) return;
+			const rawValue = this.tomSelect ? this.tomSelect.getValue() : Array.from(selectEl.selectedOptions || []).map((option) => option?.value ?? "");
+			const normalizedValues = Array.isArray(rawValue) ? rawValue.filter((value) => value !== null && value !== void 0 && value !== "").map((value) => String(value)) : rawValue === null || rawValue === void 0 || rawValue === "" ? [] : [String(rawValue)];
+			const normalizedTexts = normalizedValues.map((value) => this.getOptionText(value));
+			this.values = normalizedValues;
+			this.value = selectEl.multiple ? normalizedValues : normalizedValues[0] || "";
+			this.texts = normalizedTexts;
+			this.text = selectEl.multiple ? normalizedTexts.join(", ") : normalizedTexts[0] || "";
+			if (emit) this.$dispatch("rz:combobox:change", {
+				id: this.$el.id || null,
+				selectId: selectEl.id || null,
+				name: selectEl.name || "",
+				multiple: selectEl.multiple,
+				value: this.value,
+				values: this.values,
+				text: this.text,
+				texts: this.texts
+			});
+		},
+		getOptionText(value) {
+			const key = String(value);
+			const tomSelectText = this.tomSelect?.options?.[key]?.text;
+			if (typeof tomSelectText === "string" && tomSelectText.length > 0) return tomSelectText;
+			const selectEl = this.$refs.selectInput;
+			if (selectEl) {
+				const option = Array.from(selectEl.options || []).find((candidate) => String(candidate?.value ?? "") === key);
+				if (option?.text) return option.text;
+			}
+			return key;
 		},
 		destroy() {
 			if (this.tomSelect) {
@@ -933,4 +996,4 @@ function rzSlider() {
 //#endregion
 export { rzCombobox, rzFileInput, rzInputOTP, rzScrollArea, rzSlider };
 
-//# sourceMappingURL=advanced-input-runtime-BDyGSZ2H.js.map
+//# sourceMappingURL=advanced-input-runtime-DtjlrM4h.js.map
