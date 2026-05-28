@@ -17,6 +17,7 @@ public class RzNavigationMenuTests : BunitAlbaContext, IClassFixture<WebAppFixtu
         Assert.Equal("nav", root.TagName.ToLowerInvariant());
         Assert.Equal("vertical", root.GetAttribute("data-orientation"));
         Assert.Equal("rzNavigationMenu", root.GetAttribute("x-data"));
+        Assert.Equal("handleKeydown", root.GetAttribute("x-on:keydown"));
         Assert.Equal("closeMenu($event)", root.GetAttribute("x-on:keydown.escape.window"));
         Assert.NotNull(root.GetAttribute("aria-label"));
     }
@@ -116,6 +117,19 @@ public class RzNavigationMenuTests : BunitAlbaContext, IClassFixture<WebAppFixtu
         var triggers = cut.FindAll("[data-slot='navigation-menu-trigger']");
         Assert.Equal(2, triggers.Count);
         Assert.All(triggers, trigger => Assert.False(trigger.HasAttribute("tabindex")));
+    }
+
+
+    [Fact]
+    public void NavigationMenuLink_RendersTopLevelKeyboardDataSlotAndHref()
+    {
+        var cut = Render<NavigationMenuLink>(p => p
+            .Add(x => x.Href, "/docs")
+            .AddChildContent("Docs"));
+
+        var link = cut.Find("[data-slot='navigation-menu-link']");
+        Assert.Equal("/docs", link.GetAttribute("href"));
+        Assert.False(link.HasAttribute("tabindex"));
     }
 
     [Fact]
