@@ -19,6 +19,6 @@ From repository root:
 npm test --prefix src/RizzyUI.Docs
 ```
 
-Playwright runs headless by default. The test runner uses a Chromium binary from `@sparticuz/chromium` so it does not depend on Playwright CDN downloads.
+Playwright runs headless by default. The test runner uses a Chromium binary from `@sparticuz/chromium` so it does not depend on Playwright CDN downloads. The Playwright config also runs `tests/accessibility/scripts/playwright-global-setup.ts` so direct `npx playwright test ...` invocations extract the same local Chromium binary instead of requiring `npx playwright install`.
 
 All future interactive component accessibility tests should use these helpers to keep keyboard, focus, ARIA, and scan assertions consistent.
