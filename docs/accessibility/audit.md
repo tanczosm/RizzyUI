@@ -81,13 +81,13 @@ Recommended primitives: `focusScope`, `dismissableLayer`,
 - Docs: `src/RizzyUI.Docs/Components/Pages/Components/PopoverInfo.razor`
 - Primitives: `dismissableLayer`, `focusScope`
 
-### Tooltip/toggletip (`RzTooltip`) — needs full implementation
+### Tooltip (`RzTooltip`) — needs tests and documentation alignment
 - Files: `src/RizzyUI/Components/Feedback/RzTooltip/*`,
   `packages/rizzyui/src/js/lib/components/rzTooltip.js`
-- Semantics: root tooltip role/association pattern not clearly visible.
-- Keyboard: trigger keyboard behavior unclear.
-- Focus: hover/focus parity unclear.
-- Announcement: toggletip pattern not explicit.
+- Semantics: trigger/content description relationship and `role="tooltip"` are documented and covered by tests.
+- Keyboard: focus opens the tooltip; Escape closes it when visible and restores trigger focus.
+- Focus: hover/focus parity and no focus trap are covered by Playwright tests.
+- Announcement: non-interactive tooltip description behavior is documented; interactive disclosure points to `RzPopover`.
 - Tests: `src/RizzyUI.Tests/Components/Feedback/RzTooltipTests.cs`
 - Docs: `src/RizzyUI.Docs/Components/Pages/Components/TooltipInfo.razor`
 - Primitives: `dismissableLayer`, `focusScope`
