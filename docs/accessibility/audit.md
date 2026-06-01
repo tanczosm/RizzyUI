@@ -5,6 +5,8 @@
 This audit covers root-level interactive components in `src/RizzyUI` and
 related runtime, docs, and tests.
 
+Manual assistive-technology validation for the existing component set is tracked in [`manual-testing.md`](manual-testing.md). Use that checklist for release passes and record exact OS, browser, screen reader, and version details there.
+
 Classifications:
 
 - **ready**
