@@ -47,6 +47,13 @@
                 </AlertDescription>
             </RzAlert>
 
+            <RzAlert class="my-4">
+                <AlertTitle>Accessibility implementation notes</AlertTitle>
+                <AlertDescription>
+                    DataTable preserves native table semantics and does not implement grid keyboard navigation. Sort controls remain native buttons, selection remains native checkboxes, sortable headers should bind <code>aria-sort</code> with <code>sort.ariaSort(header)</code>, and state changes update a built-in polite status region for sorting, pagination, filtering, row selection, and column visibility changes.
+                </AlertDescription>
+            </RzAlert>
+
             <section class="my-8 py-2">
                 <RzHeading Level="HeadingLevel.H2" QuickReferenceTitle="Basic usage" class="scroll-mt-20">Basic usage</RzHeading>
                     <div>
@@ -500,6 +507,7 @@
                 <ul>
                     <li><code>selection.canSelect(row)</code> / <code>selection.isSelected(row)</code> / <code>selection.isSomeSelected(row)</code> — row-level selection queries. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#getcanselect" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
                     <li><code>selection.setRowSelected(row, value)</code> — set row selection state. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#toggleselected" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
+                    <li><code>selection.setRowSelectedById(rowId, value)</code> — set row selection from a stable serialized row id, used by generated <code>rowSelection</code> cells.</li>
                     <li><code>selection.allPageRowsSelected()</code>, <code>selection.somePageRowsSelected()</code>, <code>selection.setAllPageRows(value)</code> — page-scoped selection helpers. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#getisallpagerowsselected" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
                     <li><code>selection.allRowsSelected()</code>, <code>selection.someRowsSelected()</code>, <code>selection.setAllRows(value)</code> — table-wide selection helpers. <a href="https://tanstack.com/table/latest/docs/api/features/row-selection#getisallrowsselected" target="_blank" rel="noopener noreferrer">[Ref]</a></li>
                 </ul>
@@ -529,11 +537,16 @@
                     <li><code>rz:datatable:ready</code></li>
                     <li><code>rz:datatable:state-changed</code></li>
                     <li><code>rz:datatable:selection-changed</code></li>
+                    <li><code>rz:datatable:row-selection-input-changed</code></li>
                     <li><code>rz:datatable:page-changed</code></li>
                     <li><code>rz:datatable:sort-changed</code></li>
                     <li><code>rz:datatable:filter-changed</code></li>
                     <li><code>rz:datatable:column-visibility-changed</code></li>
+                    <li><code>rz:datatable:announcement</code></li>
                 </ul>
+                <RzParagraph>
+                    The aggregate state event fires after any TanStack state update. Granular events fire only when their state slice changes, and payloads use serializable primitives such as component ids, row ids, selected row ids, pagination objects, sorting descriptors, filter values, and column ids.
+                </RzParagraph>
             </section>
         </MainContent>
     </RzArticle>
