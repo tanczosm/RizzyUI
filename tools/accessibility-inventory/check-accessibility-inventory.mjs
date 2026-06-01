@@ -2,14 +2,46 @@
 import path from 'node:path';
 import { promises as fs } from 'node:fs';
 
+const DEFAULT_CONTRACT_DIRECTORIES = [
+  'DataTable/RzDataTable',
+  'Feedback/RzAlert',
+  'Feedback/RzDialog',
+  'Feedback/RzPopover',
+  'Feedback/RzSheet',
+  'Feedback/RzSpinner',
+  'Feedback/RzTooltip',
+  'Form/RzCombobox',
+  'Form/RzFileInput',
+  'Form/RzNativeSelect',
+  'Layout/RzAccordion',
+  'Navigation/RzCommand',
+  'Navigation/RzDropdown',
+  'Navigation/RzMenubar',
+  'Navigation/RzNavigationMenu',
+  'Navigation/RzSidebar',
+  'Navigation/RzTabs',
+  'Utility/RzBackToTop'
+];
+
+const DEFAULT_EXCLUDED_COMPONENTS = [
+  'RzNativeSelectOptGroup',
+  'RzNativeSelectOption'
+];
+
+function splitList(value) {
+  return value.split(',').map(s => s.trim()).filter(Boolean);
+}
+
 function parseArgs(argv) {
   const options = {
     componentsDir: 'Components',
     docsDir: '../RizzyUI.Docs/Components/Pages/Components',
-    testsDir: '../RizzyUI.Tests/Components',
+    testsDirs: ['../RizzyUI.Tests/Components', '../RizzyUI.Docs/tests/accessibility'],
     interactivePrefixes: ['Rz'],
-    ignoreDirs: ['_Internal', 'obj', 'bin'],
-    exts: ['.razor']
+    ignoreDirs: ['_Internal', 'obj', 'bin', 'node_modules'],
+    exts: ['.razor'],
+    contractDirectories: DEFAULT_CONTRACT_DIRECTORIES,
+    excludedComponents: DEFAULT_EXCLUDED_COMPONENTS
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -28,13 +60,22 @@ function parseArgs(argv) {
         options.docsDir = value;
         break;
       case 'tests-dir':
-        options.testsDir = value;
+        options.testsDirs = splitList(value);
+        break;
+      case 'tests-dirs':
+        options.testsDirs = splitList(value);
         break;
       case 'interactive-prefixes':
-        options.interactivePrefixes = value.split(',').map(s => s.trim()).filter(Boolean);
+        options.interactivePrefixes = splitList(value);
         break;
       case 'ignore-dirs':
-        options.ignoreDirs = value.split(',').map(s => s.trim()).filter(Boolean);
+        options.ignoreDirs = splitList(value);
+        break;
+      case 'contract-directories':
+        options.contractDirectories = splitList(value);
+        break;
+      case 'exclude-components':
+        options.excludedComponents = splitList(value);
         break;
       default:
         break;
@@ -44,7 +85,19 @@ function parseArgs(argv) {
   return options;
 }
 
+async function directoryExists(dir) {
+  try {
+    const stats = await fs.stat(dir);
+    return stats.isDirectory();
+  } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
+}
+
 async function walk(dir, predicate, ignoreDirs) {
+  if (!(await directoryExists(dir))) return [];
+
   const results = [];
   async function recurse(current) {
     const entries = await fs.readdir(current, { withFileTypes: true });
@@ -66,6 +119,10 @@ async function walk(dir, predicate, ignoreDirs) {
   return results;
 }
 
+function normalizePath(value) {
+  return value.split(path.sep).join('/');
+}
+
 function isRootLevelComponent(filePath, interactivePrefixes) {
   const baseName = path.basename(filePath, '.razor');
   if (!interactivePrefixes.some(prefix => baseName.startsWith(prefix))) return false;
@@ -73,92 +130,156 @@ function isRootLevelComponent(filePath, interactivePrefixes) {
   return true;
 }
 
+function isInContractDirectory(filePath, componentsDir, contractDirectories) {
+  const relativePath = normalizePath(path.relative(componentsDir, path.dirname(filePath)));
+  return contractDirectories.some(dir => {
+    const normalized = normalizePath(dir);
+    return relativePath === normalized || relativePath.startsWith(`${normalized}/`);
+  });
+}
+
 function toDocStem(componentName) {
-  return componentName.replace(/^Rz/, '');
+  return componentName.replace(/^Rz/, '').replace(/Provider$/, '');
 }
 
-function hasMatchingDoc(docsFiles, componentName) {
-  const stem = toDocStem(componentName);
-  return docsFiles.some(file => {
-    const fileName = path.basename(file, '.razor');
-    return fileName === `${stem}Info` || fileName === `${componentName}Info`;
-  });
+function parentDocStem(filePath, componentsDir) {
+  const relativeDir = normalizePath(path.relative(componentsDir, path.dirname(filePath)));
+  const segments = relativeDir.split('/').filter(Boolean);
+  const parentFolder = segments.at(-1) ?? '';
+  if (!parentFolder.startsWith('Rz')) return undefined;
+  return toDocStem(parentFolder);
 }
 
-function hasMatchingTest(testFiles, componentName) {
-  const bare = componentName;
+function docCandidates(componentName, filePath, componentsDir) {
+  return [...new Set([
+    `${toDocStem(componentName)}Info.razor`,
+    `${componentName}Info.razor`,
+    parentDocStem(filePath, componentsDir) ? `${parentDocStem(filePath, componentsDir)}Info.razor` : undefined
+  ].filter(Boolean))];
+}
+
+function hasMatchingDoc(docsFiles, candidates) {
+  const docsByName = new Set(docsFiles.map(file => path.basename(file)));
+  return candidates.some(candidate => docsByName.has(candidate));
+}
+
+function testCandidates(componentName, filePath, componentsDir) {
   const stem = toDocStem(componentName);
+  const parentStem = parentDocStem(filePath, componentsDir);
+  return [...new Set([
+    `${componentName}Tests.cs`,
+    `${componentName}A11yTests.cs`,
+    `${stem}A11yTests.cs`,
+    `${stem.toLowerCase()}.a11y.spec.ts`,
+    `${stem.toLowerCase()}.a11y.spec.js`,
+    parentStem ? `${parentStem}Tests.cs` : undefined,
+    parentStem ? `${parentStem}A11yTests.cs` : undefined,
+    parentStem ? `${parentStem.toLowerCase()}.a11y.spec.ts` : undefined,
+    parentStem ? `${parentStem.toLowerCase()}.a11y.spec.js` : undefined
+  ].filter(Boolean))];
+}
+
+function hasMatchingTest(testFiles, componentName, candidates) {
+  const stem = toDocStem(componentName).toLowerCase();
+  const testsByName = new Set(testFiles.map(file => path.basename(file)));
+  if (candidates.some(candidate => testsByName.has(candidate))) return true;
+
   return testFiles.some(file => {
-    const fileName = path.basename(file);
-    return (
-      fileName.includes(`${bare}Tests`) ||
-      fileName.includes(`${bare}A11yTests`) ||
-      fileName.includes(`${stem}A11y`) ||
-      fileName.toLowerCase().includes(`${stem.toLowerCase()}.a11y.`)
-    );
+    const fileName = path.basename(file).toLowerCase();
+    return fileName.includes(`${stem}.a11y.`) || fileName.includes(`${stem}a11y`);
   });
+}
+
+function expectedPaths(baseDir, names) {
+  return names.map(name => normalizePath(path.join(baseDir, name)));
 }
 
 export async function runInventoryCheck(options) {
+  const normalizedOptions = {
+    ...options,
+    testsDirs: options.testsDirs ?? (options.testsDir ? [options.testsDir] : []),
+    contractDirectories: options.contractDirectories ?? DEFAULT_CONTRACT_DIRECTORIES,
+    excludedComponents: options.excludedComponents ?? DEFAULT_EXCLUDED_COMPONENTS
+  };
+
   const components = await walk(
-    options.componentsDir,
-    name => options.exts.includes(path.extname(name)),
-    options.ignoreDirs
+    normalizedOptions.componentsDir,
+    name => normalizedOptions.exts.includes(path.extname(name)),
+    normalizedOptions.ignoreDirs
   );
 
-  const docsFiles = await walk(options.docsDir, name => name.endsWith('.razor'), options.ignoreDirs);
-  const testFiles = await walk(options.testsDir, name => /Tests\.cs$|\.a11y\.spec\.(ts|js)$/i.test(name), options.ignoreDirs);
+  const docsFiles = await walk(normalizedOptions.docsDir, name => name.endsWith('.razor'), normalizedOptions.ignoreDirs);
+  const testFileGroups = await Promise.all(
+    normalizedOptions.testsDirs.map(dir => walk(dir, name => /Tests\.cs$|\.a11y\.spec\.(ts|js)$/i.test(name), normalizedOptions.ignoreDirs))
+  );
+  const testFiles = testFileGroups.flat();
 
+  const excluded = new Set(normalizedOptions.excludedComponents);
   const rootInteractiveComponents = components
-    .filter(file => isRootLevelComponent(file, options.interactivePrefixes))
-    .map(file => path.basename(file, '.razor'))
-    .filter((value, index, self) => self.indexOf(value) === index)
-    .sort();
+    .filter(file => isRootLevelComponent(file, normalizedOptions.interactivePrefixes))
+    .filter(file => isInContractDirectory(file, normalizedOptions.componentsDir, normalizedOptions.contractDirectories))
+    .filter(file => !excluded.has(path.basename(file, '.razor')))
+    .map(file => ({ component: path.basename(file, '.razor'), path: normalizePath(file), file }))
+    .filter((value, index, self) => self.findIndex(x => x.component === value.component) === index)
+    .sort((a, b) => a.component.localeCompare(b.component));
 
-  const report = rootInteractiveComponents.map(component => {
-    const hasDoc = hasMatchingDoc(docsFiles, component);
-    const hasTest = hasMatchingTest(testFiles, component);
-    return { component, hasDoc, hasTest };
+  return rootInteractiveComponents.map(({ component, path: componentPath, file }) => {
+    const expectedDocNames = docCandidates(component, file, normalizedOptions.componentsDir);
+    const expectedTestNames = testCandidates(component, file, normalizedOptions.componentsDir);
+    const hasDoc = hasMatchingDoc(docsFiles, expectedDocNames);
+    const hasTest = hasMatchingTest(testFiles, component, expectedTestNames);
+    return {
+      component,
+      componentPath,
+      hasDoc,
+      hasTest,
+      expectedDocs: expectedPaths(normalizedOptions.docsDir, expectedDocNames),
+      expectedTests: normalizedOptions.testsDirs.flatMap(dir => expectedPaths(dir, expectedTestNames))
+    };
   });
-
-  return report;
 }
 
 function printSummary(report) {
-  console.log('Accessibility Inventory (non-blocking warning phase)');
-  console.log('-----------------------------------------------------');
+  console.log('Accessibility Inventory');
+  console.log('-----------------------');
 
   for (const row of report) {
-    const docStatus = row.hasDoc ? 'docs: ✅' : 'docs: ⚠️ missing';
-    const testStatus = row.hasTest ? 'tests: ✅' : 'tests: ⚠️ missing';
-    console.log(`- ${row.component}: ${docStatus}, ${testStatus}`);
+    const docStatus = row.hasDoc ? 'docs: ✅' : 'docs: ❌ missing';
+    const testStatus = row.hasTest ? 'tests: ✅' : 'tests: ❌ missing';
+    console.log(`- ${row.component} (${row.componentPath}): ${docStatus}, ${testStatus}`);
   }
 
   const missing = report.filter(x => !x.hasDoc || !x.hasTest);
   if (missing.length > 0) {
-    console.log('\nWarnings:');
+    console.error('\nMissing accessibility contract artifacts:');
     for (const row of missing) {
-      const missingParts = [];
-      if (!row.hasDoc) missingParts.push('accessibility documentation');
-      if (!row.hasTest) missingParts.push('accessibility test');
-      console.log(`⚠️ ${row.component} is missing ${missingParts.join(' and ')}.`);
+      console.error(`❌ ${row.component} (${row.componentPath})`);
+      if (!row.hasDoc) {
+        console.error('   Missing documentation. Expected one of:');
+        for (const expectedDoc of row.expectedDocs) console.error(`   - ${expectedDoc}`);
+      }
+      if (!row.hasTest) {
+        console.error('   Missing tests. Expected one of:');
+        for (const expectedTest of row.expectedTests) console.error(`   - ${expectedTest}`);
+      }
     }
+    console.error('\nAdd the missing docs/tests or update the explicit inventory exclusions when a component is intentionally out of scope.');
   } else {
-    console.log('\n✅ All detected root-level interactive components have docs and tests.');
+    console.log('\n✅ All detected accessibility-contract components have docs and tests.');
   }
 
-  console.log('\nThis check is non-blocking in Phase 0.5 and will become blocking in Phase 5.');
+  return missing.length;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const options = parseArgs(process.argv.slice(2));
   runInventoryCheck(options)
     .then(report => {
-      printSummary(report);
-      process.exit(0);
+      const missingCount = printSummary(report);
+      process.exit(missingCount > 0 ? 1 : 0);
     })
     .catch(error => {
-      console.error('⚠️ Accessibility inventory check encountered an error:', error.message);
-      process.exit(0);
+      console.error('❌ Accessibility inventory check encountered an error:', error.message);
+      process.exit(1);
     });
 }

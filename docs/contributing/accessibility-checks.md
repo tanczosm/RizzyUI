@@ -1,51 +1,100 @@
-# Accessibility Inventory Check
+# Accessibility CI and Inventory Checks
 
-RizzyUI includes a non-blocking accessibility inventory check that scans root-level interactive components and warns when either of these artifacts are missing:
+RizzyUI runs accessibility contract checks in CI for the existing interactive components that have been brought under the accessibility contract. The inventory is based on component files that actually exist under `src/RizzyUI/Components/`; it does not require dropped prompt work, overlay-search experiments, nonexistent `Toast`/`Toggletip` components, `DataGrid`, or newly invented component names.
 
-- A component documentation page in `src/RizzyUI.Docs/Components/Pages/Components`
-- A component accessibility test file in `src/RizzyUI.Tests/Components`
+## CI coverage
+
+The GitHub Actions build runs these accessibility-related checks:
+
+```bash
+npm test --prefix src/RizzyUI
+npm run check-accessibility-inventory --prefix src/RizzyUI
+dotnet test src/RizzyUI.sln --configuration Release --no-build
+npm run test:a11y --prefix src/RizzyUI.Docs
+```
+
+The inventory check is blocking. If an in-scope existing component is missing documentation or tests, CI fails and prints the component path plus actionable expected documentation and test paths.
 
 ## Script location
 
 - `tools/accessibility-inventory/check-accessibility-inventory.mjs`
+- Unit tests: `tools/accessibility-inventory/__tests__/check-accessibility-inventory.test.mjs`
 
-## How detection works
+## How inventory detection works
 
-The check recursively scans:
+The check recursively scans actual `.razor` files under `src/RizzyUI/Components` and then narrows the result to explicit accessibility-contract component directories. This keeps the check tied to real source files while avoiding requirements for components that do not exist in the repository.
 
-- Components: `src/RizzyUI/Components` for `.razor` files with root component names prefixed by `Rz`
-- Docs: `src/RizzyUI.Docs/Components/Pages/Components` for `{ComponentWithoutRz}Info.razor` (or `{ComponentName}Info.razor`)
-- Tests: `src/RizzyUI.Tests/Components` for files matching component test naming patterns, including:
-  - `*Tests.cs`
-  - `*A11yTests.cs`
-  - `*.a11y.spec.ts` / `*.a11y.spec.js`
+The default contract directories are:
 
-Ignored folders include `_Internal`, `obj`, and `bin`.
+- `DataTable/RzDataTable`
+- `Feedback/RzAlert`
+- `Feedback/RzDialog`
+- `Feedback/RzPopover`
+- `Feedback/RzSheet`
+- `Feedback/RzSpinner`
+- `Feedback/RzTooltip`
+- `Form/RzCombobox`
+- `Form/RzFileInput`
+- `Form/RzNativeSelect`
+- `Layout/RzAccordion`
+- `Navigation/RzCommand`
+- `Navigation/RzDropdown`
+- `Navigation/RzMenubar`
+- `Navigation/RzNavigationMenu`
+- `Navigation/RzSidebar`
+- `Navigation/RzTabs`
+- `Utility/RzBackToTop`
 
-## Manual usage
+The default explicit component exclusions are nested native-select helper components:
+
+- `RzNativeSelectOptGroup`
+- `RzNativeSelectOption`
+
+Ignored folders include `_Internal`, `obj`, `bin`, and `node_modules`.
+
+## Documentation matching
+
+For each in-scope component, the inventory accepts documentation pages in `src/RizzyUI.Docs/Components/Pages/Components` using:
+
+- `{ComponentWithoutRz}Info.razor`
+- `{ComponentName}Info.razor`
+- `{ParentComponentFolderWithoutRz}Info.razor` for families that share a page, such as `RzDropdownMenu` using `DropdownInfo.razor` or `RzSidebarProvider` using `SidebarInfo.razor`
+
+## Test matching
+
+For each in-scope component, the inventory accepts tests in both bUnit and Playwright accessibility locations:
+
+- `src/RizzyUI.Tests/Components`
+- `src/RizzyUI.Docs/tests/accessibility`
+
+Accepted names include component-specific bUnit tests such as `RzDialogTests.cs`, accessibility-specific bUnit names such as `RzDialogA11yTests.cs`, family bUnit tests such as `RzDropdownMenuTests.cs`, and Playwright specs such as `dialog.a11y.spec.ts`.
+
+## Local usage
+
+From the repository root:
+
+```bash
+npm test --prefix src/RizzyUI
+npm run check-accessibility-inventory --prefix src/RizzyUI
+npm run test:a11y --prefix src/RizzyUI.Docs
+```
 
 From `src/RizzyUI`:
 
 ```bash
+npm test
 npm run check-accessibility-inventory
 ```
 
-Optional overrides:
+Optional overrides for temporary local validation:
 
 ```bash
 node ../../tools/accessibility-inventory/check-accessibility-inventory.mjs \
-  --components-dir src/RizzyUI/Components \
-  --docs-dir src/RizzyUI.Docs/Components/Pages/Components \
-  --tests-dir src/RizzyUI.Tests/Components
+  --components-dir Components \
+  --docs-dir ../RizzyUI.Docs/Components/Pages/Components \
+  --tests-dirs ../RizzyUI.Tests/Components,../RizzyUI.Docs/tests/accessibility \
+  --contract-directories Feedback/RzDialog,Feedback/RzPopover \
+  --exclude-components RzSomeIntentionalExclusion
 ```
 
-## Phase behavior
-
-This check is intentionally **non-blocking** in Phase 0.5. It always exits successfully and prints warnings for missing docs/tests.
-
-In **Phase 5**, this check will be changed to fail the build when gaps are detected.
-
-
-## Runtime primitive docs
-
-For runtime accessibility primitive API guidance, examples, and caveats, see `docs/internal/runtime-primitives/README.md` and the per-primitive markdown files in that same directory.
+Only use exclusions for components that are intentionally out of the current accessibility-contract scope. Do not use exclusions to hide missing docs/tests for a component whose accessibility contract is being added or changed.
