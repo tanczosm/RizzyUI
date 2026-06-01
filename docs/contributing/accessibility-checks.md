@@ -2,6 +2,8 @@
 
 RizzyUI runs accessibility contract checks in CI for the existing interactive components that have been brought under the accessibility contract. The inventory is based on component files that actually exist under `src/RizzyUI/Components/`; it does not require dropped prompt work, overlay-search experiments, nonexistent `Toast`/`Toggletip` components, `DataGrid`, or newly invented component names.
 
+For real assistive-technology release passes, use the manual checklist in [`docs/accessibility/manual-testing.md`](../accessibility/manual-testing.md). It records the supported OS/browser/screen-reader matrix and keeps manual scenarios tied to existing component names such as `RzAlert`, `RzTooltip`, `RzPopover`, and `RzDataTable`.
+
 ## CI coverage
 
 The GitHub Actions build runs these accessibility-related checks:
