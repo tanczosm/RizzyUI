@@ -63,6 +63,62 @@ public class RzDataTableTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         Assert.Equal("selection.setRowSelected(row, $event.target.checked)", rowSelect.GetAttribute("x-on:change"));
     }
 
+
+    [Fact]
+    public void DataTableSortToggle_RendersNativeButtonBindingsAndIconStates()
+    {
+        var cut = Render<global::RizzyUI.DataTableSortToggle>(parameters => parameters
+            .Add(x => x.HeaderExpr, "header"));
+
+        var toggle = cut.Find("[data-slot='data-table-sort-toggle']");
+        Assert.Equal("button", toggle.TagName.ToLowerInvariant());
+        Assert.Equal("button", toggle.GetAttribute("type"));
+        Assert.Equal("!sort.can(header)", toggle.GetAttribute("x-bind:disabled"));
+        Assert.Equal("sort.nextLabel(header)", toggle.GetAttribute("x-bind:aria-label"));
+        Assert.Equal("sort.direction(header) || 'none'", toggle.GetAttribute("x-bind:data-sort-direction"));
+        Assert.Equal("sort.toggle(header)", toggle.GetAttribute("x-on:click"));
+
+        var label = cut.Find("[data-slot='label']");
+        Assert.Equal("_flex.header(header)", label.GetAttribute("x-flexrender"));
+
+        var icon = cut.Find("[data-slot='data-table-sort-icon']");
+        Assert.Equal("sort.can(header)", icon.GetAttribute("x-show"));
+        Assert.Equal("sort.direction(header) === 'asc'", cut.Find("[data-slot='ascending']").GetAttribute("x-show"));
+        Assert.Equal("sort.direction(header) === 'desc'", cut.Find("[data-slot='descending']").GetAttribute("x-show"));
+        Assert.Equal("!sort.direction(header)", cut.Find("[data-slot='unsorted']").GetAttribute("x-show"));
+    }
+
+    [Fact]
+    public void SelectionHelpers_RenderSemanticTableCellsAndNativeCheckboxes()
+    {
+        var headerCut = Render<global::RizzyUI.DataTableSelectionHeaderCell>(parameters => parameters
+            .Add(x => x.Scope, global::RizzyUI.DataTableSelectionScope.All));
+        var cellCut = Render<global::RizzyUI.DataTableSelectionCell>(parameters => parameters
+            .Add(x => x.RowExpr, "row"));
+
+        var headerCell = headerCut.Find("[data-slot='data-table-selection-header-cell']");
+        Assert.Equal("th", headerCell.TagName.ToLowerInvariant());
+        Assert.Equal("col", headerCell.GetAttribute("scope"));
+
+        var dataCell = cellCut.Find("[data-slot='data-table-selection-cell']");
+        Assert.Equal("td", dataCell.TagName.ToLowerInvariant());
+
+        var selectAll = headerCut.Find("[data-slot='data-table-select-all-checkbox']");
+        Assert.Equal("input", selectAll.TagName.ToLowerInvariant());
+        Assert.Equal("checkbox", selectAll.GetAttribute("type"));
+        Assert.Equal("selection.allRowsSelected()", selectAll.GetAttribute("x-bind:checked"));
+        Assert.Equal("$el.indeterminate = selection.someRowsSelected() && !selection.allRowsSelected()", selectAll.GetAttribute("x-effect"));
+        Assert.Equal("selection.setAllRows($event.target.checked)", selectAll.GetAttribute("x-on:change"));
+
+        var rowSelect = cellCut.Find("[data-slot='data-table-row-select-checkbox']");
+        Assert.Equal("input", rowSelect.TagName.ToLowerInvariant());
+        Assert.Equal("checkbox", rowSelect.GetAttribute("type"));
+        Assert.Equal("selection.isSelected(row)", rowSelect.GetAttribute("x-bind:checked"));
+        Assert.Equal("!selection.canSelect(row)", rowSelect.GetAttribute("x-bind:disabled"));
+        Assert.Equal("$el.indeterminate = selection.isSomeSelected(row) && !selection.isSelected(row)", rowSelect.GetAttribute("x-effect"));
+        Assert.Equal("selection.setRowSelected(row, $event.target.checked)", rowSelect.GetAttribute("x-on:change"));
+    }
+
     [Fact]
     public void RzDataTable_SerializesLargePayloadIntoScriptBlock_NotDataAttributes()
     {
