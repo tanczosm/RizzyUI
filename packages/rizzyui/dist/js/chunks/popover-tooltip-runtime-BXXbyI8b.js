@@ -146,6 +146,7 @@ function rzTooltip() {
 	return {
 		open: false,
 		ariaExpanded: "false",
+		ariaHidden: "true",
 		state: "closed",
 		side: "top",
 		triggerEl: null,
@@ -174,6 +175,7 @@ function rzTooltip() {
 			this.readDatasetOptions();
 			this.open = this.getBooleanDataset("open", this.getBooleanDataset("defaultOpen", false));
 			this.ariaExpanded = this.open.toString();
+			this.ariaHidden = (!this.open).toString();
 			this.state = this.open ? "open" : "closed";
 			this.triggerEl = this.$refs.trigger || this.$el.querySelector("[data-slot=\"tooltip-trigger\"]");
 			this.contentEl = this.$refs.content || this.$el.querySelector("[data-slot=\"tooltip-content\"]");
@@ -184,6 +186,7 @@ function rzTooltip() {
 				const nextOpen = this.isControlledOpenState ? controlledOpen : value;
 				this.open = nextOpen;
 				this.ariaExpanded = nextOpen.toString();
+				this.ariaHidden = (!nextOpen).toString();
 				this.state = nextOpen ? "open" : "closed";
 				if (this.triggerEl) this.triggerEl.dataset.state = this.state;
 				if (this.contentEl) this.contentEl.dataset.state = this.state;
@@ -243,6 +246,7 @@ function rzTooltip() {
 			if (this.contentEl) {
 				this.contentEl.addEventListener("pointerenter", this.handleContentPointerEnter.bind(this));
 				this.contentEl.addEventListener("pointerleave", this.handleContentPointerLeave.bind(this));
+				this.contentEl.addEventListener("keydown", this.handleContentKeydown.bind(this));
 			}
 		},
 		startAutoUpdate() {
@@ -341,7 +345,16 @@ function rzTooltip() {
 			this.queueClose();
 		},
 		handleTriggerKeydown(event) {
-			if (event.key === "Escape") this.handleWindowEscape();
+			if (event.key === "Escape") {
+				event.preventDefault?.();
+				this.handleWindowEscape();
+			}
+		},
+		handleContentKeydown(event) {
+			if (event.key === "Escape") {
+				event.preventDefault?.();
+				this.handleWindowEscape();
+			}
 		},
 		handleWindowEscape() {
 			this.clearTimers();
@@ -389,4 +402,4 @@ function rzTooltip() {
 //#endregion
 export { rzPopover, rzTooltip };
 
-//# sourceMappingURL=popover-tooltip-runtime-BzhC9AbP.js.map
+//# sourceMappingURL=popover-tooltip-runtime-BXXbyI8b.js.map

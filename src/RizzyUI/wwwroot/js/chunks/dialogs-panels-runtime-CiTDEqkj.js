@@ -328,6 +328,18 @@ function rzSheet() {
 }
 //#endregion
 //#region src/js/lib/components/rzSidebar.js
+var sidebarInstances = /* @__PURE__ */ new WeakMap();
+function isEditableTarget(target) {
+	if (!target || target.nodeType !== 1) return false;
+	const tagName = target.tagName?.toLowerCase();
+	return target.isContentEditable === true || tagName === "input" || tagName === "textarea" || tagName === "select";
+}
+function emitSidebarEvent(root, name, detail) {
+	root?.dispatchEvent?.(new CustomEvent(name, {
+		detail,
+		bubbles: true
+	}));
+}
 function rzSidebar() {
 	return {
 		open: true,
@@ -337,27 +349,63 @@ function rzSidebar() {
 		shortcut: "b",
 		cookieName: "sidebar_state",
 		mobileBreakpoint: 768,
+		_keydownHandler: null,
+		_resizeHandler: null,
+		_lastOpenMobile: false,
 		init() {
+			sidebarInstances.get(this.$el)?.destroy?.();
+			sidebarInstances.set(this.$el, this);
 			this.collapsible = this.$el.dataset.collapsible || "offcanvas";
 			this.shortcut = this.$el.dataset.shortcut || "b";
 			this.cookieName = this.$el.dataset.cookieName || "sidebar_state";
-			this.mobileBreakpoint = parseInt(this.$el.dataset.mobileBreakpoint) || 768;
+			this.mobileBreakpoint = parseInt(this.$el.dataset.mobileBreakpoint, 10) || 768;
 			const defaultOpen = this.$el.dataset.defaultOpen === "true";
 			const savedState = this.cookieName ? document.cookie.split("; ").find((row) => row.startsWith(`${this.cookieName}=`))?.split("=")[1] : null;
 			this.open = savedState !== null && savedState !== void 0 ? savedState === "true" : defaultOpen;
+			this._lastOpenMobile = this.openMobile;
 			this.checkIfMobile();
-			window.addEventListener("keydown", (e) => {
-				if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === this.shortcut.toLowerCase()) {
-					e.preventDefault();
-					this.toggle();
-				}
-			});
+			this.bindGlobalListeners();
 			this.$watch("open", (value) => {
 				if (this.cookieName) document.cookie = `${this.cookieName}=${value}; path=/; max-age=604800`;
+				emitSidebarEvent(this.$el, "rz:sidebar:state-change", this.stateDetail());
+			});
+			this.$watch("openMobile", (value) => {
+				if (this._lastOpenMobile === value) return;
+				this._lastOpenMobile = value;
+				emitSidebarEvent(this.$el, value ? "rz:sidebar:mobile-open" : "rz:sidebar:mobile-close", this.stateDetail());
+				emitSidebarEvent(this.$el, "rz:sidebar:state-change", this.stateDetail());
 			});
 			this.$watch("isMobile", () => {
 				this.openMobile = false;
+				emitSidebarEvent(this.$el, "rz:sidebar:breakpoint-change", this.stateDetail());
 			});
+		},
+		destroy() {
+			if (this._keydownHandler) {
+				window.removeEventListener("keydown", this._keydownHandler);
+				this._keydownHandler = null;
+			}
+			if (this._resizeHandler) {
+				window.removeEventListener("resize", this._resizeHandler);
+				this._resizeHandler = null;
+			}
+			if (sidebarInstances.get(this.$el) === this) sidebarInstances.delete(this.$el);
+		},
+		bindGlobalListeners() {
+			this.destroy();
+			sidebarInstances.set(this.$el, this);
+			this._keydownHandler = (event) => {
+				if (event.defaultPrevented || isEditableTarget(event.target) || !this.shortcut) return;
+				if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === this.shortcut.toLowerCase()) {
+					event.preventDefault();
+					this.toggle();
+				}
+			};
+			this._resizeHandler = () => {
+				this.checkIfMobile();
+			};
+			window.addEventListener("keydown", this._keydownHandler);
+			window.addEventListener("resize", this._resizeHandler);
 		},
 		checkIfMobile() {
 			this.isMobile = window.innerWidth < this.mobileBreakpoint;
@@ -378,6 +426,9 @@ function rzSidebar() {
 		isMobileOpen() {
 			return this.openMobile;
 		},
+		get triggerExpanded() {
+			return (this.isMobile ? this.openMobile : this.open) ? "true" : "false";
+		},
 		get desktopState() {
 			return this.open ? "expanded" : "collapsed";
 		},
@@ -389,10 +440,20 @@ function rzSidebar() {
 		},
 		getCollapsibleAttribute() {
 			return this.state === "collapsed" ? this.collapsible : "";
+		},
+		stateDetail() {
+			return {
+				open: this.open,
+				openMobile: this.openMobile,
+				isMobile: this.isMobile,
+				desktopState: this.desktopState,
+				mobileState: this.mobileState,
+				collapsible: this.collapsible
+			};
 		}
 	};
 }
 //#endregion
 export { rzModal, rzSheet, rzSidebar };
 
-//# sourceMappingURL=dialogs-panels-runtime-DAOVvl6T.js.map
+//# sourceMappingURL=dialogs-panels-runtime-CiTDEqkj.js.map
