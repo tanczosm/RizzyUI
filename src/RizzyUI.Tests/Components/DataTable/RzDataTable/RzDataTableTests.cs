@@ -26,6 +26,41 @@ public class RzDataTableTests : BunitAlbaContext, IClassFixture<WebAppFixture>
 
         var configScript = cut.Find($"script#{cut.Instance.ConfigScriptIdForTests}");
         Assert.Equal("application/json", configScript.GetAttribute("type"));
+
+        var status = cut.Find("[data-slot='announcement']");
+        Assert.Equal("status", status.GetAttribute("role"));
+        Assert.Equal("polite", status.GetAttribute("aria-live"));
+        Assert.Equal("true", status.GetAttribute("aria-atomic"));
+        Assert.Equal("announcement.message", status.GetAttribute("x-text"));
+    }
+
+    [Fact]
+    public void DataTableSelectionCheckboxes_RenderAccessibleNamesAndStateBindings()
+    {
+        var cut = Render<TestableDataTable>(parameters => parameters
+            .Add(x => x.Items, CreateRows())
+            .Add(x => x.Config, CreateConfig())
+            .Add(x => x.RowIdSelector, x => x.Id)
+            .Add(x => x.ChildContent, (RenderFragment)(builder =>
+            {
+                builder.OpenComponent<global::RizzyUI.DataTableSelectionHeaderCell>(0);
+                builder.AddAttribute(1, "AriaLabel", "Select visible rows");
+                builder.CloseComponent();
+                builder.OpenComponent<global::RizzyUI.DataTableSelectionCell>(2);
+                builder.AddAttribute(3, "RowExpr", "row");
+                builder.AddAttribute(4, "AriaLabel", "Select Ada");
+                builder.CloseComponent();
+            })));
+
+        var selectAll = cut.Find("[data-slot='data-table-select-all-checkbox']");
+        Assert.Equal("Select visible rows", selectAll.GetAttribute("aria-label"));
+        Assert.Equal("selection.allPageRowsSelected()", selectAll.GetAttribute("x-bind:checked"));
+        Assert.Equal("$el.indeterminate = selection.somePageRowsSelected() && !selection.allPageRowsSelected()", selectAll.GetAttribute("x-effect"));
+
+        var rowSelect = cut.Find("[data-slot='data-table-row-select-checkbox']");
+        Assert.Equal("Select Ada", rowSelect.GetAttribute("aria-label"));
+        Assert.Equal("selection.isSelected(row)", rowSelect.GetAttribute("x-bind:checked"));
+        Assert.Equal("selection.setRowSelected(row, $event.target.checked)", rowSelect.GetAttribute("x-on:change"));
     }
 
     [Fact]
