@@ -94,7 +94,7 @@ public class RzAlertTests : BunitAlbaContext, IClassFixture<WebAppFixture>
         var button = cut.Find("button[data-slot='alert-close-button']");
         Assert.Equal("button", button.GetAttribute("type"));
         Assert.Equal("dismiss", button.GetAttribute("x-on:click"));
-        Assert.Equal("RzAlert.CloseButtonAriaLabel", button.GetAttribute("aria-label"));
+        Assert.Equal("Close alert", button.GetAttribute("aria-label"));
     }
 
     [Fact]

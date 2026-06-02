@@ -4,6 +4,23 @@ RizzyUI runs accessibility contract checks in CI for the existing interactive co
 
 For real assistive-technology release passes, use the manual checklist in [`docs/accessibility/manual-testing.md`](../accessibility/manual-testing.md). It records the supported OS/browser/screen-reader matrix and keeps manual scenarios tied to existing component names such as `RzAlert`, `RzTooltip`, `RzPopover`, and `RzDataTable`.
 
+## Preservation-first hardening
+
+Accessibility hardening work must update existing components in place unless a change request explicitly authorizes new component creation. Before editing, inspect the component's Razor/C#, JavaScript/Alpine runtime, bUnit tests, Playwright accessibility tests, and documentation page. Preserve compliant keyboard handling, focus handling, ARIA relationships, live-region behavior, id generation, `rz:` events, public parameters, data attributes, CSS hooks, slot names, localization keys, docs examples, and generated IDs.
+
+If existing compliant behavior is not covered by tests, add characterization tests before refactoring it. Replace behavior only when it is incomplete, inconsistent, duplicated, inaccessible, untested, or incompatible with the SSR-only and CSP-safe contract. When moving component-specific behavior into shared primitives, keep component-boundary tests proving the public behavior still works.
+
+Use real component paths when scoping inventory or hardening work:
+
+- `src/RizzyUI/Components/Form/RzNativeSelect/`
+- `src/RizzyUI/Components/Form/RzCombobox/`
+- `src/RizzyUI/Components/Navigation/RzNavigationMenu/`
+- `src/RizzyUI/Components/Feedback/RzAlert/`
+- `src/RizzyUI/Components/Feedback/RzTooltip/`
+- `src/RizzyUI/Components/DataTable/RzDataTable/`
+
+Shared primitive docs live in [`docs/internal/runtime-primitives/README.md`](../internal/runtime-primitives/README.md), and the component documentation template lives in [`docs/templates/component-accessibility-template.md`](../templates/component-accessibility-template.md). Shared primitives should consolidate behavior deliberately; they should not be used to discard mature component architecture. For example, do not replace `RzCombobox`'s Tom Select integration unless a separate migration is approved.
+
 ## CI coverage
 
 The GitHub Actions build runs these accessibility-related checks:
