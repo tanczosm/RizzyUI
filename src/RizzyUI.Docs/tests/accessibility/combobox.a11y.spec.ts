@@ -1,4 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
+
+async function typeComboboxQuery(input: Locator, query: string) {
+  await input.focus();
+  await input.pressSequentially(query);
+  await expect(input).toHaveValue(query);
+}
 
 test.describe('Tom Select combobox accessibility baseline', () => {
   test('supports accessible name, search, keyboard navigation, selection, escape, and disabled options', async ({ page }) => {
@@ -11,15 +17,14 @@ test.describe('Tom Select combobox accessibility baseline', () => {
     await expect(input).toHaveAttribute('aria-labelledby', 'fruit-label');
     await expect(input).toHaveAttribute('aria-describedby', 'fruit-help');
 
-    await input.focus();
-    await input.fill('ora');
-    await page.keyboard.press('ArrowDown');
+    await typeComboboxQuery(input, 'ora');
+    await expect(page.locator('.ts-dropdown .option[data-value="orange"]')).toBeVisible();
     await page.keyboard.press('Enter');
 
     await expect(page.locator('#fruit-select')).toHaveValue('orange');
 
-    await input.focus();
-    await input.fill('cher');
+    await typeComboboxQuery(input, 'cher');
+    await expect(page.locator('.ts-dropdown .option[data-value="cherry"]')).toBeVisible();
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
 
@@ -42,9 +47,8 @@ test.describe('Tom Select combobox accessibility baseline', () => {
 
     const input = page.locator('.ts-wrapper input').first();
     await expect(input).toBeVisible();
-    await input.focus();
-    await input.fill('ban');
-    await page.keyboard.press('ArrowDown');
+    await typeComboboxQuery(input, 'ban');
+    await expect(page.locator('.ts-dropdown .option[data-value="banana"]')).toBeVisible();
     await page.keyboard.press('Enter');
 
     await expect(page.locator('#fruit-select')).toHaveValue('banana');
