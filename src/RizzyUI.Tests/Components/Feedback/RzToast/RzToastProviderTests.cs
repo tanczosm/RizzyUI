@@ -180,7 +180,10 @@ public class RzToastProviderTests : BunitAlbaContext, IClassFixture<WebAppFixtur
     {
         var map = BuildClassMap(new RzToastProviderOptions { Tone = ToastTone.Subtle });
 
-        Assert.Contains("text-foreground", map.Statuses["default"].Title);
+        Assert.Contains("!border-accent/50", map.Statuses["default"].Toast);
+        Assert.Contains("!bg-accent/10", map.Statuses["default"].Toast);
+        Assert.Contains("!text-accent-foreground", map.Statuses["default"].Toast);
+        Assert.Contains("!text-accent-foreground", map.Statuses["default"].Title);
 
         AssertSubtleStatusClasses(map.Statuses["info"], "info", "text-info");
         AssertSubtleStatusClasses(map.Statuses["success"], "success", "text-success");

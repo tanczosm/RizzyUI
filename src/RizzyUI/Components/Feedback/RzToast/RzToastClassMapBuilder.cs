@@ -119,7 +119,7 @@ public static class RzToastClassMapBuilder
 
     private static Dictionary<string, string> CreateIcons() => new(StringComparer.Ordinal)
     {
-        ["default"] = "info",
+        ["default"] = string.Empty,
         ["info"] = "info",
         ["success"] = "success",
         ["warning"] = "warning",

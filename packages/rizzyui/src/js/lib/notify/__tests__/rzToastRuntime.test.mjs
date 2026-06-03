@@ -451,7 +451,7 @@ function createConfig(overrides = {}) {
         },
         slots: { ...slotClasses, ...overrides.slots },
         statuses: {
-            default: { toast: 'status-default', title: 'text-foreground' },
+            default: { toast: 'status-default', title: 'text-accent-foreground' },
             info: { toast: 'status-info bg-[color-mix(in_oklab,var(--background)_90%,var(--info)_10%)]', title: 'text-info' },
             success: { toast: 'status-success', title: 'text-success' },
             warning: { toast: 'status-warning', title: 'text-warning' },
@@ -738,7 +738,7 @@ test('renderer de-duplicates slot classes while preserving status title colors a
         config.statuses.success.title = 'text-success font-medium';
         config.statuses.warning.title = 'text-warning font-medium';
         config.statuses.error.title = 'text-destructive font-medium';
-        config.statuses.default.title = 'text-foreground font-medium';
+        config.statuses.default.title = 'text-accent-foreground font-medium';
         config.tones.subtle = { toast: 'border tone-subtle' };
         config.animations.fade = { toast: 'transition-opacity animation-fade' };
         config.states.visible = { toast: 'transition-opacity state-visible' };
@@ -793,8 +793,12 @@ test('renderer de-duplicates slot classes while preserving status title colors a
         assert.ok(element.classList.includes('animation-fade'));
         assert.ok(element.classList.includes('state-visible'));
 
+        toast.options = normalizeToastOptions({ status: 'default', title: 'Default', text: 'No icon', autoclose: false }, config);
+        const defaultElement = createToastDom(toast, config);
+        assert.equal(defaultElement.querySelector('[data-slot="toast-icon-container"]'), null);
+
         for (const [status, expectedTitleClass] of Object.entries({
-            default: 'text-foreground',
+            default: 'text-accent-foreground',
             info: 'text-info',
             success: 'text-success',
             warning: 'text-warning',

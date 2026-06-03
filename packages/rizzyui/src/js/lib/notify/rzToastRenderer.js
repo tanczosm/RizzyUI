@@ -107,14 +107,15 @@ function createIconContainer(toast, classMap) {
         return iconContainer;
     }
 
+    const icon = resolveToastIcon(toast);
+    if (!icon) {
+        return null;
+    }
+
     const pulse = createSlotElement('span', 'iconPulse');
     setSlotClass(pulse, toast, classMap, 'iconPulse');
     iconContainer.appendChild(pulse);
-
-    const icon = resolveToastIcon(toast);
-    if (icon) {
-        iconContainer.appendChild(icon);
-    }
+    iconContainer.appendChild(icon);
 
     return iconContainer;
 }
