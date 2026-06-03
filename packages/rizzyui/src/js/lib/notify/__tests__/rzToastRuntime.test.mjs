@@ -612,7 +612,11 @@ test('facade and manager methods create, update, move, dismiss, and clear toasts
         Toast.info('Info text', 'Info', { id: 'info-toast', autoclose: false });
         Toast.custom({ id: 'custom-toast', text: 'Custom', autoclose: false });
         Toast.show({ id: 'show-toast', text: 'Show', autoclose: false });
+        Toast.show({ id: 'empty-status-toast', status: '', text: 'Empty status', autoclose: false });
         const loading = Toast.loading('Loading text', 'Loading', { id: 'loading-toast' });
+        assert.equal(Toast.configure().get('custom-toast').options.status, 'default');
+        assert.equal(Toast.configure().get('show-toast').options.status, 'default');
+        assert.equal(Toast.configure().get('empty-status-toast').options.status, 'default');
         assert.equal(Toast.configure().get(loading.id).options.autoclose, false);
 
         assert.equal(Toast.dismiss('saved'), true);

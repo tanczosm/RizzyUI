@@ -152,6 +152,7 @@ public class RzToastProviderTests : BunitAlbaContext, IClassFixture<WebAppFixtur
         Assert.Contains("flex-col", map.Slots.Stack);
         Assert.Contains("pointer-events-auto", map.Slots.Toast);
         Assert.Contains("rounded-full", map.Slots.CloseButton);
+        Assert.Contains("text-foreground", map.Slots.CloseButton);
         Assert.Contains("origin-left", map.Slots.ProgressIndicator);
     }
 
@@ -181,7 +182,7 @@ public class RzToastProviderTests : BunitAlbaContext, IClassFixture<WebAppFixtur
         var map = BuildClassMap(new RzToastProviderOptions { Tone = ToastTone.Subtle });
 
         Assert.Contains("!border-accent/50", map.Statuses["default"].Toast);
-        Assert.Contains("!bg-accent/10", map.Statuses["default"].Toast);
+        Assert.Contains("!bg-[color-mix(in_oklab,var(--background)_90%,var(--accent)_10%)]", map.Statuses["default"].Toast);
         Assert.Contains("!text-accent-foreground", map.Statuses["default"].Toast);
         Assert.Contains("!text-accent-foreground", map.Statuses["default"].Title);
 
