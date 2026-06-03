@@ -93,16 +93,29 @@ public static class RzToastClassMapBuilder
 
         return map with
         {
-            Toast = Append(map.Toast, toast),
-            Title = Append(map.Title, title),
-            IconContainer = Append(map.IconContainer, icon),
-            IconPulse = Append(map.IconPulse, pulse),
-            LoadingIndicator = Append(map.LoadingIndicator, icon),
-            ProgressIndicator = Append(map.ProgressIndicator, progress)
+            Toast = Append(RemoveImportantColorOverrides(map.Toast), toast),
+            Title = Append(RemoveImportantColorOverrides(map.Title), title),
+            IconContainer = Append(RemoveImportantColorOverrides(map.IconContainer), icon),
+            IconPulse = Append(RemoveImportantColorOverrides(map.IconPulse), pulse),
+            LoadingIndicator = Append(RemoveImportantColorOverrides(map.LoadingIndicator), icon),
+            ProgressIndicator = Append(RemoveImportantColorOverrides(map.ProgressIndicator), progress)
         };
     }
 
     private static string Append(string current, string next) => string.IsNullOrWhiteSpace(current) ? next : $"{current} {next}";
+
+    private static string RemoveImportantColorOverrides(string classes)
+    {
+        if (string.IsNullOrWhiteSpace(classes))
+        {
+            return string.Empty;
+        }
+
+        return string.Join(" ", classes.Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(token =>
+            !token.StartsWith("!bg-", StringComparison.Ordinal) &&
+            !token.StartsWith("!border-", StringComparison.Ordinal) &&
+            !token.StartsWith("!text-", StringComparison.Ordinal)));
+    }
 
     private static Dictionary<string, string> CreateIcons() => new(StringComparer.Ordinal)
     {

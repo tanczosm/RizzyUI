@@ -186,6 +186,8 @@ public class RzToastProviderTests : BunitAlbaContext, IClassFixture<WebAppFixtur
         AssertSubtleStatusClasses(map.Statuses["success"], "success", "text-success");
         AssertSubtleStatusClasses(map.Statuses["warning"], "warning", "text-warning");
         AssertSubtleStatusClasses(map.Statuses["error"], "destructive", "text-destructive");
+        Assert.Contains("!bg-[color-mix(in_oklab,var(--background)_90%,var(--destructive)_10%)]", map.Statuses["error"].Toast);
+        Assert.Contains("!text-destructive", map.Statuses["error"].Title);
         AssertSubtleStatusClasses(map.Statuses["loading"], "info", "text-info");
     }
 
@@ -198,6 +200,8 @@ public class RzToastProviderTests : BunitAlbaContext, IClassFixture<WebAppFixtur
         AssertSolidStatusClasses(map.Statuses["success"], "!bg-success", "text-success-foreground");
         AssertSolidStatusClasses(map.Statuses["warning"], "!bg-warning", "text-warning-foreground");
         AssertSolidStatusClasses(map.Statuses["error"], "!bg-destructive", "text-destructive-foreground");
+        Assert.DoesNotContain("!bg-[color-mix(in_oklab,var(--background)_90%,var(--destructive)_10%)]", map.Statuses["error"].Toast);
+        Assert.DoesNotContain("!text-destructive ", $"{map.Statuses["error"].Title} ");
         AssertSolidStatusClasses(map.Statuses["loading"], "!bg-info", "text-info-foreground");
     }
 
