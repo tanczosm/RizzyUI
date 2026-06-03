@@ -209,6 +209,17 @@ public class RzToastProviderTests : BunitAlbaContext, IClassFixture<WebAppFixtur
         AssertSolidStatusClasses(map.Statuses["loading"], "!bg-info", "text-info-foreground");
     }
 
+
+    [Fact]
+    public void AnimationClassMapsApplyDistinctTransitionProperties()
+    {
+        var map = BuildClassMap(new RzToastProviderOptions());
+
+        Assert.Contains("!transition-opacity", map.Animations["fade"].Toast);
+        Assert.Contains("!transition-[opacity,transform]", map.Animations["slide"].Toast);
+        Assert.Contains("!transition-none", map.Animations["none"].Toast);
+    }
+
     [Fact]
     public void ClassMapCacheReusesEquivalentInputsAndSeparatesDistinctInputs()
     {

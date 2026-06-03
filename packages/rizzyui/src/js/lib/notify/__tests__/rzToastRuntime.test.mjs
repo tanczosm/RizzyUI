@@ -238,6 +238,13 @@ class FakeElement {
         }
     }
 
+    getBoundingClientRect() {
+        this._rectReadCount = (this._rectReadCount || 0) + 1;
+        const index = this.parentElement ? this.parentElement.children.indexOf(this) : 0;
+        const top = index >= 0 ? index * 48 : 0;
+        return { top, bottom: top + 40, height: 40, left: 0, right: 320, width: 320 };
+    }
+
     querySelector(selector) {
         return this.querySelectorAll(selector)[0] || null;
     }
@@ -672,6 +679,26 @@ test('dedupe, duplicate ids, and overflow strategies are enforced per stack', ()
     }
 });
 
+
+test('toast insertion flushes initial state and animates existing stack items into place', () => {
+    const env = setupManager(createConfig({ defaults: { speed: 250 } }));
+
+    try {
+        env.manager.show({ id: 'first', title: 'First', text: 'First toast', autoclose: false });
+        const first = env.manager.get('first').elements.root;
+        assert.ok(first._rectReadCount > 0);
+
+        env.manager.show({ id: 'second', title: 'Second', text: 'Second toast', autoclose: false });
+        const stack = env.manager.stacks.get('top-right');
+        assert.equal(toastItems(stack)[0].dataset.toastId, 'second');
+        assert.equal(toastItems(stack)[1].dataset.toastId, 'first');
+        assert.equal(first.style.transform, '');
+        assert.equal(first.style.transition, 'transform 250ms cubic-bezier(0.22, 1, 0.36, 1)');
+        assert.ok(first._rectReadCount > 1);
+    } finally {
+        env.restore();
+    }
+});
 
 test('dedupeClasses preserves first-seen tokens and arbitrary color-mix utilities', () => {
     assert.equal(

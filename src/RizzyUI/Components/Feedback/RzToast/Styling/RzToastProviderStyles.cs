@@ -163,9 +163,9 @@ public static class RzToastProviderStyles
             },
             [c => ((IHasRzToastProviderStylingProperties)c).Animation] = new Variant<ToastAnimation, RzToastProviderSlots>
             {
-                [ToastAnimation.Fade] = new() { [s => s.Toast] = "transition-opacity transition-transform" },
-                [ToastAnimation.Slide] = new() { [s => s.Toast] = "transition-opacity transition-transform" },
-                [ToastAnimation.None] = new() { [s => s.Toast] = "transition-none" }
+                [ToastAnimation.Fade] = new() { [s => s.Toast] = "!transition-opacity" },
+                [ToastAnimation.Slide] = new() { [s => s.Toast] = "!transition-[opacity,transform]" },
+                [ToastAnimation.None] = new() { [s => s.Toast] = "!transition-none" }
             },
             [c => ((IHasRzToastProviderStylingProperties)c).State] = new Variant<ToastState, RzToastProviderSlots>
             {
