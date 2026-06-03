@@ -3,7 +3,7 @@ import test from 'node:test';
 import Toast from '../toast.js';
 import { RzToastManager } from '../rzToastManager.js';
 import { normalizeToastOptions } from '../rzToastNormalize.js';
-import { createToastDom } from '../rzToastRenderer.js';
+import { createToastDom, dedupeClasses } from '../rzToastRenderer.js';
 
 const positions = [
     'top-left',
@@ -449,14 +449,14 @@ function createConfig(overrides = {}) {
             closeButtonAriaLabel: 'Dismiss notification',
             ...overrides.defaults,
         },
-        slots: slotClasses,
+        slots: { ...slotClasses, ...overrides.slots },
         statuses: {
-            default: { toast: 'status-default' },
-            info: { toast: 'status-info' },
-            success: { toast: 'status-success' },
-            warning: { toast: 'status-warning' },
-            error: { toast: 'status-error' },
-            loading: { toast: 'status-loading' },
+            default: { toast: 'status-default', title: 'text-foreground' },
+            info: { toast: 'status-info bg-[color-mix(in_oklab,var(--background)_90%,var(--info)_10%)]', title: 'text-info' },
+            success: { toast: 'status-success', title: 'text-success' },
+            warning: { toast: 'status-warning', title: 'text-warning' },
+            error: { toast: 'status-error', title: 'text-destructive' },
+            loading: { toast: 'status-loading', title: 'text-info' },
         },
         positions: Object.fromEntries(positions.map(position => [position, { toast: `position-${position}`, viewport: `viewport-${position}`, stack: `stack-${position}` }])),
         tones: {
@@ -512,6 +512,11 @@ function setupManager(config = createConfig(), selectedPositions = positions) {
 
 function toastItems(stack) {
     return stack.children.filter(child => child.hasAttribute('data-rz-toast-item'));
+}
+
+
+function assertClassTokenCount(className, token, expected) {
+    assert.equal(className.split(/\s+/).filter(value => value === token).length, expected, `${token} count in ${className}`);
 }
 
 test('normalizes legacy and modern toast options', () => {
@@ -663,6 +668,21 @@ test('dedupe, duplicate ids, and overflow strategies are enforced per stack', ()
     }
 });
 
+
+test('dedupeClasses preserves first-seen tokens and arbitrary color-mix utilities', () => {
+    assert.equal(
+        dedupeClasses(
+            null,
+            undefined,
+            '',
+            '   ',
+            ['relative rounded-lg border', ['relative border text-sm']],
+            'custom-class bg-[color-mix(in_oklab,var(--background)_90%,var(--info)_10%)] custom-class'
+        ),
+        'relative rounded-lg border text-sm custom-class bg-[color-mix(in_oklab,var(--background)_90%,var(--info)_10%)]'
+    );
+});
+
 test('renderer applies only class-map classes plus caller custom classes', () => {
     const env = installDom();
 
@@ -686,9 +706,105 @@ test('renderer applies only class-map classes plus caller custom classes', () =>
 
         const element = createToastDom(toast, createConfig());
         assert.deepEqual(element.classList, ['base-toast', 'position-bottom-right', 'status-success', 'tone-outline', 'animation-slide', 'state-visible', 'caller-root']);
-        assert.equal(element.querySelector('[data-slot="toast-title"]').className, 'base-title caller-title');
+        assert.equal(element.querySelector('[data-slot="toast-title"]').className, 'base-title text-success caller-title');
         assert.equal(element.querySelector('[data-slot="toast-title"]').textContent, 'Title');
         assert.equal(element.querySelector('[data-slot="toast-description"]').textContent, 'Text');
+    } finally {
+        env.restore();
+    }
+});
+
+
+test('renderer de-duplicates slot classes while preserving status title colors and custom classes', () => {
+    const env = installDom();
+
+    try {
+        const config = createConfig({
+            slots: {
+                toast: 'not-prose pointer-events-auto relative rounded-lg border',
+                innerContainer: 'flex items-start gap-x-3',
+                title: 'font-medium tracking-tight line-clamp-1',
+                description: 'text-sm text-foreground/90',
+                closeButton: 'rounded-full p-1 opacity-70',
+            },
+        });
+        config.positions['top-right'] = { toast: 'relative border position-top-right', innerContainer: 'flex gap-x-3' };
+        config.statuses.info = {
+            toast: 'border-info bg-[color-mix(in_oklab,var(--background)_90%,var(--info)_10%)] pointer-events-auto',
+            title: 'text-info font-medium',
+            description: 'text-foreground/90',
+            closeButton: 'rounded-full',
+        };
+        config.statuses.success.title = 'text-success font-medium';
+        config.statuses.warning.title = 'text-warning font-medium';
+        config.statuses.error.title = 'text-destructive font-medium';
+        config.statuses.default.title = 'text-foreground font-medium';
+        config.tones.subtle = { toast: 'border tone-subtle' };
+        config.animations.fade = { toast: 'transition-opacity animation-fade' };
+        config.states.visible = { toast: 'transition-opacity state-visible' };
+
+        const toast = {
+            id: 'dedupe-rendered',
+            state: 'visible',
+            remaining: 1000,
+            options: normalizeToastOptions({
+                status: 'info',
+                position: 'top-right',
+                tone: 'subtle',
+                animation: 'fade',
+                title: 'Saved',
+                text: 'Done',
+                autoclose: false,
+                classNames: {
+                    toast: 'caller-root relative',
+                    innerContainer: 'caller-inner flex',
+                    title: 'caller-title text-info',
+                    description: 'caller-description text-sm',
+                    closeButton: 'caller-close rounded-full',
+                },
+            }, config),
+        };
+
+        const element = createToastDom(toast, config);
+        const inner = element.querySelector('[data-slot="toast-inner-container"]');
+        const title = element.querySelector('[data-slot="toast-title"]');
+        const description = element.querySelector('[data-slot="toast-description"]');
+        const closeButton = element.querySelector('[data-slot="toast-close-button"]');
+
+        assertClassTokenCount(element.className, 'not-prose', 1);
+        assertClassTokenCount(element.className, 'pointer-events-auto', 1);
+        assertClassTokenCount(element.className, 'relative', 1);
+        assertClassTokenCount(element.className, 'border', 1);
+        assertClassTokenCount(inner.className, 'flex', 1);
+        assertClassTokenCount(inner.className, 'gap-x-3', 1);
+        assertClassTokenCount(title.className, 'font-medium', 1);
+        assertClassTokenCount(title.className, 'text-info', 1);
+        assertClassTokenCount(description.className, 'text-sm', 1);
+        assertClassTokenCount(description.className, 'text-foreground/90', 1);
+        assertClassTokenCount(closeButton.className, 'rounded-full', 1);
+        assert.ok(element.className.includes('bg-[color-mix(in_oklab,var(--background)_90%,var(--info)_10%)]'));
+        assert.ok(element.classList.includes('caller-root'));
+        assert.ok(inner.classList.includes('caller-inner'));
+        assert.ok(title.classList.includes('caller-title'));
+        assert.ok(description.classList.includes('caller-description'));
+        assert.ok(closeButton.classList.includes('caller-close'));
+        assert.ok(element.classList.includes('position-top-right'));
+        assert.ok(element.classList.includes('tone-subtle'));
+        assert.ok(element.classList.includes('animation-fade'));
+        assert.ok(element.classList.includes('state-visible'));
+
+        for (const [status, expectedTitleClass] of Object.entries({
+            default: 'text-foreground',
+            info: 'text-info',
+            success: 'text-success',
+            warning: 'text-warning',
+            error: 'text-destructive',
+            loading: 'text-info',
+        })) {
+            toast.options = normalizeToastOptions({ status, title: status, text: 'Text', autoclose: false }, config);
+            const statusElement = createToastDom(toast, config);
+            assert.ok(statusElement.querySelector('[data-slot="toast-title"]').classList.includes(expectedTitleClass));
+        }
     } finally {
         env.restore();
     }

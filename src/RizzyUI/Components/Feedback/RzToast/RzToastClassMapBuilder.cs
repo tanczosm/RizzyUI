@@ -81,19 +81,20 @@ public static class RzToastClassMapBuilder
 
     private static RzToastSlotClassMap ApplySolidTone(RzToastSlotClassMap map, ToastStatus status)
     {
-        var (toast, icon, pulse, progress) = status switch
+        var (toast, title, icon, pulse, progress) = status switch
         {
-            ToastStatus.Info => ("border-info bg-info text-info-foreground", "text-info-foreground", "bg-info-foreground/20", "bg-info-foreground"),
-            ToastStatus.Success => ("border-success bg-success text-success-foreground", "text-success-foreground", "bg-success-foreground/20", "bg-success-foreground"),
-            ToastStatus.Warning => ("border-warning bg-warning text-warning-foreground", "text-warning-foreground", "bg-warning-foreground/20", "bg-warning-foreground"),
-            ToastStatus.Error => ("border-destructive bg-destructive text-destructive-foreground", "text-destructive-foreground", "bg-destructive-foreground/20", "bg-destructive-foreground"),
-            ToastStatus.Loading => ("border-info bg-info text-info-foreground", "text-info-foreground", "bg-info-foreground/20", "bg-info-foreground"),
-            _ => ("border-primary bg-primary text-primary-foreground", "text-primary-foreground", "bg-primary-foreground/20", "bg-primary-foreground")
+            ToastStatus.Info => ("border-info !bg-info !text-info-foreground", "text-info-foreground", "text-info-foreground", "bg-info-foreground/20", "bg-info-foreground"),
+            ToastStatus.Success => ("border-success !bg-success !text-success-foreground", "text-success-foreground", "text-success-foreground", "bg-success-foreground/20", "bg-success-foreground"),
+            ToastStatus.Warning => ("border-warning !bg-warning !text-warning-foreground", "text-warning-foreground", "text-warning-foreground", "bg-warning-foreground/20", "bg-warning-foreground"),
+            ToastStatus.Error => ("border-destructive !bg-destructive !text-destructive-foreground", "text-destructive-foreground", "text-destructive-foreground", "bg-destructive-foreground/20", "bg-destructive-foreground"),
+            ToastStatus.Loading => ("border-info !bg-info !text-info-foreground", "text-info-foreground", "text-info-foreground", "bg-info-foreground/20", "bg-info-foreground"),
+            _ => ("border-primary !bg-primary !text-primary-foreground", "text-primary-foreground", "text-primary-foreground", "bg-primary-foreground/20", "bg-primary-foreground")
         };
 
         return map with
         {
             Toast = Append(map.Toast, toast),
+            Title = Append(map.Title, title),
             IconContainer = Append(map.IconContainer, icon),
             IconPulse = Append(map.IconPulse, pulse),
             LoadingIndicator = Append(map.LoadingIndicator, icon),
