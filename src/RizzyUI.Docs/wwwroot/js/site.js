@@ -1,15 +1,132 @@
+
+function getCspNonce() {
+    const nonceScript = document.querySelector('script[nonce]');
+    return nonceScript ? nonceScript.getAttribute('nonce') : null;
+}
+
+function loadStylesheetOnce(href, id) {
+    if (!href) {
+        return Promise.reject(new Error('Stylesheet URL is missing.'));
+    }
+
+    const existing = document.getElementById(id);
+    if (existing) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = href;
+        const nonce = getCspNonce();
+        if (nonce) {
+            link.setAttribute('nonce', nonce);
+        }
+        link.addEventListener('load', () => resolve(), { once: true });
+        link.addEventListener('error', () => reject(new Error(`Unable to load stylesheet: ${href}`)), { once: true });
+        document.head.appendChild(link);
+    });
+}
+
+function loadScriptOnce(src, id) {
+    if (!src) {
+        return Promise.reject(new Error('Script URL is missing.'));
+    }
+
+    const existing = document.getElementById(id);
+    if (existing) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.id = id;
+        script.src = src;
+        script.async = true;
+        const nonce = getCspNonce();
+        if (nonce) {
+            script.setAttribute('nonce', nonce);
+        }
+        script.addEventListener('load', () => resolve(), { once: true });
+        script.addEventListener('error', () => reject(new Error(`Unable to load script: ${src}`)), { once: true });
+        document.body.appendChild(script);
+    });
+}
+
 document.addEventListener('alpine:init', () => {
 
     Alpine.data('docSearch', () => ({
+        isLoading: false,
+        isReady: false,
+        errorMessage: '',
+        assetsPromise: null,
 
-        init() {
-            docsearch({
-                container: '#docsearch',
-                appId: '4NNHPLPB1Z',
-                indexName: 'RizzyUI Documentation',
-                apiKey: '52ed9e7932048b8906b7babc7739551b',
-                askAi: '', // TODO: Replace with your Algolia Assistant ID
-            });
+        async open() {
+            if (this.isLoading) {
+                return;
+            }
+
+            this.errorMessage = '';
+            this.isLoading = true;
+
+            try {
+                await this.ensureReady();
+                this.activateSearchDialog();
+            } catch (error) {
+                this.assetsPromise = null;
+                this.isReady = false;
+                this.errorMessage = 'Search failed to load. Activate search again to retry.';
+                console.warn('[RizzyUI Docs] DocSearch failed to load.', error);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
+        async ensureReady() {
+            if (this.isReady) {
+                return;
+            }
+
+            if (!this.assetsPromise) {
+                this.assetsPromise = this.loadAssets();
+            }
+
+            await this.assetsPromise;
+
+            if (!globalThis.docsearch) {
+                throw new Error('DocSearch global is unavailable.');
+            }
+
+            if (!globalThis.__rizzyDocsDocSearchInitialized) {
+                globalThis.docsearch({
+                    container: '#docsearch-container',
+                    appId: '4NNHPLPB1Z',
+                    indexName: 'RizzyUI Documentation',
+                    apiKey: '52ed9e7932048b8906b7babc7739551b',
+                    askAi: '',
+                });
+                globalThis.__rizzyDocsDocSearchInitialized = true;
+            }
+
+            this.isReady = true;
+        },
+
+        loadAssets() {
+            const cssHref = this.$el.dataset.docsearchCss;
+            const scriptSrc = this.$el.dataset.docsearchJs;
+
+            return Promise.all([
+                loadStylesheetOnce(cssHref, 'rizzy-docsearch-css'),
+                loadScriptOnce(scriptSrc, 'rizzy-docsearch-js'),
+            ]);
+        },
+
+        activateSearchDialog() {
+            const generatedButton = document.querySelector('#docsearch-container .DocSearch-Button');
+            if (generatedButton instanceof HTMLElement) {
+                generatedButton.click();
+            }
         }
     }));
 
