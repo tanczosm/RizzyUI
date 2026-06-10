@@ -367,14 +367,7 @@
 
             <!-- Right-aligned items -->
             <div class="flex items-center gap-4">
-                <div x-data="docSearch" data-docsearch-js="@Assets["/vendor/docsearch/docsearch.js"]" data-docsearch-css="@Assets["/vendor/docsearch/docsearch.css"]" class="bg-background">
-                    <button type="button" class="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-8 items-center gap-2 rounded-md border px-3 text-sm font-medium shadow-xs outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2" x-on:click="open" x-bind:aria-busy="isLoading" AriaLabel="Search documentation">
-                        <Blazicon Svg="Lucide.Search" class="size-4" />
-                        <span class="hidden sm:inline">Search</span>
-                    </button>
-                    <span class="sr-only" aria-live="polite" x-text="errorMessage"></span>
-                    <div id="docsearch-container" class="sr-only"></div>
-                </div>
+                <div x-data="docSearch" id="docsearch" class="bg-background [&>button:first-child]:!h-8"></div>
                 <RzDarkModeToggle/>
                 <a href="https://github.com/jalexsocial/RizzyUI" class="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border text-xl outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2" aria-label="Open RizzyUI on GitHub"><Blazicon Svg="MdiIcon.Github" /></a>
             </div>

@@ -6,7 +6,7 @@ import { expect, test } from '@playwright/test';
 
 async function loadGeneratedHomepage(page) {
   const homepagePath = resolve(process.cwd(), '../../docs/index.html');
-  test.skip(!existsSync(homepagePath), 'Generate the static docs site before running homepage Lighthouse regression tests.');
+  test.skip(!existsSync(homepagePath), 'Generate the static docs site before running homepage regression tests.');
   const html = await readFile(homepagePath, 'utf8');
   await page.setContent(html, { waitUntil: 'domcontentloaded' });
 }
@@ -35,7 +35,7 @@ test('homepage has deterministic labels, valid lists, and SEO metadata', async (
   const descriptions = page.locator('meta[name="description"]');
   await expect(descriptions).toHaveCount(1);
   await expect(descriptions).toHaveAttribute('content', /accessible, SSR-only Razor components/);
-  await expect(page.getByText('Explore RizzyUI interactivity')).toBeVisible();
+  await expect(page.getByRole('link', { name: /^Explore$/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /Read about RizzyUI interactivity/ })).toBeVisible();
 
   for (const id of labeledControlIds) {
@@ -78,14 +78,12 @@ test('homepage has deterministic labels, valid lists, and SEO metadata', async (
   expect(axe.violations.filter((violation) => violation.impact === 'serious' || violation.impact === 'critical')).toEqual([]);
 });
 
-test('homepage avoids untouched third-party search, font, and GitHub avatar requests', async ({ page }) => {
+test('homepage avoids untouched GitHub avatar requests', async ({ page }) => {
   const requested: string[] = [];
   page.on('request', (request) => requested.push(request.url()));
 
   await loadGeneratedHomepage(page);
   await page.waitForLoadState('networkidle');
 
-  expect(requested.filter((url) => url.includes('docsearch') || url.includes('@docsearch'))).toEqual([]);
   expect(requested.filter((url) => url.includes('github.com') || url.includes('avatars.githubusercontent.com'))).toEqual([]);
-  expect(requested.filter((url) => url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com'))).toEqual([]);
 });

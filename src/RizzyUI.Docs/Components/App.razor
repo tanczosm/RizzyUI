@@ -16,7 +16,7 @@
 
     @if (UseContentSecurityPolicy)
     {
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' localhost:* http://localhost:* ws://localhost:* wss://localhost:* https://*.algolia.net https://*.algolianet.com; script-src 'self' localhost:* wss://localhost:* 'nonce-@Nonce'; font-src 'self'; style-src 'self' 'nonce-@Nonce'; img-src 'self' data:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' localhost:* http://localhost:* ws://localhost:* wss://localhost:* https://*.algolia.net https://*.algolianet.com; script-src 'self' localhost:* wss://localhost:* https://cdn.jsdelivr.net 'nonce-@Nonce'; font-src 'self' fonts.gstatic.com; style-src 'self' fonts.googleapis.com https://cdn.jsdelivr.net 'nonce-@Nonce'; img-src 'self' data:;">
     }
     
     <HtmxConfigHeadOutlet/>
@@ -24,13 +24,13 @@
     <!--<link rel="stylesheet" href="_content/RizzyUI/dist/rizzyui.css" />-->
 
     <link nonce="@Nonce" rel="stylesheet" href="@Assets["/css/app.css"]" />
+    <link nonce="@Nonce" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@docsearch/css@4" />
 
     <HeadOutlet/>
     
     <script nonce="@Nonce" defer src="@Assets["/vendor/htmx/htmx.min.js"]"></script>
     <script nonce="@Nonce" defer src="@Assets["/_content/Rizzy/js/rizzy.js"]"></script>
     
-    <script nonce="@Nonce" defer src="@Assets["/js/site.js"]"></script>
 
     @if (UseContentSecurityPolicy)
     {
@@ -41,6 +41,15 @@
         <script nonce="@Nonce" type="module" src="@Assets["/_content/RizzyUI/js/rizzyui.js"]"></script>
     }
 
+    <script nonce="@Nonce" defer src="@Assets["/js/site.js"]"></script>
+
+    <link rel="preconnect" defer nonce="@Nonce" href="https://fonts.googleapis.com">
+    <link rel="preconnect" defer nonce="@Nonce" href="https://fonts.gstatic.com" crossorigin>
+    <link nonce="@Nonce" defer href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" defer nonce="@Nonce" href="https://fonts.gstatic.com" crossorigin>
+    <link nonce="@Nonce" defer href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
 </head>
 
 <body class="bg-background" hx-ext="rizzy-nonce">
@@ -48,6 +57,8 @@
 <RzThemeProvider>
     <Routes/>
 </RzThemeProvider>
+
+    <script nonce="@Nonce" src="https://cdn.jsdelivr.net/npm/@@docsearch/js@4"></script>
 
 </body>
 

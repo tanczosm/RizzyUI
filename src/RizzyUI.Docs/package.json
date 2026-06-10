@@ -32,8 +32,6 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@docsearch/css": "^4.6.3",
-    "@docsearch/js": "^4.6.3",
     "@tailwindcss/cli": "^4.2.1",
     "htmx.org": "^2.0.4"
   }
